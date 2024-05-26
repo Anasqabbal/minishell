@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/24 16:31:15 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/25 16:05:42 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	ft_open_files(t_prs *lst, t_exec *e)
 	ret = open_in_files(lst, e);
 	if (!ret)
 		ret = open_out_files(lst, e);
-	return (ret);
+	return (lst->ex_code = ret);
 }
 
 // void f(void){system("leaks a.out");}

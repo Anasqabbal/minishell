@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/24 16:40:14 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/26 14:08:38 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,29 +62,26 @@ int		start_exec(t_prs *lst, t_list *envp)
 {
 	t_exec e;
 	int		ret;
+	int		i;
 
-	/* in this part you need to open the necessary files that you will need during the execution */
-	// ret = ft_open_files(lst, &e); /* first open the files and work with it*/
-	// if (ret)
-	// 	return (ret);
-	// if (dup2(e.in, STDIN_FILENO) < 1)/*open the infiles that you will need in this part*/
-	// 	return(perror("dup"), 1);
-	while(lst->next)
+	i = 1;
+	e.size = ft_lstsize(lst);
+	lst = lst->next;
+	if (e.size != 1 && !ret)
 	{
-		if (it_is_builtin(lst, envp))
-			ret = mid_cmds(lst, envp, &e);
-		else
-			ret = mid_blts(lst, envp);
-		lst = lst->next;
+		while(lst->next)
+		{
+			e.size = ft_lstsize(lst);
+			ret = mult_cmds(lst, envp, &e);
+			if (ret)
+				return (ret);
+			lst = lst->next;
+			i++;
+		}
+		e.size = ft_lstsize(lst);
+		ret = last_cmd(lst, envp, &e);
 	}
-	// ret = ft_open_files(lst, &e); /* first open the files and work with it*/
-	// if (ret)
-	// 	return (ret);
-	if (dup2(e.out, STDOUT_FILENO) < 1) /*also before the last command you need to open the files that you will need in this case the outfile and so one*/
-		return(perror("dup"), 1);
-	if (it_is_builtin(lst, envp))
-		ret = last_cmds(lst, envp, &e);
 	else
-		ret = last_blts(lst, envp)
+		one_cmd(lst, envp, &e);
 	return (ret);
 }

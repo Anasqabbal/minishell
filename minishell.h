@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/05/24 16:27:21 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/25 12:51:31 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef	struct s_exec{
 	char	*path;
 	char	**env;
 	char	*here_doc;
+	int		size;
 }t_exec;
 
 typedef struct s_par{
@@ -83,7 +84,8 @@ void	to_free_f(int **file, int len);
 int 	ft_error(char *from, int indice);
 	/*execute commands*/
 int		mid_cmds(t_prs *lst, t_list *envp, t_exec *e);
-int		last_cmds(t_prs *lst, t_list *envp, t_exec *e);
+int		last_cmd(t_prs *lst, t_list *envp, t_exec *e);
+int		first_cmd(t_prs *lst, t_list *envp, t_exec *e);
 
 
 /*builtins*/

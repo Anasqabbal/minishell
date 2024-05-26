@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 14:14:22 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/05/23 13:18:09 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/26 18:22:04 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +97,28 @@ static int m_strlen(char *str, char c)
 // 	}
 // }
 
-void set_values(t_prs *p)
+t_list *new_prs(char *cmd, char **opts, char *args)
 {
-	char *cmd = "";
-	char **args[1][5] = {
-		{"hello", "world"},
-	};
+	t_prs *new;
 }
+
+void	set_values(t_prs *p)
+{
+	t_prs *p1;
+
+	p->cmd = "ls";
+	p->ex_code = 0;
+	p->arg = NULL;
+	p->opts = NULL;
+	p->in = NULL;
+	p->in_f = NULL;
+	p->out = NULL;
+	p->out_f = NULL;
+	p->next = 
+	
+		
+}
+
 
 int main(int ac, char **av, char **env)
 {
@@ -122,7 +137,7 @@ int main(int ac, char **av, char **env)
 		if (input[0] != '\0')
 		{
 		//set_values(&n, input);
-		set_values1(&n);
+		set_values(&n);
 		n.ex_code = start_exec(&n, envp);
 		if (input[0] != '\0')
 			add_history(input);
