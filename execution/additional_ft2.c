@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:40:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/15 17:00:11 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:52:13 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ char **from_lst_to_2d(t_list *s)
 	len = ft_lstsize(s);
 	if (!len)
 		return (NULL);// your lst is 0;
-	printf("the len of your list is %d\n", len);
 	res = malloc(sizeof(char *) * (len + 1));
 	if (!res)
 		return(NULL); //malloc failed;
@@ -55,4 +54,17 @@ char **from_lst_to_2d(t_list *s)
 	// 	j++;
 	// }
 	return (res);
+}
+
+int ft_2dprint(char **str)
+{
+	if (!str)
+		return(printf("your 2D is NULL\n"), 1);
+	else
+	{
+		int i = -1;
+		while(str[++i])
+			printf("%s\n", str[i]);
+	}
+	return(0);
 }

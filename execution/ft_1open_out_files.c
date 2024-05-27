@@ -6,14 +6,16 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:28 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/24 16:25:36 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/27 15:06:51 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_error_files(int indice, int ret)
+int	ft_error_files(int indice, int ret, char *n)
 {
+	ft__putstr_fd("minishell: ", 2);
+	ft__putstr_fd(n, 2);
 	if (indice == 13)
 		ft_putendl_fd(": Permission denied", 2);
 	else if (indice == 2)
@@ -21,7 +23,7 @@ int	ft_error_files(int indice, int ret)
 	return (ret);
 }
 
-static int	creat_open_file(char *f1, int ind, int VAL)
+int	creat_open_file(char *f1, int ind, int VAL)
 {
 	int	fd;
 

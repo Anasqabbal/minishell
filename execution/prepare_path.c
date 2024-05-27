@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 15:54:03 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/22 17:03:13 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/27 15:52:06 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ static int ft_error2(char *from, int indice)
 	ft_putstr_fd(from, 2);
 	if (indice == 127)
 		ft_putstr_fd(": No such file or directory\n", 2);
+	if (indice == 126)
+		ft_putstr_fd(": Permission denied\n", 2);
 	return (indice);
 }
 
@@ -87,7 +89,7 @@ int		check_access(char *cmd, t_exec *p, t_list *env)
 	if (!access(cmd, F_OK))
 	{
 		if (access(cmd, X_OK) == -1)
-			return (ft_error(cmd, 126));
+			return (ft_error2(cmd, 126));
 		else
 		{
 			p->path = ft_strdup(cmd);

@@ -6,25 +6,11 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 09:35:09 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/16 18:09:06 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/27 10:26:51 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-static char *to_free(char **str)
-{
-	int	i;
-
-	i = -1;
-	if (str)
-	{
-		while(str[++i])
-			free(str[i]);
-		free(str);
-	}
-	return (NULL);
-}
 
 char **join_cmd_and_args(char *cmd, char **opts, int len)
 {

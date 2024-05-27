@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/25 16:05:42 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/27 15:06:21 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 void to_free_f(int **file, int len)
 {
-	int cl;
-
 	while(--len >= 0)
 	{
 		if (file[len][0] >= 0)
@@ -28,15 +26,15 @@ static int check_file_access(char *file)
 {
 	if (file)
 	{
-		if (access(file, F_OK))
+		if (!access(file, F_OK))
 		{
-			if (access(file, R_OK))
+			if (!access(file, R_OK))
 				return (0);
 			else
 				return (13);//permision denied
 		}
 		else
-			return (2); //file not found;
+			return (ft_error_files(2, 1, file)); //file not found;
 	}
 	return(0);
 }
@@ -47,6 +45,7 @@ char	*read_from_here_doc(char *lim, t_exec *e)
 	char	*here_doc;
 	char	*tmp;
 
+	(void)e;
 	here_doc = NULL;
 	while(1)
 	{
@@ -107,11 +106,11 @@ int	ft_open_files(t_prs *lst, t_exec *e)
 	i = -1;
 	while(++i < len)
 	{
-		if (ft_strncmp(lst->in[i], "<<", ft_strlen(lst->in[i])))
+		if (ft_strncmp(lst->in[i], "<<", 2))
 		{
 			ret = check_file_access(lst->in_f[i]);
 			if (ret)
-				return (ret);
+				return (1);
 		}
 	}
 	ret = open_in_files(lst, e);

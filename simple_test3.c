@@ -73,9 +73,9 @@ int main(int ac, char **av, char **env)
 			e.path = "/bin/ls";
 			
 			out = fd[1];
-			// in = open(av[3], O_RDWR);
-			//out = -1;
-			in = fd[0];
+			in = open(av[3], O_RDWR);
+			// out = in;
+			//in = fd[0];
 		}
 		else if (i == 1)
 		{

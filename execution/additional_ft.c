@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:04:37 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/26 10:49:14 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/27 18:09:43 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ char **to_free(char **s)
 
 	i = -1;
 	while(s && s[++i])
+	{
 		free(s[i]);
+	}
 	free(s);
 	return (NULL);
 }
@@ -43,7 +45,7 @@ char **ft_2dstrdup(char **s)
 
 	len = calcul_args(s);
 	if (!len)
-		return (NULL);
+		return (printf("in 2DSTRDUP, len"), NULL);
 	res = malloc(sizeof(char *) * (len + 1));
 	if (!res)
 		return (NULL);
@@ -86,9 +88,9 @@ char **ft_2dstrjoin(char **s1, char **s2)
 	if (!s1 && !s2)
 		return(NULL);
 	else if (!s1)
-		return(ft_2dstrdup(s1));
+		return(ft_2dstrdup(s2));
 	else if (!s2)
-		return (ft_2dstrdup(s2));
+		return (ft_2dstrdup(s1));
 	f_len = calcul_args(s1) + calcul_args(s2) + 1;
 	res = ft_calloc(sizeof(char *), (f_len + 1));
 	if (!res)

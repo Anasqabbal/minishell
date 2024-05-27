@@ -6,124 +6,177 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 14:14:22 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/05/26 18:22:04 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/27 18:12:06 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void to_free2(char **av)
+void	clear_prs(t_prs *c)
 {
-	int i = -1;
-	while (++i)
-		free(av[i]);
-	free(av);
+	while(c)
+	{
+		if (c->cmd)
+		{
+			free(c->cmd);
+			c->cmd = NULL;
+		}
+		if (c->arg)
+			c->arg = to_free(c->arg);
+		if (c->opts)
+			c->opts = to_free(c->opts);
+		if (c->in_f)
+			c->in_f = to_free(c->in_f);
+		if (c->in)
+			c->in =  to_free(c->in);
+		if (c->out_f)
+			c->out_f = to_free(c->out_f);
+		if (c->out)
+			c->out = to_free(c->out);
+		c = c->next;
+	}
 }
 
-static int m_strlen(char *str, char c)
+void	ft_printf_prs(t_prs *c)
 {
-	int i = -1;
-	while(str[++i] && str[i] != c);
-	return(i);
+	if (c->cmd)
+		ft_printf("   cmd == %s  \n", c->cmd);
+	if (c->arg)
+	{
+		ft_printf("|    ___args___   |\n");
+		ft_printf("   args == ");
+		ft_2dprint(c->arg);
+	}
+	if (c->opts)
+	{
+		ft_printf("|   ___opts___   |\n");
+		ft_printf("   opts == ");
+		ft_2dprint(c->opts);
+	}
+	if (c->in_f)
+		ft_printf("your in_f is not NULL\n");
+	if (c->in)
+		ft_printf("your in is not NULL\n");
+	if (c->out_f)
+		ft_printf("your out_f is not NULL\n");
+	if (c->out)
+		ft_printf("your out is not NULL\n");
+}
+void	print_prs(t_prs *p)
+{
+	int i = 0;
+	while (p)
+	{
+		printf("|-------%d-------|\n", i);
+		ft_printf_prs(p);
+		p = p->next;
+		i++;
+	}
+	printf("\n\n\n\n");
 }
 
-// void	set_values(t_prs *n, char *input)
-// {
-// 	m_strlen(input, 'c');
-// 	char **av;
-// 	// int j;
-	
-// 	av = ft_split(input, ' ');
-// 	if (!av)
-// 	{
-// 		printf("split failed\n");
-// 		return ;
-// 	}
-// 	n->opts = NULL;
-// 	n->arg = NULL;
-
-// 	//check the first arg
-
-// 	if (ft_strncmp(av[0], ">", ft_strlen(av[0])) && ft_strncmp(av[0], "<", ft_strlen(av[0])) && ft_strncmp(av[0], ">>", ft_strlen(av[0])))
-// 	{
-// 		n->cmd = ft_strdup(av[0]);
-// 		if (!n->cmd)
-// 			printf("no commad\n");
-// 		n->outfile = NULL;
-// 		n->infile = NULL;
-// 		if (split_strlen(input, ' ', 0) <= 3  && split_strlen(input, ' ', 0) != 1)
-// 		{
-// 			if (!ft_strncmp(av[1], ">", ft_strlen(av[1])))
-// 			{
-// 				char **res = {av[1], "NULL"};
-// 				n->outfile = ft_2dstrdup(res);
-// 			}
-// 			else if (!ft_strncmp(av[1], "<", ft_strlen(av[1])))
-// 				n->infile = ft_strdup(av[2]);
-// 			else if (ft_strchr(av[1], '-'))
-// 			{
-// 				n->opts = malloc(sizeof(char *) * (1 + 1));
-// 				if (!n->opts)
-// 				{
-// 					printf("malloc failed\n");
-// 					return ;
-// 				}
-// 				n->opts = ft_2dstrcpy(n->opts, av + 1, 1);
-// 				if (!n->opts)
-// 					printf("no opts in your code");
-// 				n->arg = ft_2dstrdup(av + 2);
-// 				if (!n->arg)
-// 					printf("no args in your code\n");
-// 			}
-// 			else
-// 			{
-// 				n->arg = ft_2dstrdup(av + 1);
-// 				if (!n->arg)
-// 					printf("no args in your code\n");
-// 			}
-// 			n->ex_code = 0;
-// 			to_free2(av);
-// 		}
-// 	}
-// 	else
-// 	{
-// 		n->cmd = NULL;
-// 		n->outfile = NULL;
-// 		n->infile = NULL;
-// 		if (!ft_strncmp(av[0], ">", ft_strlen(av[0])))
-// 			n->outfile = ft_strdup(av[1]);
-// 		else if (!ft_strncmp(av[0], "<", ft_strlen(av[0])))
-// 			n->infile = ft_strdup(av[1]);
-// 	}
-// }
-
-t_list *new_prs(char *cmd, char **opts, char *args)
+t_prs *new_prs(char *cmd, char **opts, char **args)
 {
 	t_prs *new;
+
+	new = malloc(sizeof(t_prs));
+	if (!new)
+		return(NULL);
+	new->cmd = cmd;
+	new->arg = args;
+	new->opts = opts;
+	new->in = NULL;
+	new->in_f = NULL;
+	new->out = NULL;
+	new->out_f = NULL;
+	new->next = NULL;
+	new->ex_code = 0;
+	return (new);
 }
 
-void	set_values(t_prs *p)
+t_prs *set_values(int indice)
 {
-	t_prs *p1;
+	char *cmd1;
+	char **opts1;
+	char **args1;
+	t_prs *p, *p1, *p2;
+	t_prs *head;
 
-	p->cmd = "ls";
-	p->ex_code = 0;
-	p->arg = NULL;
-	p->opts = NULL;
-	p->in = NULL;
-	p->in_f = NULL;
-	p->out = NULL;
-	p->out_f = NULL;
-	p->next = 
-	
-		
+	p = NULL;
+	ft_printf("your indice == %d\n", indice);
+	if (indice <= 4)
+	{
+		cmd1 = ft_strdup("./test.c");
+		opts1 = NULL;
+		// opts1[0] = NULL;
+		// opts1[1] = NULL;
+		args1 = NULL;
+		p = new_prs(cmd1, opts1, args1);
+		if (!p)
+		{
+			ft_printf("return with NULL\n");
+			return (NULL);
+		}
+		// p->in = malloc(sizeof(char *) * 2);
+		// p->in[0] = ft_strdup("<");
+		// p->in[1] = NULL;
+
+		// p->in_f = malloc(sizeof(char *) * 2);
+		// p->in_f[0] = ft_strdup("sdfs");
+		// p->in_f[1] = NULL;
+		indice--;
+	}
+	head = p;
+	if (indice <= 3 && indice)
+	{
+		char *cmd2 = ft_strdup("./infile");
+		char **opts2 = NULL;
+		char **args2 = NULL;
+		// malloc(sizeof(char *) * 2);
+		// args2[0] = ft_strdup("test");
+		// args2[1] = NULL;
+		p->next = new_prs(cmd2, opts2, args2);
+		indice--;
+	}
+	if (indice <= 2 && indice)
+	{	
+		char *cmd3 = ft_strdup("grep");
+		if (!cmd3)
+			return (printf("fialed cmd3\n"), NULL);
+		ft_printf("your cmd3 = %s\n", cmd3);
+		char **opts3 = NULL;
+		char **args3 = malloc(sizeof(char *) * 2);
+		args3[0] = ft_strdup("simple");
+		args3[1] = NULL;
+		p1 = new_prs(cmd3, opts3, args3);
+		if (!p1)
+			return (printf("your p1 === NULLL"), NULL);
+		p->next->next = p1;
+		indice--;
+	}
+	if (indice == 1 && indice)
+	{
+		char *cmd4 = ft_strdup("grep");
+		if (!cmd4)
+			return (printf("fialed cmd4\n"), NULL);
+		ft_printf("your cmd4 = %s\n", cmd4);
+		char **opts4 = NULL;
+		char **args4 = malloc(sizeof(char *) * 2);
+		args4[0] = ft_strdup("test2");
+		args4[1] = NULL;
+		p2 = new_prs(cmd4, opts4, args4);
+		if (!p2)
+			return (printf("your p1 === NULLL"), NULL);
+		p->next->next->next = p2;
+	}
+	return (head);
 }
 
 
 int main(int ac, char **av, char **env)
 {
 	char	*input;
-	t_prs	n;
+	t_prs	*n;
 	t_list	*envp;
 
 	envp = ft_envdup(env);
@@ -132,17 +185,18 @@ int main(int ac, char **av, char **env)
 	while (1)
 	{
 		input = readline("minishell$ ");
-		if (input == NULL)
-			return (ft_printf("exit\n"), 0);
-		if (input[0] != '\0')
+		if ((input && !ft_strncmp(input, "exit", ft_strlen(input))) || !input)
+			return (free(input), ft_printf("exit\n"), 0);
+		if (input && input[0] != '\0')
 		{
-		//set_values(&n, input);
-		set_values(&n);
-		n.ex_code = start_exec(&n, envp);
-		if (input[0] != '\0')
-			add_history(input);
+			n = set_values(ft_atoi(input));
+			print_prs(n);
+			n->ex_code = start_exec(n, envp);
+			if (input[0] != '\0')
+				add_history(input);
 		}
-		printf("your exit code == %d\n", n.ex_code);
+		printf("your exit code == %d\n", n->ex_code);
+		clear_prs(n);
 		free(input);
 	}
 }

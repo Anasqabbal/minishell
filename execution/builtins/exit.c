@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:47:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/15 11:51:20 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/27 18:05:08 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,5 +16,5 @@ int		ft_exit(t_list *envp)
 {
 	ft_putendl_fd("exit", 1);
 	ft_lstclear(&envp, free);
-	exit(0);	
+	exit(0);
 }

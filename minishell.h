@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/05/25 12:51:31 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/27 15:05:35 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # include <libc.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 
 
 typedef struct s_prs{
@@ -64,6 +66,10 @@ char	**ft_2dstrjoin(char **s1, char **s2);
 char	**from_lst_to_2d(t_list *s);
 char	**to_free(char **s);
 
+/*additional_ft2.c*/
+int		ft_2dprint(char **str); // remove_it;
+int		ft_prssize(t_prs *lst);
+
 
 /*env_utils*/
 void	*ft_getenv_org(char *str, char **env); /*this functions to get some specific variable in your env*/
@@ -80,12 +86,15 @@ int		check_access(char *cmd, t_exec *p, t_list *env);
 int		ft_open_files(t_prs *lst, t_exec *e);
 int		open_out_files(t_prs *p, t_exec *e);
 int		open_in_files(t_prs *p, t_exec *e);
+int		creat_open_file(char *f1, int ind, int VAL);
+int		ft_error_files(int indice, int ret, char *n);
 void	to_free_f(int **file, int len);
+int		ft_is_pipe(int fd);
 int 	ft_error(char *from, int indice);
 	/*execute commands*/
-int		mid_cmds(t_prs *lst, t_list *envp, t_exec *e);
-int		last_cmd(t_prs *lst, t_list *envp, t_exec *e);
-int		first_cmd(t_prs *lst, t_list *envp, t_exec *e);
+int		mult_cmds(t_prs *lst, t_list *envp, t_exec *e);
+// int		last_cmd(t_prs *lst, t_list *envp, t_exec *e);
+int		one_cmd(t_prs *lst, t_list *envp, t_exec *e);
 
 
 /*builtins*/
