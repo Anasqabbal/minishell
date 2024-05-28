@@ -6,21 +6,37 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/27 15:06:21 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/28 18:15:28 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void to_free_f(int **file, int len)
+int		**to_free_f(int **file, int len)
 {
-	while(--len >= 0)
+	while(file && --len >= 0)
 	{
 		if (file[len][0] >= 0)
 			close (file[len][0]);
 		free(file[len]);
+		file[len] = NULL;
 	}
 	free(file);
+	return(NULL);
+}
+
+void ft_clear_exec(t_exec *e)
+{
+	e->in = to_free_f(e->in, e->in_l);
+	e->out = to_free_f(e->out, e->out_l);
+	e->cmd = to_free(e->cmd);
+	free(e->path);
+	e->path = NULL;
+	e->env = to_free(e->env);
+	e->in_l = 0;
+	e->out_l = 0;
+	free(e->here_doc);
+	e->size = 0;
 }
 static int check_file_access(char *file)
 {
@@ -49,7 +65,7 @@ char	*read_from_here_doc(char *lim, t_exec *e)
 	here_doc = NULL;
 	while(1)
 	{
-		ft_putstr_fd("> ", 0);
+		write(0, ">", 1);
 		res = get_next_line(0);
 		if (!res || !ft_strncmp(res, lim, ft_strlen(res) - 1))
 			break ;

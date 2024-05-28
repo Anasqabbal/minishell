@@ -6,7 +6,7 @@
 #    By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 16:28:17 by zgtaib            #+#    #+#              #
-#    Updated: 2024/05/27 10:19:40 by anqabbal         ###   ########.fr        #
+#    Updated: 2024/05/28 10:19:58 by anqabbal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,9 @@ BUILTINS = execution/builtins/check_variable.c execution/builtins/env.c\
 EXECUTION = execution/env_utils.c execution/ft_additional_lst.c  execution/prepare_path.c execution/prepare_cmd.c $(BUILTINS) ft_errors.c execution/additional_ft.c\
 execution/start_exec_00.c execution/additional_ft2.c execution/ft_1open_in_files.c execution/ft_1open_out_files.c execution/start_exec_01_cmds.c
 
-SRC = minishell.c $(EXECUTION)
+PARSING = parsing/parsing.c
+
+SRC = minishell.c $(EXECUTION) $(PARSING)
 
 OBJ = $(SRC:.c=.o)
 

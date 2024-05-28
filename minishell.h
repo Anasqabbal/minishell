@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/05/27 15:05:35 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/28 18:16:18 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,12 @@ void	*ft_getenv_org(char *str, char **env); /*this functions to get some specifi
 t_list	*ft_envdup(char **env); /*duplicate your environment variable*/
 t_list	*ft_getenv_ours(char *str, t_list *env);
 
+/*parsing functions*/
+t_list	*ft_envdup(char **env);
+t_list	*ft_getenv(char *str, t_list *env);
+char	*ft_syntax(char *stl);
+int		check_syntax(char *input, t_list *env, t_prs **struc);
+
 /*execution functions*/
 	/* prepare cmds and args */
 char	**join_cmd_and_args(char *cmd, char **opts, int len);
@@ -88,9 +94,10 @@ int		open_out_files(t_prs *p, t_exec *e);
 int		open_in_files(t_prs *p, t_exec *e);
 int		creat_open_file(char *f1, int ind, int VAL);
 int		ft_error_files(int indice, int ret, char *n);
-void	to_free_f(int **file, int len);
+int		**to_free_f(int **file, int len);
 int		ft_is_pipe(int fd);
 int 	ft_error(char *from, int indice);
+int		ft_restore_input(void);
 	/*execute commands*/
 int		mult_cmds(t_prs *lst, t_list *envp, t_exec *e);
 // int		last_cmd(t_prs *lst, t_list *envp, t_exec *e);
@@ -113,4 +120,6 @@ int	ft_sort_ascii(t_list *n);
 
 
 int		start_exec(t_prs *lst, t_list *env);
+void	ft_clear_exec(t_exec *e);
+void	clear_prs(t_prs *c);
 #endif

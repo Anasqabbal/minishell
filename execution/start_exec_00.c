@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/27 16:16:07 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/28 15:08:01 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,27 +44,6 @@ int ft_is_pipe(int fd)
 // 	else if (!ft_strncmp("echo", lst->cmd, ft_strlen(lst->cmd)))
 // 		return(printf("do echo\n"), 0);
 // 	return (0);
-// }
-
-// static int	it_is_builtin(t_prs *lst, t_list *envp)
-// {
-// 	(void)envp;
-// 	if (!lst->cmd)
-// 		return (1);
-// 	if (!ft_strncmp("export", lst->cmd, ft_strlen(lst->cmd)))
-// 		return(0);
-// 	else if (!ft_strncmp("env", lst->cmd, ft_strlen(lst->cmd)))
-// 		return(0);
-// 	else if (!ft_strncmp("cd", lst->cmd, ft_strlen(lst->cmd)))
-// 		return(0);
-// 	else if (!ft_strncmp("unset", lst->cmd, ft_strlen(lst->cmd)))
-// 		return(0);
-// 	else if (!ft_strncmp("exit", lst->cmd, ft_strlen(lst->cmd)))
-// 		return(0);
-// 	else if (!ft_strncmp("echo", lst->cmd, ft_strlen(lst->cmd)))
-// 		return(0);
-// 	else
-// 		return (1);
 // }
 
 
@@ -111,9 +90,7 @@ int		start_exec(t_prs *lst, t_list *envp)
 		if (ret)
 			return (ret);
 	}
-	else if (1)
+	else
 		one_cmd(lst, envp, &e);
-	// else
-	// 	exec_builtins(lst, envp);
 	return (lst->ex_code);
 }

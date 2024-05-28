@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:04:37 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/27 18:09:43 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/28 18:11:13 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ char **to_free(char **s)
 	while(s && s[++i])
 	{
 		free(s[i]);
+		s[i] = NULL;
 	}
 	free(s);
 	return (NULL);
@@ -84,7 +85,7 @@ char **ft_2dstrjoin(char **s1, char **s2)
 {
 	int f_len;
 	char **res;
-	
+
 	if (!s1 && !s2)
 		return(NULL);
 	else if (!s1)

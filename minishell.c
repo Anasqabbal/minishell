@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 14:14:22 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/05/27 18:12:06 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:30:53 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,29 @@ void	ft_printf_prs(t_prs *c)
 {
 	if (c->cmd)
 		ft_printf("   cmd == %s  \n", c->cmd);
-	if (c->arg)
-	{
-		ft_printf("|    ___args___   |\n");
-		ft_printf("   args == ");
-		ft_2dprint(c->arg);
-	}
 	if (c->opts)
 	{
 		ft_printf("|   ___opts___   |\n");
 		ft_printf("   opts == ");
 		ft_2dprint(c->opts);
 	}
-	if (c->in_f)
-		ft_printf("your in_f is not NULL\n");
-	if (c->in)
-		ft_printf("your in is not NULL\n");
+	if (c->arg)
+	{
+		ft_printf("|    ___args___   |\n");
+		ft_printf("   args == ");
+		ft_2dprint(c->arg);
+	}
+	if (c->in && c->in_f)
+	{
+		ft_printf("|    ___in_f___   |\n");
+		int i = 0;
+		while(c->in[i] || c->in_f[i])
+		{
+			ft_printf("    the infile ");
+			ft_printf("%s\n    and its name %s\n", c->in[i], c->in_f[i]);
+			i++;
+		}
+	}
 	if (c->out_f)
 		ft_printf("your out_f is not NULL\n");
 	if (c->out)
@@ -143,7 +150,7 @@ t_prs *set_values(int indice)
 		char *cmd3 = ft_strdup("grep");
 		if (!cmd3)
 			return (printf("fialed cmd3\n"), NULL);
-		ft_printf("your cmd3 = %s\n", cmd3);
+		//ft_printf("your cmd3 = %s\n", cmd3);
 		char **opts3 = NULL;
 		char **args3 = malloc(sizeof(char *) * 2);
 		args3[0] = ft_strdup("simple");
@@ -159,7 +166,7 @@ t_prs *set_values(int indice)
 		char *cmd4 = ft_strdup("grep");
 		if (!cmd4)
 			return (printf("fialed cmd4\n"), NULL);
-		ft_printf("your cmd4 = %s\n", cmd4);
+		//ft_printf("your cmd4 = %s\n", cmd4);
 		char **opts4 = NULL;
 		char **args4 = malloc(sizeof(char *) * 2);
 		args4[0] = ft_strdup("test2");
@@ -176,22 +183,24 @@ t_prs *set_values(int indice)
 int main(int ac, char **av, char **env)
 {
 	char	*input;
-	t_prs	*n;
+	t_prs	*n = NULL;
 	t_list	*envp;
 
 	envp = ft_envdup(env);
 	if (!envp || ac == -1 || !av)
 		return (1);// malloc failed;
+	n = NULL;
 	while (1)
 	{
 		input = readline("minishell$ ");
-		if ((input && !ft_strncmp(input, "exit", ft_strlen(input))) || !input)
-			return (free(input), ft_printf("exit\n"), 0);
+		if (!input)
+			return (free(input), ft_printf("\nexit\n"), 0);
 		if (input && input[0] != '\0')
 		{
-			n = set_values(ft_atoi(input));
+			if (!check_syntax(input, envp, &n))
+				write(2, "syntax error\n", 13);
 			print_prs(n);
-			n->ex_code = start_exec(n, envp);
+			 n->ex_code = start_exec(n, envp);
 			if (input[0] != '\0')
 				add_history(input);
 		}

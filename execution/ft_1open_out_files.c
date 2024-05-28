@@ -6,11 +6,26 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:28 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/27 15:06:51 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:05:53 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	ft_restore_input(void)
+{
+	int fd2;
+	
+	close(0);
+	fd2 = open("/dev/tty", O_RDONLY);
+	if (fd2 < 0) 
+	{
+		printf("ft_1open_out_files.c, ft_restore_input()\n");
+		perror("open");
+		return (1);
+	}	
+	return (0);
+}
 
 int	ft_error_files(int indice, int ret, char *n)
 {

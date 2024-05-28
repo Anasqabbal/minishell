@@ -6,18 +6,16 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:12 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/27 18:18:14 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/28 18:19:26 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int ft_execve1(t_exec *e, int in, int out)
+int ft_execve1(t_exec *e, int in, int out, int *ret)
 {
 	int		pid;
-	// int		fd[2];
 
-	ft_printf("the value of in == %d\n and out == %d\n", in, out);
 	pid  = fork();
 	if (pid < 0)
 		return (perror("fork"), 1);
@@ -38,7 +36,7 @@ int ft_execve1(t_exec *e, int in, int out)
 			return (perror("dup2(1)"), 1);
 		if (in != -1)
 			close(in);
-		wait(NULL);
+		return (waitpid(pid ,ret, 0));
 	}
 	return (0);
 }
@@ -51,7 +49,8 @@ int  the_input(t_prs *lst, t_exec *e)
 	{
 		if (pipe(fd) < 0)
 				return (perror("pipe"), 1); //close all files and free them;
-		write(fd[1], e->here_doc, ft_strlen(e->here_doc));
+		if (e->here_doc)
+			write(fd[1], e->here_doc, ft_strlen(e->here_doc));
 		if (dup2(fd[0], STDIN_FILENO) < 0)
 			return (perror("dup2"), lst->ex_code = 1, 1);// close files descriptores and free its memory
 		close(fd[0]);
@@ -70,17 +69,15 @@ int  the_input(t_prs *lst, t_exec *e)
 int	one_cmd(t_prs *lst, t_list *envp, t_exec *e)
 {
 	int		ret;
-	int		in;
 	int		out;
 
-	in = -1;
+	printf("ONE\n");
 	out = -1;
 	ret = check_access(lst->cmd, e, envp);
 	if (ret)
 		return (lst->ex_code = ret);
 	if (ft_open_files(lst, e))
 		return (lst->ex_code = 1);
-	ft_printf("your path %s\n", e->path);
 	if (e->in)
 	{
 		if (the_input(lst, e))
@@ -91,8 +88,11 @@ int	one_cmd(t_prs *lst, t_list *envp, t_exec *e)
 	e->cmd = prepare_cmd(lst->cmd, lst->opts, lst->arg);
 	e->env = from_lst_to_2d(envp);
 	if (!e->env)
-		return(printf("Error inside ft_exeve \n"), 1);// malloc failed
-	return (lst->ex_code = ft_execve1(e, in, out));
+		return(printf("from_lst_to_2d failed\n"), 1);
+	ft_execve1(e, -1, out, &ret);
+	if (ft_restore_input())
+		return(1);
+	return (lst->ex_code = ret);
 }
 
 int mult_cmds(t_prs *lst, t_list *envp, t_exec *e)
@@ -101,6 +101,7 @@ int mult_cmds(t_prs *lst, t_list *envp, t_exec *e)
 	int		out;
 	int		fd[2];
 
+	printf("MULTS\n");
 	lst->ex_code = 0;
 	while(lst)
 	{
@@ -108,10 +109,14 @@ int mult_cmds(t_prs *lst, t_list *envp, t_exec *e)
 		ret = ft_open_files(lst, e);
 		if (ret)
 			return (ret);
+		if (pipe(fd) < 0)
+			return (perror("pipe"), 1);
 		ret = check_access(lst->cmd, e, envp);
 		if (ret)
 		{
 			lst = lst->next;
+			close(fd[0]);
+			close(fd[1]);
 			continue;
 		}
 		if (e->in)
@@ -119,9 +124,7 @@ int mult_cmds(t_prs *lst, t_list *envp, t_exec *e)
 			if (the_input(lst, e))
 				return (lst->ex_code);
 		}
-		if (pipe(fd) < 0)
-			return (perror("pipe"), 1);
-		else if (!e->in && ft_prssize(lst) == 1)
+		else if ((!e->in && ft_prssize(lst) == 1) || check_access(lst->cmd, e, envp))
 		{
 			if (dup2(fd[0], STDIN_FILENO) < 0)
 				return(perror("dup2"), 1);
@@ -139,24 +142,22 @@ int mult_cmds(t_prs *lst, t_list *envp, t_exec *e)
 		if (!e->env)
 			return(printf("Error inside ft_exeve \n"), 1);// malloc failed
 		ft_printf("the size of your lst == %d\n",ft_prssize(lst));
-		if (ft_prssize(lst) != 1)
+		if (ft_prssize(lst) != 1 && printf("MID\n"))
 		{
-			if (ft_execve1(e, fd[0], out))
-				return (1);
+			ret = ft_execve1(e, fd[0], out, &ret);
 			if (ft_is_pipe(out))// you need to check the return of the pipe if it failed or not, (another var hhhhhh);
 				close(out);
 		}
 		else
 		{
+			printf("LAST\n");
 			close(fd[1]);
-			if (ft_execve1(e, -1, out))
-				return (1);
-			if (ft_is_pipe(0) && printf("it is a pipe ??\n"))// you need to check the return of the pipe if it failed or not, (another var hhhhhh);
-				close(0);
-			if (open("/dev/stdin", O_RDONLY) < 0)
-				return (perror("open"), 1);
+			ft_execve1(e, -1, out, &ret);
 		}
+		ft_clear_exec(e);
 		lst = lst->next;
+		if (ft_restore_input())
+			return (1);
 	}
 	return (ret);
 }
