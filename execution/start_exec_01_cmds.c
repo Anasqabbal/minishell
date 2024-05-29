@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:12 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/28 18:19:26 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/29 17:18:07 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int ft_execve1(t_exec *e, int in, int out, int *ret)
 			return (perror("dup2(1)"), 1);
 		if (in != -1)
 			close(in);
-		return (waitpid(pid ,ret, 0));
+		return (waitpid(pid ,ret, 0), WEXITSTATUS(*ret));
 	}
 	return (0);
 }
@@ -89,10 +89,10 @@ int	one_cmd(t_prs *lst, t_list *envp, t_exec *e)
 	e->env = from_lst_to_2d(envp);
 	if (!e->env)
 		return(printf("from_lst_to_2d failed\n"), 1);
-	ft_execve1(e, -1, out, &ret);
+	ret = ft_execve1(e, -1, out, &ret);
 	if (ft_restore_input())
 		return(1);
-	return (lst->ex_code = ret);
+	return (ret);
 }
 
 int mult_cmds(t_prs *lst, t_list *envp, t_exec *e)
@@ -100,11 +100,18 @@ int mult_cmds(t_prs *lst, t_list *envp, t_exec *e)
 	int		ret;
 	int		out;
 	int		fd[2];
+	int		fd2[2];
+	int		indice;
+	int		first_size;
 
-	printf("MULTS\n");
+	first_size = ft_prssize(lst);
+	indice = 0;
 	lst->ex_code = 0;
+	ret = 99;
 	while(lst)
 	{
+		// printf("ther return of your commad %d\n", ret);
+		//ft_printf("the size of your lst == %d\n",ft_prssize(lst));
 		out = -1;
 		ret = ft_open_files(lst, e);
 		if (ret)
@@ -114,9 +121,12 @@ int mult_cmds(t_prs *lst, t_list *envp, t_exec *e)
 		ret = check_access(lst->cmd, e, envp);
 		if (ret)
 		{
+			indice = 1;
 			lst = lst->next;
 			close(fd[0]);
 			close(fd[1]);
+			//ft_clear_exec(e);
+			ft_restore_input();
 			continue;
 		}
 		if (e->in)
@@ -124,11 +134,23 @@ int mult_cmds(t_prs *lst, t_list *envp, t_exec *e)
 			if (the_input(lst, e))
 				return (lst->ex_code);
 		}
-		else if ((!e->in && ft_prssize(lst) == 1) || check_access(lst->cmd, e, envp))
+		else if ((!e->in && ft_prssize(lst) == 1 && indice))
 		{
 			if (dup2(fd[0], STDIN_FILENO) < 0)
 				return(perror("dup2"), 1);
-			close(fd[0]);
+				close(fd[0]);
+		}
+		else if (!e->in && indice && ft_prssize(lst) != 1)
+		{
+			if (!ft_is_pipe(0))
+			{
+				if(pipe(fd2) < 0)
+					return (perror("pipe"), 1);
+				if (dup2(fd2[0], STDIN_FILENO) < 0)
+					return(perror("dup2"), 1);
+				close(fd2[0]);
+				close(fd2[1]);
+			}
 		}
 		if (e->out)
 		{
@@ -141,24 +163,28 @@ int mult_cmds(t_prs *lst, t_list *envp, t_exec *e)
 		e->env = from_lst_to_2d(envp);
 		if (!e->env)
 			return(printf("Error inside ft_exeve \n"), 1);// malloc failed
-		ft_printf("the size of your lst == %d\n",ft_prssize(lst));
-		if (ft_prssize(lst) != 1 && printf("MID\n"))
+		if (ft_prssize(lst) != 1)
 		{
+			printf("MID\n");
 			ret = ft_execve1(e, fd[0], out, &ret);
-			if (ft_is_pipe(out))// you need to check the return of the pipe if it failed or not, (another var hhhhhh);
+			if (ft_is_pipe(out))// the return value if ft_is_pipe
 				close(out);
 		}
 		else
 		{
 			printf("LAST\n");
 			close(fd[1]);
-			ft_execve1(e, -1, out, &ret);
+			ret = ft_execve1(e, -1, out, &ret);
 		}
+		// if (ft_is_pipe(1))
+		// 	printf("your STDOUT is pipe\n");
 		ft_clear_exec(e);
 		lst = lst->next;
-		if (ft_restore_input())
-			return (1);
+		indice = 0;
 	}
+	printf("ther return of your commad %d\n", ret);
+	if (ft_restore_input())
+		return (1);
 	return (ret);
 }
 

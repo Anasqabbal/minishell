@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/05/28 18:16:18 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/29 09:25:08 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <readline/readline.h>
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <sys/wait.h>
 
 
 typedef struct s_prs{
