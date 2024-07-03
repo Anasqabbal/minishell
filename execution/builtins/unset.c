@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 15:54:11 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/14 11:48:09 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/06/30 11:17:51 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,33 +59,37 @@ t_list	*ft_envdup_exept(t_list *envp, char *str)
 	return (head);	
 }
 
-t_list	*unset1(char *str, t_list *env)
+t_list	*unset1(char *str, t_list *envp, char **path)
 {
 	char	*tmp;
 	int		pos;
 	t_list 	*head;
+	t_list	*env;
 
+	env = envp;
 	tmp = ft_strjoin(str, "=");
 	if (!tmp)
 		return (NULL);
+	if (*path && !ft_strncmp(tmp, "PATH=", 5))
+		return (*path = NULL ,ft_envdup_exept(env, NULL));
 	pos = ft_lstget_pos(tmp, env);
 	if (pos == -1)
 		return(free(tmp), ft_envdup_exept(env, NULL));
 	head = ft_envdup_exept(env, tmp);
 	if (!head)
-		return (free(str), NULL);
+		return (free(str), free(tmp), NULL);
 	free(tmp);
 	return (head);
 }
 
-int	unset(char **str, t_list **env)
+int	ft_unset(char **str, t_list **env, char **path)
 {
 	int		i;
 	t_list *new;
 	t_list *tmp;
 	int		ret;
 
-	i = 1;
+	i = 0;
 	if (!str || !str[i])
 		return (0);
 	else
@@ -95,7 +99,7 @@ int	unset(char **str, t_list **env)
 			ret = valid_par("unset", str[i]);
 			if (ret)
 				return (ret);// invalid variable
-			new = unset1(str[i], *env);
+			new = unset1(str[i], *env, path);
 			if (!new)
 				return (1); // malloc failed
 			tmp = *env;

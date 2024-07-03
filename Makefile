@@ -6,23 +6,35 @@
 #    By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 16:28:17 by zgtaib            #+#    #+#              #
-#    Updated: 2024/05/28 10:19:58 by anqabbal         ###   ########.fr        #
+#    Updated: 2024/06/30 14:19:03 by anqabbal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+F = -fsanitize=address -g
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 INCLUDES = minishell.h ./libft/libft.h
 LIBFT = libft/libft.a
-F = -fsanitize=address -g
 
 BUILTINS = execution/builtins/check_variable.c execution/builtins/env.c\
-			execution/builtins/export.c execution/builtins/sort_with_ascii.c execution/builtins/unset.c execution/builtins/exit.c
-EXECUTION = execution/env_utils.c execution/ft_additional_lst.c  execution/prepare_path.c execution/prepare_cmd.c $(BUILTINS) ft_errors.c execution/additional_ft.c\
-execution/start_exec_00.c execution/additional_ft2.c execution/ft_1open_in_files.c execution/ft_1open_out_files.c execution/start_exec_01_cmds.c
+			execution/builtins/export.c execution/builtins/sort_with_ascii.c\
+			execution/builtins/unset.c execution/builtins/exit.c\
+			execution/builtins/echo.c execution/builtins/cd.c
+EXECUTION = execution/env_utils.c execution/ft_additional_lst.c  execution/prepare_path.c execution/prepare_cmd.c $(BUILTINS) execution/additional_ft.c\
+execution/start_exec_00.c execution/additional_ft2.c execution/ft_1open_in_files.c execution/ft_1open_out_files.c execution/start_exec_01_cmds.c\
+execution/exec_functions.c  execution/start_exec_02_blts.c execution/ft_errors.c
 
-PARSING = parsing/parsing.c
+PARSING = parsing/ft_syntax.c\
+	parsing/ft_env.c\
+	parsing/ft_syntax_helper.c\
+	parsing/ft_check_qts.c\
+	parsing/ft_utils.c\
+	parsing/ft_expantion.c\
+	parsing/ft_split_cmd_h.c\
+	parsing/ft_split_cmd.c\
+	parsing/ft_utils_1.c\
+	parsing/ft_parsing.c\
 
 SRC = minishell.c $(EXECUTION) $(PARSING)
 
@@ -34,7 +46,7 @@ lib :
 	$(MAKE) -C ./libft
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) -lreadline -o $@ $(OBJ) $(LIBFT) $(F)
+	$(CC) $(CFLAGS) -lreadline -o $@ $(OBJ) $(LIBFT)
 
 %.o : %.c $(INCLUDES)
 	$(CC) $(CFLAGS) -c $< -o $@

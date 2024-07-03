@@ -6,11 +6,40 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 14:14:22 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/05/28 16:30:53 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/02 11:16:40 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void ft_clear_exec(t_exec **e)
+{
+	while(*e)
+	{
+		// (*e)->in = to_free_f((*e)->in, (*e)->in_l);
+		// (*e)->out = to_free_f((*e)->out, (*e)->out_l);
+		(*e)->cmd = to_free((*e)->cmd);
+		free((*e)->path);
+		(*e)->path = NULL;
+		(*e)->env = to_free((*e)->env);
+		// (*e)->in_l = 0;
+		// (*e)->out_l = 0;
+		// free((*e)->here_doc);
+		// (*e)->size = 0;
+		*e = (*e)->n;
+	}
+}
+void print_lst(t_list *e)
+{
+	if (e)
+	{
+		while(e)
+		{
+			printf("lst>>>%s\n", e->content);
+			e = e->next;
+		}
+	}
+}
 
 void	clear_prs(t_prs *c)
 {
@@ -25,14 +54,8 @@ void	clear_prs(t_prs *c)
 			c->arg = to_free(c->arg);
 		if (c->opts)
 			c->opts = to_free(c->opts);
-		if (c->in_f)
-			c->in_f = to_free(c->in_f);
-		if (c->in)
-			c->in =  to_free(c->in);
-		if (c->out_f)
-			c->out_f = to_free(c->out_f);
-		if (c->out)
-			c->out = to_free(c->out);
+		if (c->red)
+			c->red = to_free(c->red);
 		c = c->next;
 	}
 }
@@ -53,21 +76,25 @@ void	ft_printf_prs(t_prs *c)
 		ft_printf("   args == ");
 		ft_2dprint(c->arg);
 	}
-	if (c->in && c->in_f)
+	if (c->red)
 	{
-		ft_printf("|    ___in_f___   |\n");
+		ft_printf("|    ___red___   |\n");
 		int i = 0;
-		while(c->in[i] || c->in_f[i])
+		while(c->red[i])
 		{
-			ft_printf("    the infile ");
-			ft_printf("%s\n    and its name %s\n", c->in[i], c->in_f[i]);
-			i++;
+			if (!ft_strncmp(c->red[i], "<", 1))
+			{
+				ft_printf("    the infile ");
+				ft_printf("%s\n    and its name %s\n", c->red[i], c->red[i + 1]);
+			}
+			else if (!ft_strncmp(c->red[i], ">", 1))
+				{
+				ft_printf("    the outfile ");
+				ft_printf("  %s\n    and its name %s\n", c->red[i], c->red[i + 1]);
+			}
+			i += 2;
 		}
 	}
-	if (c->out_f)
-		ft_printf("your out_f is not NULL\n");
-	if (c->out)
-		ft_printf("your out is not NULL\n");
 }
 void	print_prs(t_prs *p)
 {
@@ -92,11 +119,7 @@ t_prs *new_prs(char *cmd, char **opts, char **args)
 	new->cmd = cmd;
 	new->arg = args;
 	new->opts = opts;
-	new->in = NULL;
-	new->in_f = NULL;
-	new->out = NULL;
-	new->out_f = NULL;
-	new->next = NULL;
+	new->red = NULL;
 	new->ex_code = 0;
 	return (new);
 }
@@ -179,15 +202,21 @@ t_prs *set_values(int indice)
 	return (head);
 }
 
+void f(void){system("leaks minishell");}
 
 int main(int ac, char **av, char **env)
 {
+	t_all	a;
+	(void) av;
+	(void) ac;
 	char	*input;
-	t_prs	*n = NULL;
-	t_list	*envp;
+	char 	*path;
+	int		ret;
+	t_prs	*n ;
 
-	envp = ft_envdup(env);
-	if (!envp || ac == -1 || !av)
+	// envp = NULL;
+	(a).envp = ft_envdup(env, &a);
+	if (!a.envp || ac == -1 || !av)
 		return (1);// malloc failed;
 	n = NULL;
 	while (1)
@@ -197,15 +226,18 @@ int main(int ac, char **av, char **env)
 			return (free(input), ft_printf("\nexit\n"), 0);
 		if (input && input[0] != '\0')
 		{
-			if (!check_syntax(input, envp, &n))
-				write(2, "syntax error\n", 13);
-			print_prs(n);
-			 n->ex_code = start_exec(n, envp);
-			if (input[0] != '\0')
-				add_history(input);
+			if (check_syntax(input, a.envp, &n, &ret))
+			{
+				ret = start_exec(n, &a.envp , ret, &path);
+				// ret = start_exec(n, &envp, ret, &path);
+				if (input[0] != '\0')
+					add_history(input);
+			}
 		}
-		printf("your exit code == %d\n", n->ex_code);
 		clear_prs(n);
 		free(input);
 	}
 }
+/*
+		fix the waiting for simple commad like "echo hello | wc -l";
+*/

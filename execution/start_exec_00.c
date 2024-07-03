@@ -6,53 +6,61 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/29 09:54:37 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/06/30 11:25:27 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include "errno.h"
 
+/*4 functions*/
+
+int		ft_execve1(t_exec *e, int in, int out, int *ret)
+{
+	int		pid;
+	(void) ret;
+
+	pid = fork();
+	if (pid < 0)
+		return (perror("fork"), 1);
+	if (pid == 0)
+	{
+		if (in != -1)
+			close(in);
+		if (out != -1 && dup2(out, STDOUT_FILENO) < 0)
+			return (perror("dup2(0)"), 1);
+		if (out != -1)
+			close(out);
+		if (execve(e->path, e->cmd, e->env) < 0)
+			return (perror("execve(1)"), 1);
+	}
+	else if (pid)
+	{
+		if (in != -1 && dup2(in, STDIN_FILENO) < 0)
+			return (perror("dup2(1)"), 1);
+		if (in != -1)
+			close(in);
+			// waitpid(pid, ret, 0);
+			// WEXITSTATUS(*ret);
+		return (*ret);
+	}
+	return (0);
+}
+
 int ft_is_pipe(int fd) 
 {
     struct stat st;
 
-    if (fstat(fd, &st) == -1) {
+    if (fstat(fd, &st) == -1)
+	{
         perror("fstat");
-        return -1;  // An error occurred
+        return -1;
     }
-
-    if (S_ISFIFO(st.st_mode)) {
-        return 1;  // It's a pipe
-    } else {
-        return 0;  // It's not a pipe
-    }
+    if (S_ISFIFO(st.st_mode))
+        return (1);
+	else
+        return (0);
 }
-
-// static int exec_builtins(t_prs *lst, t_list *envp)
-// {
-// 	if (!ft_strncmp("export", lst->cmd, ft_strlen(lst->cmd)))
-// 		return(ft_export(lst->arg, envp));
-// 	else if (!ft_strncmp("env", lst->cmd, ft_strlen(lst->cmd)))
-// 		return(ft_env(envp));
-// 	else if (!ft_strncmp("cd", lst->cmd, ft_strlen(lst->cmd)))
-// 		return(printf("do cd\n"), 0);
-// 	else if (!ft_strncmp("unset", lst->cmd, ft_strlen(lst->cmd)))
-// 		return(printf("do unset\n"), 0);
-// 	else if (!ft_strncmp("exit", lst->cmd, ft_strlen(lst->cmd)))
-// 		return(ft_exit(envp), 0);
-// 	else if (!ft_strncmp("echo", lst->cmd, ft_strlen(lst->cmd)))
-// 		return(printf("do echo\n"), 0);
-// 	return (0);
-// }
-
-
-	/* check if you have one command or multiple commands 
-		if one
-			work with the it as thed last command;
-		else
-			enter to will and work with all with pipe;
-	*/
 
 int	ft_prssize(t_prs *lst)
 {
@@ -71,26 +79,28 @@ int	ft_prssize(t_prs *lst)
 	return (i);
 }
 
-
-
-int		start_exec(t_prs *lst, t_list *envp)
+int		start_exec(t_prs *lst, t_list **envp, int rett, char **path)
 {
-	t_exec e;
+	t_exec *e;
 	int		ret;
-	int		i;
-	(void) ret;
-	(void) envp;
-	(void) e;
+	int		size;
 
-	i = 1;
-	e.size = ft_prssize(lst);
-	if (e.size != 1)
+	ret = 0;
+	e = NULL;
+	set_here_doc(lst, &e, -1);
+	e->ex = rett;
+	size = ft_prssize(lst);
+	ret = 0;
+	if (size != 1)
 	{
-		ret = mult_cmds(lst, envp, &e);
+		ret = mult_cmds(lst, envp, e, path);
 		if (ret)
 			return (ret);
 	}
 	else
-		ret = one_cmd(lst, envp, &e);
+		ret = one_cmd(lst, envp, e, path);
+	if (ft_restore_input())
+		return(1);
+	ft_clear_exec(&e);
 	return (ret);
 }

@@ -6,11 +6,13 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 09:44:32 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/10 14:37:46 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/06/27 10:36:32 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+/*2 functions*/
 
 int	ft_lstget_pos(char *str, t_list *lst)
 {

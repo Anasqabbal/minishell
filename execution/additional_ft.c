@@ -6,18 +6,18 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:04:37 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/28 18:11:13 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/06/29 18:09:10 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char **to_free(char **s)
+char	**to_free(char **s)
 {
-	int i;
+	int	i;
 
 	i = -1;
-	while(s && s[++i])
+	while (s && s[++i])
 	{
 		free(s[i]);
 		s[i] = NULL;
@@ -30,14 +30,17 @@ int	calcul_args(char **args)
 {
 	int	i;
 
-	i = -1;
+	i = 0;
 	if (!args)
 		return (0);
-	while(args[++i]);
+	if (!args[i])
+		return (0);
+	while (args && args[i])
+		i++;
 	return (i);
 }
 
-char **ft_2dstrdup(char **s)
+char	**ft_2dstrdup(char **s)
 {
 	int		len;
 	int		len2;
@@ -51,7 +54,7 @@ char **ft_2dstrdup(char **s)
 	if (!res)
 		return (NULL);
 	i = 0;
-	while(s[i])
+	while (s[i])
 	{
 		len2 = ft_strlen(s[i]);
 		res[i] = ft_calloc(sizeof(char), (len2 + 1));
@@ -64,9 +67,9 @@ char **ft_2dstrdup(char **s)
 	return (res);
 }
 
-char **ft_2dstrcpy(char **dst, char **src, int f_len)
+char	**ft_2dstrcpy(char **dst, char **src, int f_len)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	if (!src || !dst)
@@ -81,60 +84,23 @@ char **ft_2dstrcpy(char **dst, char **src, int f_len)
 	return (dst);
 }
 
-char **ft_2dstrjoin(char **s1, char **s2)
+char	**ft_2dstrjoin(char **s1, char **s2)
 {
-	int f_len;
-	char **res;
+	int		f_len;
+	char	**res;
 
 	if (!s1 && !s2)
-		return(NULL);
+		return (NULL);
 	else if (!s1)
-		return(ft_2dstrdup(s2));
+		return (ft_2dstrdup(s2));
 	else if (!s2)
 		return (ft_2dstrdup(s1));
 	f_len = calcul_args(s1) + calcul_args(s2) + 1;
 	res = ft_calloc(sizeof(char *), (f_len + 1));
 	if (!res)
 		return (NULL);
-	ft_2dstrcpy(res, s1,  calcul_args(s1));
-	ft_2dstrcpy(res + calcul_args(s1), s2,  calcul_args(s2));
+	ft_2dstrcpy(res, s1, calcul_args(s1));
+	ft_2dstrcpy(res + calcul_args(s1), s2, calcul_args(s2));
 	return (res);
 }
 
-// void f(void){system("leaks a.out");}
-
-// int main(int ac, char **av)
-// {
-// 	atexit(f);
-// 	if (ac == 1)
-// 		return(printf("enter valid arg\n"), 1);
-// 	else
-// 	{
-// 		char **res;
-// 		char **res1;
-// 		char **f_res;
-
-// 		res = malloc(sizeof(char *) * (3 + 1));
-// 		if (!res)
-// 			return (printf("malloc failed\n"));
-		
-// 		res1 = malloc(sizeof(char *) * (3 + 1));
-// 		if (!res1)
-// 			return (printf("malloc failed\n"));
-// 		ft_2dstrcpy(res, av, 3);
-// 		ft_2dstrcpy(res1, av + 3, 3);
-
-// 		f_res = ft_2dstrjoin(res, res1);
-// 		if (!f_res)
-// 			return (printf("NULL\n"), 1);
-		
-// 		int i = 0;
-// 		while(f_res[i])
-// 		{
-// 			printf("%s\n", f_res[i]);
-// 			i++;
-// 		}
-// 		to_free(f_res);
-// 		to_free(res);
-// 		to_free(res1);
-// 	}

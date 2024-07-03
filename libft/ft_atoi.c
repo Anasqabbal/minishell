@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 11:45:44 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/04/21 15:45:47 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/05/30 10:50:02 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,3 @@ int	ft_atoi(const char *str)
 	}
 	return (return_check(str, res, sign, i));
 }
-

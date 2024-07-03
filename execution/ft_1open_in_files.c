@@ -6,12 +6,13 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/29 09:20:27 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/06/04 11:34:31 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/*5 functions*/
 int		**to_free_f(int **file, int len)
 {
 	while(file && --len >= 0)
@@ -20,25 +21,12 @@ int		**to_free_f(int **file, int len)
 			close (file[len][0]);
 		free(file[len]);
 		file[len] = NULL;
-	}
 	free(file);
+	}
 	return(NULL);
 }
 
-void ft_clear_exec(t_exec *e)
-{
-	e->in = to_free_f(e->in, e->in_l);
-	e->out = to_free_f(e->out, e->out_l);
-	e->cmd = to_free(e->cmd);
-	free(e->path);
-	e->path = NULL;
-	e->env = to_free(e->env);
-	e->in_l = 0;
-	e->out_l = 0;
-	free(e->here_doc);
-	e->size = 0;
-}
-static int check_file_access(char *file)
+static int check_file_access(char *file, int indice)
 {
 	if (file)
 	{
@@ -47,25 +35,40 @@ static int check_file_access(char *file)
 			if (!access(file, R_OK))
 				return (0);
 			else
-				return (13);//permision denied
+			{
+				if (indice == 1)
+					return (1);
+				else
+					return (ft_error_files(13, 1, file));
+			}
 		}
 		else
-			return (ft_error_files(2, 1, file)); //file not found;
+		{
+			if (indice == 1)
+				return (1);
+			else
+				return (ft_error_files(2, 1, file)); //file not found;
+		}
 	}
 	return(0);
 }
 
-char	*read_from_here_doc(char *lim, t_exec *e)
+
+static char	*read_from_here_doc(char **red, int i, char *lim, char *res)
 {
-	char	*res;
 	char	*here_doc;
 	char	*tmp;
 
-	(void)e;
-	here_doc = NULL;
-	while(1)
+	while(red && red[++i])
 	{
-		write(0, ">", 1);
+		if (!ft_strncmp(red[i], "<<", 2))
+			break ;
+	}
+	here_doc = NULL;
+	while(1 && red && red[i])
+	{
+		lim = red[i + 1];
+		write(1, "> ", 2);
 		res = get_next_line(0);
 		if (!res || !ft_strncmp(res, lim, ft_strlen(res) - 1))
 			break ;
@@ -76,108 +79,188 @@ char	*read_from_here_doc(char *lim, t_exec *e)
 		free(res);
 		free(tmp);
 	}
-	free(res);
-	return (here_doc);
+	return (free(res), here_doc);
 }
 
-int open_in_files(t_prs *p, t_exec *e)
+int open_in_files(t_exec *e, int len, char *file, char *token)
 {
 	int	i;
 
 	i = -1;
-	e->in_l = calcul_args(p->in);
-	if (!e->in_l)
-		return (e->in = NULL, 0);
-	e->in = malloc(sizeof(int *) * e->in_l);
+	e->in = malloc(sizeof(int *) * (len + 1));
 	if (!e->in)
 		return (1);// malloc failed;
-	while(++i < e->in_l)
+	while(++i < len)
 	{
 		e->in[i] = malloc(sizeof(int));
 		if (!e->in[i])
 			return(to_free_f(e->in, i), 1); //free malloc before return; malloc failed;
-		if (!ft_strncmp(p->in[i], "<<", 2))
-		{
+		if (!ft_strncmp(token, "<<", 2))
 			e->in[i][0] = -1;
-			e->here_doc = read_from_here_doc(p->in_f[i], e);
-		}
-		else if (!ft_strncmp(p->in[i], "<", 1))
-			e->in[i][0] = creat_open_file(p->in_f[i], 0, 0);
-		if ((ft_strncmp(p->in[i], "<<", 2) && e->in[i][0] == -1))
+		else if (!ft_strncmp(token, "<", 1))
+			e->in[i][0] = creat_open_file(file, 0, 0);
+		if ((ft_strncmp(token, "<<", 2) && e->in[i][0] == -1))
 			return (to_free_f(e->in, i), 1);
+	}
+	e->in_f = 1;
+	return (e->in_l = 1, 0);
+}
+
+int		to_free_m(char **f, int len)
+{
+	int i;
+
+	i = 0;
+	if (f)
+	{
+		i = 0;
+		while(i < len)
+		{
+			free(f[i]);
+			i++;
+		}
+	}
+	free(f);
+	return (1);
+}
+
+int 	calcul_strs(char *s1, char **s2)
+{
+	int i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while(s2 && s2[i])
+	{
+		if (!ft_strncmp(s2[i], s1, 2))
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+int	file_here_docs(char **f, t_exec *e)
+{
+	int i;
+	int len;
+	int	j;
+
+	i = -1;
+	j = 0;
+	len = calcul_strs("<<", f);
+	if (len == 0)
+		return (0);
+	e->here_doc = malloc(sizeof(char *) * (len + 1));
+	if (!e->here_doc)
+		return (1); // malloc failed;
+	while(f && f[++i])
+	{
+		if (!ft_strncmp(f[i], "<<", 2))
+			e->here_doc[j++] = read_from_here_doc(f, -1, NULL, NULL);
+	}
+	e->here_doc[len] = NULL;
+	return (0);
+}
+
+int		set_and_open(t_exec *e, char **f, int i)
+{
+	while(f && f[++i])
+	{
+		if (!ft_strncmp(f[i], "<<", 2))
+		{
+			e->in_f = 2;
+			continue ;
+		}
+		if(!ft_strncmp(f[i], "<", ft_strlen(f[i])))
+		{
+			if (check_file_access(f[i + 1], 1))
+				return (1);
+			if (e->in)
+				to_free_f(e->in, 1);
+			if (open_in_files(e, 1, f[i + 1], f[i]))
+				return (1);
+		}
+		else if(!ft_strncmp(f[i], ">", ft_strlen(f[i]))
+			|| !ft_strncmp(f[i], ">>", ft_strlen(f[i])))
+		{
+			if (e->out)
+				to_free_f(e->out, 1);
+			if (open_out_files(e, 1, f[i + 1], f[i]))
+				return (1);
+		}
+	}
+	return (0);	
+}
+
+int 	set_here_doc(t_prs *l, t_exec **e, int i)
+{
+	t_exec	*new;
+	t_prs 	*l2;
+
+	l2 = l;
+	while(l)
+	{
+		new = ft_exec_new();
+		if (!new)
+			return (1) ;// malloc failed //free the old stufs
+		file_here_docs(l->red, new);
+		ft_execadd_back(e, new);
+		l = l->next;
+	}
+	while(l2)
+	{
+		while(l2->red && l2->red[++i])
+		{
+			if (ft_strncmp(l2->red[i], "<<", 2)
+				&& !ft_strncmp(l2->red[i], "<", ft_strlen(l2->red[i])))
+				check_file_access(l2->red[i + 1], 0);
+		}
+		l2 = l2->next;
 	}
 	return (0);
 }
 
-int	ft_open_files(t_prs *lst, t_exec *e)
-{
-	int		len;
-	int		i;
-	int		ret;
+/*IMPORTANT FILE HANDLE*/
+					/*OPEN THE HERE_DOC*/
+						/* first you need to read from the here_doc first all things */
+					/* you neeed to check all infile  and shows all errors in 
+					this case and after that pass to outfile and open whose before the error */
 
-	e->here_doc = NULL;
-	e->in = NULL;
-	e->out = NULL;
-	len = calcul_args(lst->in);
-	i = -1;
-	while(++i < len)
-	{
-		if (ft_strncmp(lst->in[i], "<<", 2))
-		{
-			ret = check_file_access(lst->in_f[i]);
-			if (ret)
-				return (1);
-		}
-		else if (ft_restore_input())
-			return (1);
-	}
-	ret = open_in_files(lst, e);
-	if (!ret)
-		ret = open_out_files(lst, e);
-	return (lst->ex_code = ret);
-}
-
-// void f(void){system("leaks a.out");}
 
 // int main(int ac, char **av)
 // {
-// 	atexit(f);
-// 	t_prs p;
-// 	t_exec e;
-// 	int i = 0;
+// 	char **files;
+// 	int i = 2;
 // 	int j = 0;
-// 	int k = 0;
+// 	int len2;
+// 	int len;
 
-// 	p.in = malloc(sizeof(char *) * (3 + 1));
-// 	p.in_f = malloc(sizeof(char *) * (3 + 1));
-// 	while(++i < 7)
+// 	files = NULL;
+// 	len = ft_atoi(av[1]);
+// 	files = malloc(sizeof(char *) * (len + 1));
+// 	if (!files)
+// 		return (perror("malloc"), 1);
+// 	files[len] = NULL;
+// 	while (i < ac)
 // 	{
-// 		if (i % 2 != 1)
-// 			p.in_f[k++] = ft_strdup(av[i]);
-// 		else
-// 			p.in[j++] = ft_strdup(av[i]);
+// 		len2 = ft_strlen(av[i]);
+// 		files[j] = malloc(sizeof(char) * (len2 + 1));
+// 		if (!files[j])
+// 			return (to_free_m(files, len), 1);
+// 		ft_memcpy(files[j], av[i], len2);
+// 		files[j][len2] = '\0';
+// 		i++;
+// 		j++;
 // 	}
-// 	p.in_f[3] = NULL;
-// 	p.in[3] = NULL;
+// 	t_exec e;
 
-// 	printf("your tokens :\n");
-// 	i = -1;
-// 	while(++i < 3)
-// 		printf("%s\n", p.in[i]);
-
-// 	printf("your files :\n");
-// 	i = -1;
-// 	while(++i < 3)
-// 		printf("%s\n", p.in_f[i]);
-
-// 	open_in_files(&p, &e);
-// 	printf("your files descriptor is :\n");
-// 	i = -1;
-// 	while(++i < 3)
-// 		printf("%d\n", e.in[i][0]);
-// 	printf("your here_doc is %s\n", e.here_doc);
-// 	to_free_f(e.in, e.in_l);
-// 	to_free(p.in);
-// 	to_free(p.in_f);
-// 	free(e.here_doc);
+// 	set_and_open(&e, files, -1);
+	
+	
+// 	if (files)
+// 	{
+// 		printf("to free\n");
+// 		to_free_m(files, len);
+// 	}
 // }
