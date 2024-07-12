@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:12:54 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/06/29 08:41:42 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/03 12:55:10 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ static char *ft_syntax(char *stl)
 }
 int check_syntax(char *input, t_list *env, t_prs **node, int *ret)
 {
+	
 	char *raw;
 	char *cmd;
 	int opp;
@@ -96,7 +97,7 @@ int check_syntax(char *input, t_list *env, t_prs **node, int *ret)
 		return (free(cmd), 0, *ret = 258, e_w_e_m());	
 	if(!check_qts(cmd, &opp, &qts))
 		return (free(cmd), 0, *ret = 258, e_w_e_m());
-	(*node) = pipe_split(cmd, opp, qts, env);
+	*node = pipe_split(cmd, opp, qts, env);
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 15:54:11 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/06/30 11:17:51 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/05 16:28:21 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	static valid_par(char *from, char *str)
 		return (ft_error2(from, str ,1));
 	return (0);
 }
-t_list	*ft_envdup_exept(t_list *envp, char *str)
+int		ft_envdup_exept(t_list *envp, char *str, t_list **new)
 {
 	int i;
 	t_list *res;
@@ -51,42 +51,42 @@ t_list	*ft_envdup_exept(t_list *envp, char *str)
 		{
 			res = ft_lstnew(ft_strdup(envp->content));
 			if (!res)
-				return (ft_lstclear(&head, free), NULL);
+				return (ft_lstclear(&head, free), 1);
 			ft_lstadd_back(&head, res);
 		}
 		envp = envp->next;
 	}
-	return (head);	
+	*new = head;
+	return (0);	
 }
 
-t_list	*unset1(char *str, t_list *envp, char **path)
+int	unset1(char *str, t_list **envp, char **path, t_list **new)
 {
 	char	*tmp;
 	int		pos;
 	t_list 	*head;
 	t_list	*env;
 
-	env = envp;
+	env = *envp;
 	tmp = ft_strjoin(str, "=");
 	if (!tmp)
-		return (NULL);
+		return (1);
 	if (*path && !ft_strncmp(tmp, "PATH=", 5))
-		return (*path = NULL ,ft_envdup_exept(env, NULL));
+		return (*path = NULL ,*new = env, 1);
 	pos = ft_lstget_pos(tmp, env);
 	if (pos == -1)
-		return(free(tmp), ft_envdup_exept(env, NULL));
-	head = ft_envdup_exept(env, tmp);
-	if (!head)
-		return (free(str), free(tmp), NULL);
+		return(free(tmp), *new = env, 1);
+	if (ft_envdup_exept(env, tmp, &head))
+		return (free(tmp), 1);
 	free(tmp);
-	return (head);
+	return (*new = head, 0);
 }
 
 int	ft_unset(char **str, t_list **env, char **path)
 {
 	int		i;
 	t_list *new;
-	t_list *tmp;
+	// t_list *tmp;
 	int		ret;
 
 	i = 0;
@@ -99,12 +99,10 @@ int	ft_unset(char **str, t_list **env, char **path)
 			ret = valid_par("unset", str[i]);
 			if (ret)
 				return (ret);// invalid variable
-			new = unset1(str[i], *env, path);
-			if (!new)
+			if (unset1(str[i], env, path, &new))
 				return (1); // malloc failed
-			tmp = *env;
+			ft_lstclear(env, free);
 			*env = new;
-			ft_lstclear(&tmp, free);
 			i++;
 		}
 	}

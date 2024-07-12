@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 16:19:08 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/14 11:36:45 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:38:38 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,17 @@ int	valid_name(char *from, char *str, t_par *par)
 		var_error(from, str, 0);
 		return (0);
 	}
-	while (str[++i])
+	while (str[++i] && i < par->len - 1)
 	{
 		if ((i == 0 && !allowed_char(str[i], par->first))
 		|| (i != 0 && !allowed_char(str[i], par->mid)))
 			return (0);
 	}
 	if ((i == par->len - 1 && !allowed_char(str[i], par->last)))
+		return (0);
+	if (str[i] == '+' && ft_strchr(str, '='))
+		return (1);
+	else if (str[i] == '+' && !ft_strchr(str, '='))
 		return (0);
 	return (1);
 }

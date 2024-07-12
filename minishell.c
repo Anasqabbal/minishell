@@ -6,28 +6,33 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 14:14:22 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/02 11:16:40 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/12 17:00:37 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_clear_exec(t_exec **e)
+void	ft_clear_exec(t_exec **e)
 {
-	while(*e)
+	t_exec	*tmp;
+
+	while (*e)
 	{
-		// (*e)->in = to_free_f((*e)->in, (*e)->in_l);
-		// (*e)->out = to_free_f((*e)->out, (*e)->out_l);
+		(*e)->in = to_free_f((*e)->in, (*e)->in_l);
+		(*e)->out = to_free_f((*e)->out, (*e)->out_l);
 		(*e)->cmd = to_free((*e)->cmd);
 		free((*e)->path);
 		(*e)->path = NULL;
 		(*e)->env = to_free((*e)->env);
-		// (*e)->in_l = 0;
-		// (*e)->out_l = 0;
-		// free((*e)->here_doc);
-		// (*e)->size = 0;
+		(*e)->in_l = 0;
+		(*e)->out_l = 0;
+		(*e)->here_doc = to_free((*e)->here_doc);
+		(*e)->size = 0;
+		tmp = *e;
 		*e = (*e)->n;
+		free(tmp);
 	}
+	*e = NULL;
 }
 void print_lst(t_list *e)
 {
@@ -41,26 +46,30 @@ void print_lst(t_list *e)
 	}
 }
 
-void	clear_prs(t_prs *c)
+void	clear_prs(t_prs **c)
 {
-	while(c)
+	t_prs	*tmp;
+
+	while (*c)
 	{
-		if (c->cmd)
+		if ((*c)->cmd)
 		{
-			free(c->cmd);
-			c->cmd = NULL;
+			free((*c)->cmd);
+			(*c)->cmd = NULL;
 		}
-		if (c->arg)
-			c->arg = to_free(c->arg);
-		if (c->opts)
-			c->opts = to_free(c->opts);
-		if (c->red)
-			c->red = to_free(c->red);
-		c = c->next;
+		if ((*c)->arg)
+			(*c)->arg = to_free((*c)->arg);
+		if ((*c)->opts)
+			(*c)->opts = to_free((*c)->opts);
+		if ((*c)->red)
+			(*c)->red = to_free((*c)->red);
+		tmp = *c;
+		*c = (*c)->next;
+		free(tmp);
 	}
 }
 
-void	ft_printf_prs(t_prs *c)
+void	ft_print_prs(t_prs *c)
 {
 	if (c->cmd)
 		ft_printf("   cmd == %s  \n", c->cmd);
@@ -102,20 +111,20 @@ void	print_prs(t_prs *p)
 	while (p)
 	{
 		printf("|-------%d-------|\n", i);
-		ft_printf_prs(p);
+		ft_print_prs(p);
 		p = p->next;
 		i++;
 	}
 	printf("\n\n\n\n");
 }
 
-t_prs *new_prs(char *cmd, char **opts, char **args)
+t_prs	*new_prs(char *cmd, char **opts, char **args)
 {
-	t_prs *new;
+	t_prs	*new;
 
 	new = malloc(sizeof(t_prs));
 	if (!new)
-		return(NULL);
+		return (NULL);
 	new->cmd = cmd;
 	new->arg = args;
 	new->opts = opts;
@@ -124,120 +133,59 @@ t_prs *new_prs(char *cmd, char **opts, char **args)
 	return (new);
 }
 
-t_prs *set_values(int indice)
+t_prs	*set_values(int indice)
 {
-	char *cmd1;
-	char **opts1;
-	char **args1;
-	t_prs *p, *p1, *p2;
-	t_prs *head;
+	t_prs	*h;
 
-	p = NULL;
-	ft_printf("your indice == %d\n", indice);
-	if (indice <= 4)
-	{
-		cmd1 = ft_strdup("./test.c");
-		opts1 = NULL;
-		// opts1[0] = NULL;
-		// opts1[1] = NULL;
-		args1 = NULL;
-		p = new_prs(cmd1, opts1, args1);
-		if (!p)
-		{
-			ft_printf("return with NULL\n");
-			return (NULL);
-		}
-		// p->in = malloc(sizeof(char *) * 2);
-		// p->in[0] = ft_strdup("<");
-		// p->in[1] = NULL;
-
-		// p->in_f = malloc(sizeof(char *) * 2);
-		// p->in_f[0] = ft_strdup("sdfs");
-		// p->in_f[1] = NULL;
-		indice--;
-	}
-	head = p;
-	if (indice <= 3 && indice)
-	{
-		char *cmd2 = ft_strdup("./infile");
-		char **opts2 = NULL;
-		char **args2 = NULL;
-		// malloc(sizeof(char *) * 2);
-		// args2[0] = ft_strdup("test");
-		// args2[1] = NULL;
-		p->next = new_prs(cmd2, opts2, args2);
-		indice--;
-	}
-	if (indice <= 2 && indice)
-	{	
-		char *cmd3 = ft_strdup("grep");
-		if (!cmd3)
-			return (printf("fialed cmd3\n"), NULL);
-		//ft_printf("your cmd3 = %s\n", cmd3);
-		char **opts3 = NULL;
-		char **args3 = malloc(sizeof(char *) * 2);
-		args3[0] = ft_strdup("simple");
-		args3[1] = NULL;
-		p1 = new_prs(cmd3, opts3, args3);
-		if (!p1)
-			return (printf("your p1 === NULLL"), NULL);
-		p->next->next = p1;
-		indice--;
-	}
-	if (indice == 1 && indice)
-	{
-		char *cmd4 = ft_strdup("grep");
-		if (!cmd4)
-			return (printf("fialed cmd4\n"), NULL);
-		//ft_printf("your cmd4 = %s\n", cmd4);
-		char **opts4 = NULL;
-		char **args4 = malloc(sizeof(char *) * 2);
-		args4[0] = ft_strdup("test2");
-		args4[1] = NULL;
-		p2 = new_prs(cmd4, opts4, args4);
-		if (!p2)
-			return (printf("your p1 === NULLL"), NULL);
-		p->next->next->next = p2;
-	}
-	return (head);
+	(void) indice;
+	h = malloc(sizeof(t_prs));
+	if (!h)
+		return(NULL);
+	h->cmd = ft_strdup("ls");
+	h->arg = NULL;
+	h->opts = NULL;
+	h->red = NULL;
+	h->next = NULL;
+	h->ex_code = 0;
+	return (h);
 }
 
 void f(void){system("leaks minishell");}
 
 int main(int ac, char **av, char **env)
 {
-	t_all	a;
-	(void) av;
-	(void) ac;
 	char	*input;
-	char 	*path;
+	char	*path;
 	int		ret;
 	t_prs	*n ;
+	t_list	*envp;
 
 	// envp = NULL;
-	(a).envp = ft_envdup(env, &a);
-	if (!a.envp || ac == -1 || !av)
+	// atexit(f);
+	envp = ft_envdup(env, &path);
+	if (!envp || ac == -1 || !av)
 		return (1);// malloc failed;
 	n = NULL;
+	ret = 0;
 	while (1)
 	{
 		input = readline("minishell$ ");
 		if (!input)
-			return (free(input), ft_printf("\nexit\n"), 0);
+			break ;
 		if (input && input[0] != '\0')
 		{
-			if (check_syntax(input, a.envp, &n, &ret))
+			if (check_syntax(input, envp, &n, &ret))
 			{
-				ret = start_exec(n, &a.envp , ret, &path);
-				// ret = start_exec(n, &envp, ret, &path);
+				print_prs(n);
+				ret = start_exec(&n, &envp , ret, &path);
 				if (input[0] != '\0')
 					add_history(input);
 			}
+			clear_prs(&n);
+			free(input);
 		}
-		clear_prs(n);
-		free(input);
 	}
+	return (ft_lstclear(&envp, free), clear_prs(&n), ret);
+
+	/* set a new variable in your struct to trakc the len of your here_doc to make the last one as input e->in_h_l */
 }
-/*
-		fix the waiting for simple commad like "echo hello | wc -l";
-*/

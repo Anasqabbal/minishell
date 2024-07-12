@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:47:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/03 11:39:58 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:57:39 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	prepare_exit_cod(t_exec *e)
 	return (exit (atoi_ex(res[0], res)), 0);
 }
 
-unsigned char	ft_exit(t_exec *e, t_list **envp)
+unsigned char	ft_exit(t_exec *e, t_list **envp, t_prs **l)
 {
 	int	ret;
 
@@ -117,8 +117,10 @@ unsigned char	ft_exit(t_exec *e, t_list **envp)
 		ret = prepare_exit_cod(e);
 	else
 	{
+		(void) l;
 		ret = e->ex;
 		ft_clear_exec(&e);
+		// clear_prs(l);
 		ft_lstclear(envp, free);
 		exit(ret);
 	}

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/06/30 13:27:30 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/12 14:45:08 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
+#include "errno.h"
 
 
 typedef struct s_prs{
@@ -42,9 +43,10 @@ typedef	struct s_exec{
 	char	*path;
 	char	**env;
 	char	**here_doc;
+	int		in_h_l;
 	int		size;
 	int		ex;
-	char	*PATH;
+	// char	*PATH;
 	struct	s_exec *n;
 }	t_exec;
 
@@ -71,13 +73,17 @@ typedef struct s_all{
 int		ft_export(char **opts, t_list **envp);
 int		ft_env(t_list *node);
 int		ft_unset(char **str, t_list **env, char **path);
-unsigned char 		ft_exit(t_exec *e, t_list **envp);
-int	ft_echo(t_exec *e, t_list *envp);
-void	ft_pwd(t_list *env, char **str);
-int		ft_cd(char **str , t_list *env, char *path);
+unsigned char 		ft_exit(t_exec *e, t_list **envp, t_prs **l);
+int					ft_echo(t_exec *e, t_list *envp);
+int					ft_pwd(t_list *env, char **str);
+int		ft_cd(char **str , t_list **env, char *path);
+int check_dir_access(char **str);
+int join_and_export(char *str, char *new, t_list **env, char *c);
+int		ft_check_dir(char  *str);
+
 void	*add_to_env(char *str, t_list **envp);
 void	*export1(char *str, t_list **env);
- t_list	*ft_getenv(char *str, t_list *env);
+t_list	*ft_getenv(char *str, t_list *env);
 
 /*check_variavles*/
 void	var_error(char *from, char *str, int indice);
@@ -98,10 +104,11 @@ int		ft_2dprint(char **str); // remove_it;
 int		ft_prssize(t_prs *lst);
 
 	/*env_utils*/
-t_list	*ft_envdup(char **env, t_all *a); /*duplicate your environment variable*/
+t_list	*ft_envdup(char **env, char **path); /*duplicate your environment variable*/
 t_list	*ft_getenv_ours(char *str, t_list *env);
-char	**from_lst_to_2d(t_list *s);
+int		from_lst_to_2d(t_list *s, char ***env);
 char	*nw_vl(t_list *env, int ii);
+t_list	*ft_getenv_ours_special(char *str, t_list *env);
 
 	/*ft_1open_in_files.c "5"*/
 int		**to_free_f(int **file, int len);
@@ -111,6 +118,7 @@ int		set_and_open(t_exec *e, char **f, int i);
 
 	/*ft_1open_out_files.c "3"*/
 int		ft_restore_input(void);
+int		ft_restore_output(int out, int save);
 int		creat_open_file(char *f1, int ind, int VAL);
 int		open_out_files(t_exec *e, int len, char *file, char *token);
 
@@ -126,19 +134,20 @@ char	**prepare_cmd(char *cmd, char **opts, char **args);
 int		check_access(char *cmd, t_exec *p, t_list *env, char *path);
 
 	/*start_exec_00.c "4"*/
-int		ft_execve1(t_exec *e, int in, int out, int *ret);
+int		ft_execve1(t_exec *e, int in, int out);
 int		ft_is_pipe(int fd);
-int		start_exec(t_prs *lst, t_list **envp, int rett, char **path);
+int		start_exec(t_prs **lst, t_list **envp, int rett, char **path);
 
 	/*start_exec_01_cmds.c "3" */
 int		the_input(t_prs *lst, t_exec *e);
-int		one_cmd(t_prs *lst, t_list **envp, t_exec *e, char **paht);
+int		one_cmd(t_prs **lst, t_list **envp, t_exec *e, char **paht);
 int		mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path);
 
 	/*start_exec_02_blts "1" */
 int		it_is_builtin(char *cmd);
 int		ft_execve2(t_exec *e, int in, int out, t_list **envp);
-int		execvecmd(t_exec *e, t_list **envp, char **path);
+int		ft_execve3(int in, int out);
+int		execvecmd(t_exec *e, t_list **envp, char **path, t_prs **l);
 
 	/*exec_functions*/
 t_exec	*ft_exec_new(void);
@@ -176,7 +185,7 @@ char	*dollar_sign(char *str);
 
 
 void	ft_clear_exec(t_exec **e);
-void	clear_prs(t_prs *c);
+void	clear_prs(t_prs **c);
 
 
 /*to remove*/

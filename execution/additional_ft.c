@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:04:37 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/06/29 18:09:10 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/08 08:52:47 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	**ft_2dstrdup(char **s)
 
 	len = calcul_args(s);
 	if (!len)
-		return (printf("in 2DSTRDUP, len"), NULL);
+		return (NULL);
 	res = malloc(sizeof(char *) * (len + 1));
 	if (!res)
 		return (NULL);
@@ -103,4 +103,3 @@ char	**ft_2dstrjoin(char **s1, char **s2)
 	ft_2dstrcpy(res + calcul_args(s1), s2, calcul_args(s2));
 	return (res);
 }
-

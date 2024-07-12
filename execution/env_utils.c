@@ -6,14 +6,14 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 13:30:49 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/06/30 13:33:21 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/10 16:13:14 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 	/*4 functions*/
-char	**from_lst_to_2d(t_list *s)
+int	from_lst_to_2d(t_list *s, char ***env)
 {
 	char	**res;
 	int		len;
@@ -22,40 +22,77 @@ char	**from_lst_to_2d(t_list *s)
 	i = -1;
 	len = ft_lstsize(s);
 	if (!len)
-		return (NULL);
+		return (0);
 	res = malloc(sizeof(char *) * (len + 1));
 	if (!res)
-		return (NULL);
+		return (1);
 	while (++i < len && s)
 	{
 		res[i] = ft_strdup(s->content);
 		if (!res[i])
-			return (to_free(res), NULL);
+			return (to_free(res), 1);
 		s = s->next;
 	}
 	res[len] = NULL;
-	return (res);
+	*env = res;
+	return (0);
 }
+
+// t_list	*ft_getenv_ours(char *str, t_list *env)
+// {
+// 	char	*tmp;
+// 	int		f_l;
+
+// 	tmp = ft_strchr(str, '=');
+// 	if (!tmp)
+// 		return (NULL);
+// 	f_l = ft_strlen(str) - ft_strlen(tmp) + 1;
+// 	while (env)
+// 	{
+// 		if (!ft_strncmp(env->content, str, f_l))
+// 			return (env);
+// 		env = env->next;
+// 	}
+// 	return (NULL);
+// }
 
 t_list	*ft_getenv_ours(char *str, t_list *env)
 {
 	char	*tmp;
-	int		f_l;
+	int		j;
 
-	tmp = ft_strchr(str, '=');
-	if (!tmp)
-		return (NULL);
-	f_l = ft_strlen(str) - ft_strlen(tmp) + 1;
 	while (env)
 	{
-		if (!ft_strncmp(env->content, str, f_l))
+		j = -1;
+		tmp = env->content;
+		while(tmp[++j] != '=' && tmp[j])
+			;
+		if (!ft_strncmp(env->content, str, j))
 			return (env);
 		env = env->next;
 	}
 	return (NULL);
 }
 
-static	t_list	*env_is_null(t_list **env, t_all *a)
+t_list	*ft_getenv_ours_special(char *str, t_list *env)
+{
+	char	*tmp;
+	int		j;
+
+	while (env)
+	{
+		j = -1;
+		tmp = env->content;
+		while(tmp[++j] != '=' && tmp[j])
+			;
+		if (!ft_strncmp(env->content, str, ft_strlen(str)))
+			return (env);
+		env = env->next;
+	}
+	return (NULL);
+}
+
+static	t_list	*env_is_null(t_list **env, char **path)
 {
 	char	buffer[PATH_MAX];
 	char	*res;
@@ -68,7 +105,7 @@ static	t_list	*env_is_null(t_list **env, t_all *a)
 	ft_env(NULL);
 	ft_lstadd_back(env, ft_lstnew(res));
 	ft_lstadd_back(env, ft_lstnew(ft_strdup("SHLVL=1")));
-	(a)->path = "PATH=/usr/local/bin:/usr/bin:/bin";
+	*path = "PATH=/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:.";
 	return (*env);
 }
 
@@ -83,9 +120,10 @@ char	*nw_vl(t_list *env, int ii)
 	res = 0;
 	s = NULL;
 	env = ft_getenv_ours("SHLVL=", env);
-	if (env)
-		s = env->content;
-	while (s[++i])
+	if (!env)
+		return (ft_strdup("SHLVL=1"));
+	s = env->content;
+	while (s && s[++i])
 	{
 		if (ft_isdigit(s[i]))
 			break ;
@@ -101,7 +139,7 @@ char	*nw_vl(t_list *env, int ii)
 	return (free(s), re);
 }
 
-t_list	*ft_envdup(char **env, t_all *a)
+t_list	*ft_envdup(char **env, char **path)
 {
 	int		i;
 	t_list	*res;
@@ -110,12 +148,12 @@ t_list	*ft_envdup(char **env, t_all *a)
 
 	i = -1;
 	head = NULL;
-	(a)->path = NULL;
+	*path = NULL;
 	if (!env[0])
-		return (env_is_null(&head, a), print_lst(head), head);
+		return (env_is_null(&head, path), head);
 	while (env[++i])
 	{
-		if (ft_strnstr(env[i], "_=", 2))
+		if (ft_strnstr(env[i], "_=", 2) || ft_strnstr(env[i], "OLDPWD=", 8))
 			continue ;
 		res = ft_lstnew(ft_strdup(env[i]));
 		if (!res)
@@ -126,5 +164,6 @@ t_list	*ft_envdup(char **env, t_all *a)
 	if (!ress)
 		return (ft_lstclear(&head, free), NULL);
 	export1(ress, &head);
+	export1("OLDPWD", &head);
 	return (free(ress), head);
 }

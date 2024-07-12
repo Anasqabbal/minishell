@@ -6,19 +6,18 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/06/30 11:25:27 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/08 15:52:05 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include "errno.h"
+
 
 /*4 functions*/
 
-int		ft_execve1(t_exec *e, int in, int out, int *ret)
+int		ft_execve1(t_exec *e, int in, int out)
 {
 	int		pid;
-	(void) ret;
 
 	pid = fork();
 	if (pid < 0)
@@ -40,10 +39,20 @@ int		ft_execve1(t_exec *e, int in, int out, int *ret)
 			return (perror("dup2(1)"), 1);
 		if (in != -1)
 			close(in);
-			// waitpid(pid, ret, 0);
-			// WEXITSTATUS(*ret);
-		return (*ret);
 	}
+	return (0);
+}
+
+int		ft_execve3(int in, int out)
+{
+	if (out != -1 && dup2(out, STDOUT_FILENO) < 0)
+		return (perror("dup2(0)"), 1);
+	if (out != -1)
+		close(out);
+	if (in != -1 && dup2(in, STDIN_FILENO) < 0)
+		return (perror("dup2(1)"), 1);
+	if (in != -1)
+		close (in);
 	return (0);
 }
 
@@ -79,21 +88,22 @@ int	ft_prssize(t_prs *lst)
 	return (i);
 }
 
-int		start_exec(t_prs *lst, t_list **envp, int rett, char **path)
+int	start_exec(t_prs **lst, t_list **envp, int rett, char **path)
 {
-	t_exec *e;
+	t_exec	*e;
 	int		ret;
 	int		size;
 
 	ret = 0;
 	e = NULL;
-	set_here_doc(lst, &e, -1);
+	if (set_here_doc(*lst, &e, -1))
+		return (ft_clear_exec(&e), exit(1), 1);
+	size = ft_prssize(*lst);
 	e->ex = rett;
-	size = ft_prssize(lst);
 	ret = 0;
 	if (size != 1)
 	{
-		ret = mult_cmds(lst, envp, e, path);
+		ret = mult_cmds(*lst, envp, e, path);
 		if (ret)
 			return (ret);
 	}
@@ -102,5 +112,6 @@ int		start_exec(t_prs *lst, t_list **envp, int rett, char **path)
 	if (ft_restore_input())
 		return(1);
 	ft_clear_exec(&e);
+	clear_prs(lst);
 	return (ret);
 }

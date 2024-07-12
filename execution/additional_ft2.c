@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:40:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/06/04 10:15:25 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/07 17:14:07 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_2dprint(char **str)
 	int	i;
 
 	if (!str)
-		return (printf("your 2D is NULL\n"), 1);
+		return (ft_printf("your 2D is NULL\n"), 1);
 	else
 	{
 		i = 0;
@@ -25,12 +25,13 @@ int	ft_2dprint(char **str)
 		{
 			while (str[i])
 			{
-				printf("%s\n", str[i]);
+				ft_printf("str[%d] = %s\n",i, str[i]);
 				i++;
 			}
+			ft_printf("str[%d] = %s\n",i, str[i]);
 		}
 		else
-			printf("your str[%d] == NULL\n", i);
+			ft_printf("your str[%d] == NULL\n", i);
 	}
 	return (0);
 }

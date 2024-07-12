@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:28 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/06/03 16:10:42 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/07 15:53:06 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,17 @@ int	ft_restore_input(void)
 		perror("open");
 		return (-1);
 	}	
+	return (0);
+}
+
+int	ft_restore_output(int out, int save)
+{
+	if (out != -1)
+	{
+		close(1);
+		if (dup2(save, 1) < 1)
+			return (perror("dup2 failed"), 1);
+	}
 	return (0);
 }
 
@@ -58,12 +69,12 @@ int open_out_files(t_exec *e, int len, char *file, char *token)
 		e->out[i] = malloc(sizeof(int));
 		if (!e->out[i])
 			return(to_free_f(e->out, i), 1); //free malloc before return; malloc failed;
-		if (!ft_strncmp(token, ">>", 2))
+		if (!ft_strncmp(token, ">>", 2) && ft_strlen(token) == 2)
 			e->out[i][0] = creat_open_file(file, 1, O_APPEND);
-		else if (!ft_strncmp(token, ">", 1))
+		else if (!ft_strncmp(token, ">", 1)  && ft_strlen(token) == 1)
 			e->out[i][0] = creat_open_file(file, 1, O_TRUNC);
 		if (e->out[i][0] < 0)
-			return (to_free_f(e->out, i), 1);
+			return (e->out = to_free_f(e->out, i), 1);
 	}
 	return (e->out_l = 1, 0);
 }

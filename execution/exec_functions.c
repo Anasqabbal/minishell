@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:55:21 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/06/27 15:14:00 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/12 17:16:16 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ t_exec *ft_exec_new(void)
 	new->n = NULL;
 	new->ex = 0;
 	new->i = 0;
+	new->in_h_l = 0;
     return (new);
 }
 
@@ -55,26 +56,41 @@ void    ft_execadd_back(t_exec **h, t_exec *nw)
 
 void	ft_print_exec(t_exec *e)
 {
-	(void)e;
-	if (!e->in)
-		printf("your e->in is NULL\n");
-	printf("the len of in_l == %d\n", e->in_l);
-	if(!e->out)
-		printf("your e->out is NULL\n");
-	printf("the len of out_l == %d\n", e->out_l);
-	if(e->cmd)
-		ft_2dprint(e->cmd);
-	if (e->path)
-		printf("your path == %s", e->path);
-	if (e->env)
-		ft_2dprint(e->env);
-	if(e->here_doc)
-		ft_2dprint(e->here_doc);
-	else
-		printf("your here_doc is NULL\n");
-	printf("the size == %d\n", e->size);
+	while(e)
+	{
+		printf("-----redirections----\n");
+		if (!e->in)
+			printf("your e->in is NULL\n");
+		printf("the len of in_l == %d\n", e->in_l);
+		if(!e->out)
+			printf("your e->out is NULL\n");
+		printf("the len of out_l == %d\n", e->out_l);
+		printf("-----your command-------\n");
+		if(e->cmd)
+		{
+			if (e->cmd[0])
+				ft_2dprint(e->cmd);
+			else
+				printf("you command is NULL");
+		}
+		else
+			printf("your command is NULL\n");
+		printf("---------------your PATH--------\n");
+		if (e->path)
+			printf("your path == %s", e->path);
+		printf("---------------your environment -----------------\n");
+		if (e->env)
+			ft_2dprint(e->env);
+		printf("-----------------your here_doc---------------\n");
+		if(e->here_doc && printf("---here_doc---\n"))
+			ft_2dprint(e->here_doc);
+		else
+			printf("your here_doc is NULL\n");
+		printf("the size == %d\n", e->size);
 
-	printf("\n\n\n");
+		printf("\n\n\n");
+		e = e->n;
+	}
 	
 }
 
