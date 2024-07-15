@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 14:14:22 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/12 17:00:37 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/13 09:23:14 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,6 @@ int main(int ac, char **av, char **env)
 		{
 			if (check_syntax(input, envp, &n, &ret))
 			{
-				print_prs(n);
 				ret = start_exec(&n, &envp , ret, &path);
 				if (input[0] != '\0')
 					add_history(input);

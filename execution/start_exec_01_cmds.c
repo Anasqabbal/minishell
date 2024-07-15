@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:12 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/12 16:10:55 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/14 11:31:26 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 /*4 functions*/
 
-int t_l(char **h)
-{
-	int	i;
+// int t_l(char **h)
+// {
+// 	int	i;
 
-	i = 0;
-	if (!h)
-		return (0);
-	if (!h[i])
-		return (0);
-	while(h && h[i])
-		i++;
-	return (i - 1);
-}
+// 	i = 0;
+// 	if (!h)
+// 		return (0);
+// 	if (!h[i])
+// 		return (0);
+// 	while(h && h[i])
+// 		i++;
+// 	return (i - 1);
+// }
 
 int	the_input(t_prs *lst, t_exec *e)
 {
@@ -145,6 +145,21 @@ int	one_cmd(t_prs **lst, t_list **envp, t_exec *e, char **path)
 	return (ret);
 }
 
+int	ft_return (int *ret, int *i)
+{
+	if (!(*ret))
+	{
+			while(waitpid(-1, ret, 0) != -1)
+				;
+		return (WEXITSTATUS(*ret));
+	}
+	else
+	{
+		while(waitpid(-1, i, 0) != -1)
+			;
+		return (*ret);
+	}
+}
 
 int	mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path)
 {
@@ -160,7 +175,7 @@ int	mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path)
 		e->i = i;
 		e->ex = WEXITSTATUS(ret);
 		out = -1;
-		ret = set_and_open(e, lst->red, -1); //open files ---------------------------------------------------------------------*/
+		ret = set_and_open(e, lst->red, -1); //open files -----------------------------------------------------------------------------*/
 		if (ret)
 		{
 			lst = lst->next;
@@ -181,13 +196,13 @@ int	mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path)
 				return (1);
 			continue ;
 		}
-		ret = set_stdin(lst, e, indice, fd); ///set stdin and stdout -----------------------------------------------------------*/
+		ret = set_stdin(lst, e, indice, fd); ///set stdin and stdout -----------------------------------------------------------       */
 		if (ret)
 			return (ret);
 		set_stdout_and_cmd(lst, e, &out, fd);
 		if (from_lst_to_2d(*envp, &(e->env)))
 			return(printf("Error inside ft_exeve \n"), 1);
-		if (ft_prssize(lst) != 1) //execution ---------------------------------------------------------------------*/
+		if (ft_prssize(lst) != 1) //execution ---------------------------------------------------------------------                    */
 		{
 			if (it_is_builtin(lst->cmd))
 				ret = ft_execve1(e, fd[0], out);
@@ -211,7 +226,6 @@ int	mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path)
 		indice = 0;
 		i++;
 	}
- 	while(waitpid(-1, &ret, 0) != -1);
-	return (WEXITSTATUS(ret));
+	return(ft_return(&ret, &i));
 }
 /* this function with 63 in real*/
