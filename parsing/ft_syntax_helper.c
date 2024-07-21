@@ -6,48 +6,16 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:18:39 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/06/29 08:31:53 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:46:00 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int 	ft_syntax_h1(char *str, int *x)
-{
-	if(!ft_strncmp(&str[*x], ">|", ft_strlen(">|")))
-		{
-			while (str[*x + 2] == ' ' || (str[*x + 2] >= 9 && str[*x + 2] <= 13))
-				(*x)++;
-			if(str[*x + 2] == '>'|| str[*x + 2] == '<')
-				return (0);
-		}
-	return (1);
-}
-
 int 	ft_syntax_h2(char *str, int x)
 {
-	if (!ft_strncmp(&str[x], "<< |", ft_strlen("<< |")) ||
-        !ft_strncmp(&str[x], "<<|", ft_strlen("<<|")) ||
-        !ft_strncmp(&str[x], ">>>", ft_strlen(">>>")) ||
-        !ft_strncmp(&str[x], "<<<", ft_strlen("<<<")) ||
-        !ft_strncmp(&str[x], "< |", ft_strlen("< |")) ||
-        !ft_strncmp(&str[x], "<|", ft_strlen("<|")) ||
-        !ft_strncmp(&str[x], "> |", ft_strlen("> |")) ||
-        !ft_strncmp(&str[x], ">> |", ft_strlen(">> |")) ||
-        !ft_strncmp(&str[x], ">>|", ft_strlen(">>|")) ||
-        !ft_strncmp(&str[x], "| |", ft_strlen("| |")) ||
-        !ft_strncmp(&str[x], "||", ft_strlen("||")) ||
-        !ft_strncmp(&str[x], ">> >>", ft_strlen(">> >>")) ||
-        !ft_strncmp(&str[x], "<< <<", ft_strlen("<< <<")) ||
-        !ft_strncmp(&str[x], "< <", ft_strlen("< <")) ||
-        !ft_strncmp(&str[x], "> >", ft_strlen("> >")) ||
-        !ft_strncmp(&str[x], "< >", ft_strlen("< >")) ||
-        !ft_strncmp(&str[x], "<>", ft_strlen("<>")) ||
-        !ft_strncmp(&str[x], "> <", ft_strlen("> <")) ||
-        !ft_strncmp(&str[x], "><", ft_strlen("><")) ||
-		!ft_strncmp(&str[x], "& &", ft_strlen("& &")) ||
-		!ft_strncmp(&str[x], "&&", ft_strlen("&&")))
-			return (0);
+	if(!error_msg1(str, x))
+		return(0);
 	return (1);
 }
 
@@ -68,7 +36,7 @@ static void	replacewihte_s_h(char *str, int *len, int *is_space)
 	}
 }
 
-char *replacewihte_s(char *str)
+void replacewihte_s(char *str)
 {
 	int x;
 	int len;
@@ -90,5 +58,4 @@ char *replacewihte_s(char *str)
 		x++;
 	}
 	str[len] = '\0';
-	return (str);
 }

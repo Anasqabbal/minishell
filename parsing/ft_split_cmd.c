@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:33:49 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/06/29 08:31:50 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:45:56 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,24 +70,26 @@ static char	*put_spaces(char *cmd, int count)
     return (free(cmd), str);
 }
 
-t_prs *pipe_split(char *cmd, int opp, int qts, t_list *env)
+t_prs *pipe_split(char *cmd, int opp, t_list *env, int *ret)
 {	
 	char **splt_pip;
 	char *final;
 	t_prs *head = NULL;
 	t_prs *curr = NULL;
 
-	final = put_spaces(cmd, opp + qts);
-	turn_back(final, 1);	
+	final = put_spaces(cmd, opp);	
+	turn_back(final, 1);
 	final = dollar_sign(final);
-	final = cmd_expa(final, env);
+	final = cmd_expa(final, env, ret);
 	turn_back(final, 1);
 	splt_pip = ft_split(final, '|');
 	if (!splt_pip)
 	{
 		free(final);
 		exit(1);
-	}
+	} 
+	// free(final);
+	// exit(0);
 	pipe_split_h(splt_pip, &curr, &head, final);
 	free(final);
 	free_it(splt_pip, arg_count(splt_pip));

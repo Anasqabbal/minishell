@@ -6,27 +6,26 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:13:46 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/03 13:07:49 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/21 13:08:37 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static int skip_n(char **cmd, int *ind)
+static int	skip_n(char **cmd, int *ind)
 {
-	int i;
-	int j;
-	int s_i;
+	int	i;
+	int	j;
+	int	s_i;
 
 	i = 1;
-	j = 1;
-	s_i = i;
-	while(cmd[i])
+	while (cmd[i])
 	{
 		s_i = i;
-		if (cmd[i][0] == '-')
+		j = 1;
+		if (cmd[i][0] == '-' && cmd[i][j])
 		{
-			while(cmd[i][j] == 'n')
+			while (cmd[i][j] && cmd[i][j] == 'n')
 				j++;
 			if (cmd[i][j] != '\0')
 				return (s_i);
@@ -41,19 +40,18 @@ static int skip_n(char **cmd, int *ind)
 
 int	ft_echo(t_exec *e, t_list *envp)
 {
-	(void) envp;
 	int		x;
-	int 	ind;
+	int		ind;
 
+	(void) envp;
 	ind = 0;
+	if (it_is_with_options(e->cmd + 1, 0, "echo"))
+		return (1);
 	x = skip_n(e->cmd, &ind);
 	while (e->cmd[x] != NULL)
 	{
-		if (!ft_strncmp(e->cmd[x], "?", ft_strlen(e->cmd[x])))
-			ft_printf("%d", e->ex);
-		else
-			ft_printf("%s", e->cmd[x]);
-		if(e->cmd[x + 1] != NULL)
+		ft_printf("%s", e->cmd[x]);
+		if (e->cmd[x + 1] != NULL)
 			ft_printf(" ");
 		x++;
 	}

@@ -6,18 +6,30 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:12:54 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/03 12:55:10 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:45:15 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int		e_w_e_m(void)
-{
-	write(2, "syntax error\n", 13);
-	return (0);
-}
 
+static int ft_syntax_msg(char *str, int len)
+{
+	char last;
+    char third_last;
+    char fourth_last;
+
+	last = str[len - 1];
+	if (len > 3)
+		third_last = str[len - 3];
+	if (len > 4)
+		fourth_last = str[len - 4];
+	 if ((last == '<' || last == '>') &&
+        (fourth_last != '<' && fourth_last != '>') &&
+        (third_last != '<' && third_last != '>')) 
+        return 0;
+	return (1);
+}
 static char	*ft_syntax_h3(char *str, int x)
 {
 	char hold;
@@ -37,8 +49,6 @@ static char	*ft_syntax_h3(char *str, int x)
 				str[x++] *= -1;
             }
 		}
-		if (!ft_syntax_h1(str, &x))
-			return (NULL);
 		if (!ft_syntax_h2(str, x))
 			return (NULL);
 		x++;
@@ -46,42 +56,51 @@ static char	*ft_syntax_h3(char *str, int x)
 	return (str);
 }
 
-static char	*ft_syntax_h(char *stl, int *x)
+static int ft_syntax_h(char *str, int *x)
 {
 	int len;
-	char *str;
 
-	len = ft_strlen(stl);
-	while ((stl[len - 1] == ' ' || (stl[len - 1] >= 9 && stl[len - 1] <= 13)) && len > 1)
-		len--;	
-  	if (stl[len - 1] == '|' || stl[len - 1] == '<' || stl[len - 1] == '>') 
-        return(0);
-	str = replacewihte_s(stl);	
+	turn_back(str, 1);
+	replacewihte_s(str);
+	turn_back(str, 1);
+	len = ft_strlen(str);
 	while (str[(*x)] == ' ' || (str[(*x)] > 9 && str[(*x)] < 13))
 		(*x)++;
-	if (str[*x] == '|')
+	if (str[*x] == '|' && str[*x  + 1] != '|')
+	{
+		error_msg(str[*x]);
         return(0);
-	return(str);
+	}
+	while ((str[len - 1] == ' ' || (str[len - 1] >= 9 && str[len - 1] <= 13)) && len > 1)
+		len--;	
+  	if (!ft_syntax_msg(str, len))
+	{	
+		error_msg(str[len - 1]);
+        return(0);
+	}
+	return(len);
 }
-static char *ft_syntax(char *stl)
+static int ft_syntax(char *stl)
 {
 	int x;
-	char *str;
+	int len;
 
 	x = 0;
-	str = ft_syntax_h(stl, &x);
-	if (!str)
-		return (NULL);
-	str = ft_syntax_h3(str, x);
-	if(!str)
-		return(NULL);
-	return (str);
+	len = ft_syntax_h(stl, &x);
+	if (!len)
+		return (0);
+	if(!ft_syntax_h3(stl, x))
+		return(0);
+	if((stl[len - 1] == '|' && stl[len - 2] != '|'))
+	{
+		error_msg(stl[len - 1]);
+        return(0);
+	}
+	return (1);
 }
 int check_syntax(char *input, t_list *env, t_prs **node, int *ret)
 {
-	
 	char *raw;
-	char *cmd;
 	int opp;
 	int qts;
 
@@ -92,12 +111,11 @@ int check_syntax(char *input, t_list *env, t_prs **node, int *ret)
 	raw = ft_strdup(input);
 	if(!raw)
 		return (0);	
-	cmd = ft_syntax(raw);
-	if (!cmd)		
-		return (free(cmd), 0, *ret = 258, e_w_e_m());	
-	if(!check_qts(cmd, &opp, &qts))
-		return (free(cmd), 0, *ret = 258, e_w_e_m());
-	*node = pipe_split(cmd, opp, qts, env);
+	if (!ft_syntax(raw))		
+		return (free(raw), *ret = 258, 0);
+	if(!check_qts(raw, &opp, &qts))
+		return (free(raw), *ret = 258, 0);	
+	(*node) = pipe_split(raw, opp, env, ret);
 	return (1);
 }
 

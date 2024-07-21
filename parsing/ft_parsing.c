@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:02:33 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/06/29 08:31:42 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:45:45 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 
 static void delete_row(char ***array, int row_d)
 {
-	int rows = arg_count(*(array));
-	int x =row_d;
+	int rows;
+	int x;
 	
+	rows = arg_count(*(array));
+	x = row_d;
 	free((*array)[row_d]);
-
 	while (x < rows - 1)
 	{
 		(*array)[x] = (*array)[x + 1];
@@ -88,10 +89,11 @@ void parse_red(char **array, t_prs *node)
 			add_to_struct(&node->red, array[x]);
 			delete_row(&array, x);
 			add_to_struct(&node->red, array[x]);
-			delete_row(&array, x);
+			delete_row(&array, x); 
 			x = 0;
 		}
-		x++;
+		else 
+			x++;
 	}
 	parse_cmd(array, node);
 }

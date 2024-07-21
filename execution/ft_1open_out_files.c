@@ -6,26 +6,24 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:28 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/07 15:53:06 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/19 10:25:50 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/*3 functions*/
-
 int	ft_restore_input(void)
 {
-	int fd2;
-	
+	int	fd2;
+
 	close(0);
 	fd2 = open("/dev/tty", O_RDONLY);
-	if (fd2 < 0) 
+	if (fd2 < 0)
 	{
 		printf("ft_1open_out_files.c, ft_restore_input()\n");
 		perror("open");
 		return (-1);
-	}	
+	}
 	return (0);
 }
 
@@ -55,7 +53,8 @@ int	creat_open_file(char *f1, int ind, int VAL)
 	}
 	return (fd);
 }
-int open_out_files(t_exec *e, int len, char *file, char *token)
+
+int	open_out_files(t_exec *e, int len, char *file, char *token)
 {
 	int	i;
 
@@ -63,15 +62,15 @@ int open_out_files(t_exec *e, int len, char *file, char *token)
 	e->out = 0;
 	e->out = malloc(sizeof(int *) * len);
 	if (!e->out)
-		return (1);// malloc failed;
-	while(++i < len)
+		return (1);
+	while (++i < len)
 	{
 		e->out[i] = malloc(sizeof(int));
 		if (!e->out[i])
-			return(to_free_f(e->out, i), 1); //free malloc before return; malloc failed;
+			return (to_free_f(e->out, i), 1);
 		if (!ft_strncmp(token, ">>", 2) && ft_strlen(token) == 2)
 			e->out[i][0] = creat_open_file(file, 1, O_APPEND);
-		else if (!ft_strncmp(token, ">", 1)  && ft_strlen(token) == 1)
+		else if (!ft_strncmp(token, ">", 1) && ft_strlen(token) == 1)
 			e->out[i][0] = creat_open_file(file, 1, O_TRUNC);
 		if (e->out[i][0] < 0)
 			return (e->out = to_free_f(e->out, i), 1);

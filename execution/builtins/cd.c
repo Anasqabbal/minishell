@@ -6,54 +6,11 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 17:06:21 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/12 16:53:37 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/21 13:09:48 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-
-int	to_home(t_list *env)
-{
-	t_list *home;
-	char	*hm;
-
-	if (!ft_getenv_ours("HOME=", env))
-		return(ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
-	home = ft_getenv_ours("HOME=", env);
-	hm = home->content + ft_strlen("HOME=");
-	if (hm[0] == '\0')
-		return (0);
-	hm = ft_strdup(home->content);
-	if (!hm)
-		return (1);
-	if (chdir(hm + ft_strlen("HOME=")))
-		return (free(hm), 1);
-	return (free(hm), 0);
-}
-
-
-int	to_old_one(t_list **env, char *lastdir)
-{
-	t_list	*old;
-	char	*s;
-
-	old = ft_getenv_ours_special("OLDPWD=", *env);
-	if (!old)
-		return (ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2), 1);
-	s = old->content;
-	if (*(s + 7) == '\0')
-		ft_printf("\n");
-	else
-	{
-		if (chdir(old->content + 7))
-			return( ft_putstr_fd("cd :", 2), ft_putstr_fd(old->content + 7, 2)
-			, ft_putstr_fd(": ", 2), perror(NULL), 1);
-		ft_printf("%s\n", old->content + 7);
-	}
-	join_and_export("PWD=", old->content + 7, env, "PWD=");
-	join_and_export("OLDPWD=", lastdir, env, "PWD=");
-	return (0);
-}
 
 int	cd_relative_path(char *str, t_list **env)
 {
@@ -65,12 +22,12 @@ int	cd_relative_path(char *str, t_list **env)
 		return (to_old_one(env, getcwd(l, sizeof(l))));
 	if (!getcwd(l, sizeof(l)))
 		return (perror("cd :"), 1);
-	if(chdir(str))
+	if (chdir(str))
 		return (perror("chdir"), 1);
 	len = ft_strlen(l);
 	old_pwd = ft_calloc(sizeof(char), len);
 	if (!old_pwd)
-		return(1);
+		return (1);
 	ft_memcpy(old_pwd, l, len);
 	if (join_and_export("OLDPWD=", old_pwd, env, "PWD="))
 		return (free(old_pwd), 1);
@@ -78,14 +35,14 @@ int	cd_relative_path(char *str, t_list **env)
 	return (0);
 }
 
-int cd_absolute_path(char *str, t_list **env)
+int	cd_absolute_path(char *str, t_list **env)
 {
 	char	old[PATH_MAX];
-	
+
 	if (!getcwd(old, sizeof(old)))
 		return (perror("cd"), 1);
-	if(chdir(str))
-		return(perror("chdir"), 1);
+	if (chdir(str))
+		return (perror("chdir"), 1);
 	if (join_and_export("OLDPWD=", old, env, "PWD="))
 		return (1);
 	return (0);
@@ -93,7 +50,7 @@ int cd_absolute_path(char *str, t_list **env)
 
 char	*move_back1(char *str, char *res, int *i, t_list **env)
 {
-	static char sp[PATH_MAX];
+	static char	sp[PATH_MAX];
 	char		*new_path;
 	char		*tmp;
 	char		o[PATH_MAX];
@@ -124,14 +81,14 @@ int	move_back(char	*str, t_list	**env)
 {
 	char		o[PATH_MAX];
 	char		n[PATH_MAX];
-	char	static *sp;
+	char static	*sp;
 	static int	i;
 	char		*res;
 
 	res = getcwd(o, sizeof(o));
 	if (!ft_check_dir(str))
 		chdir(str);
-	if(!getcwd(n, sizeof(n)))
+	if (!getcwd(n, sizeof(n)))
 	{
 		sp = move_back1(str, res, &i, env);
 		if (sp)
@@ -147,13 +104,15 @@ int	move_back(char	*str, t_list	**env)
 	return (i = 0, 0);
 }
 
-int ft_cd(char **str , t_list **env, char *path)
+int	ft_cd(char **str, t_list **env, char *path)
 {
 	char	s[PATH_MAX];
 
 	(void)path;
+	if (it_is_with_options(str, 0, "cd"))
+		return (1);
 	if (!str[0] || !ft_strncmp(str[0], "~", ft_strlen(str[0]))
-			|| (!ft_strncmp(str[0], "--", 2) && ft_strlen(str[0]) == 2))
+		|| (!ft_strncmp(str[0], "--", 2) && ft_strlen(str[0]) == 2))
 		return (to_home(*env));
 	if (check_dir_access(str))
 		return (1);
@@ -161,11 +120,12 @@ int ft_cd(char **str , t_list **env, char *path)
 		cd_absolute_path(str[0], env);
 	else
 	{
-		if (ft_strnstr("..", str[0], ft_strlen(str[0])) && ft_strlen(str[0]) % 2 == 0)
+		if (ft_strnstr("..", str[0]
+				, ft_strlen(str[0])) && ft_strlen(str[0]) % 2 == 0)
 			return (move_back(str[0], env));
 		cd_relative_path(str[0], env);
 		getcwd(s, sizeof(s));
-		if(join_and_export("PWD=", s, env, "PWD="))
+		if (join_and_export("PWD=", s, env, "PWD="))
 			return (1);
 	}
 	return (0);

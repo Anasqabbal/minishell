@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:09 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/14 09:34:18 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/21 13:22:52 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 /*1 function*/
 
-int		execvecmd(t_exec *e, t_list **envp, char **path, t_prs **l)
+int	execvecmd(t_exec *e, t_list **envp, char **path, t_prs **l)
 {
 	int		ret;
 	char	**var;
 
 	ret = 0;
 	var = e->cmd;
-	// ft_print_exec(e);
 	if (!ft_strncmp("export", e->cmd[0], ft_strlen(e->cmd[0])))
 		ret = ft_export(e->cmd + 1, envp);
 	if (!ft_strncmp("env", e->cmd[0], ft_strlen(e->cmd[0])))
-		ret = ft_env(*envp);
+		ret = ft_env(e->cmd + 1, *envp);
 	if (!ft_strncmp("echo", e->cmd[0], ft_strlen(e->cmd[0])))
 		ret = ft_echo(e, *envp);
-	if (!ft_strncmp("exit", e->cmd[0], ft_strlen(e->cmd[0])) && printf("exit\n"))
+	if (!ft_strncmp("exit", e->cmd[0],
+			ft_strlen(e->cmd[0])) && printf("exit\n"))
 		ret = ft_exit(e, envp, l);
 	if (!ft_strncmp("unset", e->cmd[0], ft_strlen(e->cmd[0])))
 		ret = ft_unset(var + 1, envp, path);
@@ -39,12 +39,10 @@ int		execvecmd(t_exec *e, t_list **envp, char **path, t_prs **l)
 	return (ret);
 }
 
-int		ft_execve2(t_exec *e, int in, int out, t_list **envp)
+int	ft_execve2(t_exec *e, int in, int out, t_list **envp)
 {
 	int		pid;
-	int		ret;
 
-	ret = 0;
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork"), 1);
@@ -64,7 +62,6 @@ int		ft_execve2(t_exec *e, int in, int out, t_list **envp)
 			return (perror("dup2(1)"), 1);
 		if (in != -1)
 			close(in);
-		return (ret);
 	}
 	return (0);
 }
@@ -74,19 +71,19 @@ int	it_is_builtin(char *cmd)
 	if (!cmd)
 		return (1);
 	if (!ft_strncmp("export", cmd, 6) && ft_strlen(cmd) == 6)
-		return(0) ;
+		return (0);
 	else if (!ft_strncmp("env", cmd, 3) && ft_strlen(cmd) == 3)
-		return(0) ;
+		return (0);
 	else if (!ft_strncmp("cd", cmd, 2) && ft_strlen(cmd) == 2)
-		return(0) ;
+		return (0);
 	else if (!ft_strncmp("unset", cmd, 5) && ft_strlen(cmd) == 5)
-		return(0) ;
+		return (0);
 	else if (!ft_strncmp("exit", cmd, 4) && ft_strlen(cmd) == 4)
-		return(0) ;
+		return (0);
 	else if (!ft_strncmp("echo", cmd, 4) && ft_strlen(cmd) == 4)
-		return(0) ;
+		return (0);
 	else if (!ft_strncmp("pwd", cmd, 3) && ft_strlen(cmd) == 3)
-		return(0) ;
+		return (0);
 	else
 		return (1);
 }

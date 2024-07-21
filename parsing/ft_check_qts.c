@@ -6,18 +6,17 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:30:26 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/06/29 08:31:26 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:45:23 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
 static void	check_qts_h1(char *input, int *count, int *x)
 {
-	if(input[*x] == '|' || input[*x] == '>' || input[*x] == '<')
+	if ((input[*x] == '|' || input[*x] == '>' || input[*x] == '<'))
     	{
-        	if ((input[*x] == '>' && input[*x + 1] == '>') || (input[*x] == '<' && input[*x + 1] == '<'))
+        	if (((input[*x] == '>' && input[*x + 1] == '>') || (input[*x] == '<' && input[*x + 1] == '<')))
         	{
         		(*x)++;
         		(*x)++;
@@ -26,7 +25,7 @@ static void	check_qts_h1(char *input, int *count, int *x)
    	 	}
 }
 
-static void	check_qts_h(char *input, int *count, int *qts)
+static char	check_qts_h(char *input, int *count, int *qts)
 {
 	int x;
 	char hold;
@@ -50,15 +49,24 @@ static void	check_qts_h(char *input, int *count, int *qts)
 				x++;
 			}
 		}
-		x++;
+		if (input[x])
+			x++;
 		check_qts_h1(input, count, &x);
 	}
+	return (hold);
 }
 
 int check_qts(char *input, int *count, int *qts)
 {
-	check_qts_h(input, count, qts);
+	char	hold;
+
+	hold = check_qts_h(input, count, qts);
 	if ((*qts) % 2 != 0)
+	{
+		write(2, "minishell: syntax error near unexpected token `", 48);
+		write(2, &hold, 1);
+		write(2, "'\n", 2);
 		return(0);
+	}
 	return (1);
 }

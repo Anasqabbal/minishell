@@ -6,21 +6,11 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:36:31 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/06/29 08:32:07 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:46:11 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void free_it_h(char **splt_pip, char *com, int ndx)
-{
-	if (ndx == 0)
-	{
-		free(com);
-		free_it(splt_pip, arg_count(splt_pip));
-		exit(1);
-	}
-}
 
 int    ft_check_quotes(char c, int *sign)
 {
@@ -68,19 +58,64 @@ void turn_back(char *str, int ndx)
                 x++;
             }
 		}
+		if (str[x] != '\0')
+			x++;
+	}
+}
+void turn_double(char *str, int ndx)
+{
+	int x;
+	char hold;
+
+	x = 0;
+	while (str[x] != '\0')
+	{
+		if (str[x] == '"')
+        {
+          	hold = str[x];
+            x++;
+			if (str[x] == '\0')
+				break ;
+           	while (str[x] != '\0')
+            {
+				if (str[x] == hold)
+                    break ;
+				if (ndx == 1)
+					str[x] *= -1;
+                x++;
+            }
+		}
 		x++;
 	}
 }
-
-void	free_it(char **arg, int count)
+int turn_dollar(char *str, int y)
 {
-	int	i;
+	int x;
+	char hold;
+	int ho;
 
-	i = 0;
-	while (i < count)
+	x = 0;
+	while (str[x] != '\0')
 	{
-		free(arg[i]);
-		i++;
+		if (str[x] == '"' || str[x] == '\'')
+        {
+          	hold = str[x];
+			ho = x;
+            x++;
+			if (str[x] == '\0')
+				break ;
+           	while (str[x] != '\0')
+            {
+				if (str[x] == hold)
+				{
+					if (str[y] == '$' && y > ho && y < x)
+						return (1);
+					break;
+				}
+                x++;
+            }
+		}
+		x++;
 	}
-	free(arg);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:12:51 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/06/29 08:33:00 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/20 14:44:23 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,16 @@ int	ft_error_p(char *from, int indice)
 		ft_putstr_fd(": No such file or directory\n", 2);
 	if (indice == 126)
 		ft_putstr_fd(": Permission denied\n", 2);
+	else if (indice / 2 == 126)
+	{
+		ft_putstr_fd(": is a directory\n", 2);
+		return (indice / 2);
+	}
+	else if (indice == 2)
+	{
+		ft_putstr_fd(": filename argument required\n", 2);
+		return (indice);
+	}
 	return (indice);
 }
 

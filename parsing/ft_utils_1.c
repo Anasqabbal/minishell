@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:44:34 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/06/29 08:32:04 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:46:08 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,3 +65,43 @@ t_prs	*init_prs(void)
     return new_node;
 }
 
+void back_turning(char **array)
+{
+	int y;
+
+	y = 0;
+	while (array[y])
+	{
+		turn_back(array[y], 1);
+		y++;
+	}
+}
+
+int	error_msg1h3(char *str, int x)
+{
+	if (!ft_strncmp(&str[x], "&", ft_strlen("&")) || !ft_strncmp(&str[x], "& &", ft_strlen("& &")))
+	{
+		write(2, "minishell: syntax error near unexpected token `&'\n", 51);
+		return (0);
+	}
+	else if(!ft_strncmp(&str[x], "||", ft_strlen("||")))
+	{
+		write(2, "minishell: syntax error near unexpected token `||'\n", 52);
+		return (0);
+	}
+	else if(!ft_strncmp(&str[x], "( (", ft_strlen("( (")) ||
+		!ft_strncmp(&str[x], "((", ft_strlen("((")) ||
+		!ft_strncmp(&str[x], "(", ft_strlen("(")))
+	{
+		write(2, "minishell: syntax error near unexpected token `'\n", 51);
+		return (0);
+	}
+	else if(!ft_strncmp(&str[x], ") )", ft_strlen(") )")) ||
+		!ft_strncmp(&str[x], "))", ft_strlen("))")) ||
+		!ft_strncmp(&str[x], ")", ft_strlen(")")))
+	{
+		write(2, "minishell: syntax error near unexpected token `)'\n", 51);
+		return (0);
+	}
+	return (1);
+}

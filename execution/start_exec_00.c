@@ -6,16 +6,13 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/08 15:52:05 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:52:49 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
-/*4 functions*/
-
-int		ft_execve1(t_exec *e, int in, int out)
+int	ft_execve1(t_exec *e, int in, int out)
 {
 	int		pid;
 
@@ -43,32 +40,31 @@ int		ft_execve1(t_exec *e, int in, int out)
 	return (0);
 }
 
-int		ft_execve3(int in, int out)
+int	ft_execve3(int in, int out)
 {
 	if (out != -1 && dup2(out, STDOUT_FILENO) < 0)
-		return (perror("dup2(0)"), 1);
+		return (perror("dup2"), 1);
 	if (out != -1)
 		close(out);
 	if (in != -1 && dup2(in, STDIN_FILENO) < 0)
-		return (perror("dup2(1)"), 1);
+		return (perror("dup2"), 1);
 	if (in != -1)
 		close (in);
 	return (0);
 }
 
-int ft_is_pipe(int fd) 
+int	ft_is_pipe(int fd)
 {
-    struct stat st;
+	struct stat	st;
 
-    if (fstat(fd, &st) == -1)
-	{
-        perror("fstat");
-        return -1;
-    }
-    if (S_ISFIFO(st.st_mode))
-        return (1);
+	if (fd == -1)
+		return (0);
+	if (fstat(fd, &st) == -1)
+		return (perror("fstat"), -1);
+	if (S_ISFIFO(st.st_mode))
+		return (1);
 	else
-        return (0);
+		return (0);
 }
 
 int	ft_prssize(t_prs *lst)
@@ -92,26 +88,28 @@ int	start_exec(t_prs **lst, t_list **envp, int rett, char **path)
 {
 	t_exec	*e;
 	int		ret;
-	int		size;
 
-	ret = 0;
 	e = NULL;
-	if (set_here_doc(*lst, &e, -1))
-		return (ft_clear_exec(&e), exit(1), 1);
-	size = ft_prssize(*lst);
-	e->ex = rett;
-	ret = 0;
-	if (size != 1)
+	ret = rett;
+	if (*lst)
 	{
-		ret = mult_cmds(*lst, envp, e, path);
-		if (ret)
-			return (ret);
+		if (set_here_doc(*lst, &e, envp, &rett))
+			return (ft_clear_exec(&e), exit(1), 1);
+		e->ex = rett;
+		if (ft_prssize(*lst) != 1)
+		{
+			ret = mult_cmds(*lst, envp, e, path);
+			if (ret < 0)
+				return (ret);
+		}
+		else
+			ret = one_cmd(lst, envp, e, path);
+		if (ft_restore_input())
+			return (1);
 	}
 	else
-		ret = one_cmd(lst, envp, e, path);
-	if (ft_restore_input())
-		return(1);
-	ft_clear_exec(&e);
-	clear_prs(lst);
-	return (ret);
+	{
+		export1("_=", envp);
+	}
+	return (clear_prs(lst), ft_clear_exec(&e), ret);
 }

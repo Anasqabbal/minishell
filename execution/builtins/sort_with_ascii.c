@@ -6,16 +6,16 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 14:25:28 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/05/10 16:36:56 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/16 15:55:12 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static int ft_swap(t_list *n)
+static int	ft_swap(t_list *n)
 {
-	char *tmp;
-	t_list *next;
+	char	*tmp;
+	t_list	*next;
 
 	next = n->next;
 	tmp = n->content;
@@ -26,7 +26,7 @@ static int ft_swap(t_list *n)
 
 static int	ft_lstcmp(t_list *n)
 {
-	char 	*s1;
+	char	*s1;
 	char	*s2;
 	int		len;
 
@@ -43,7 +43,7 @@ static int	ft_lstcmp(t_list *n)
 
 static int	ft_check(t_list *n)
 {
-	while(n)
+	while (n)
 	{
 		if (ft_lstcmp(n))
 			n = n->next;
@@ -55,7 +55,7 @@ static int	ft_check(t_list *n)
 
 int	ft_sort_ascii(t_list *n)
 {
-	t_list *head;
+	t_list	*head;
 
 	head = n;
 	if (ft_check(n))
@@ -71,4 +71,3 @@ int	ft_sort_ascii(t_list *n)
 	}
 	return (1);
 }
-

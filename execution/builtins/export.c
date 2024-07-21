@@ -6,74 +6,90 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 18:04:18 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/09 09:28:54 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:59:50 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static void	ft_print_lst(t_list *envp, int indice)
-{
-	char	*str;
-	int		i;
 
-	if (indice == 0)
+char	*remove_plus(char *str, char *res)
+{
+	int	len;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	len = ft_strlen(str);
+	res = malloc(sizeof(char) * len);
+	if (!(res))
+		exit(1);
+	while(str[i])
 	{
-		while (envp)
+		if (str[i] == '+')
 		{
-			str = envp->content;
-			if (ft_strchr(str, '='))
-			{
-				i = -1;
-				ft_printf("declare -x ");
-				while (str[++i] != '=')
-					ft_printf("%c", str[i]);
-				ft_printf("%c\"%s\"\n", str[i], (str + i + 1));
-			}
-			else
-				ft_printf("declare -x %s\n", envp->content);
-			envp = envp->next;
+			i++;
+			continue;
 		}
+		res[j] = str[i];
+		i++;
+		j++;
 	}
+	res[j] = '\0';
+	return (res);
 }
 
-static int	valide_par(char *from, char *str)
+t_list *ex_getenv_ours(char *str, t_list *env)
 {
-	t_par	par;
+	char	*tmp;
+	char	*tmp1;
+	int		j;
 
-	par.first = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
-	par.mid = "abcdefghijklmnopqrstuvwxyz\
-		ABCDEFGHIJKLMNOPQRSTUVWXYZ_01233456789=";
-	par.last = "abcdefghijklmnopqrstuvwxyz\
-		ABCDEFGHIJKLMNOPQRSTUVWXYZ_01233456789=+";
-	if (str)
+	tmp1 = NULL;
+	if (ft_strchr(str, '+'))
+		tmp1 = remove_plus(str, tmp1);
+	if (tmp1)
+		printf("after remove + your content became === %s\n", tmp1);
+	while (env)
 	{
-		if (!ft_strchr(str, '='))
-			par.len = ft_strlen(str);
-		else
-			par.len = ft_strlen(str) - (ft_strlen(ft_strchr(str, '=')));
+		j = -1;
+		tmp = env->content;
+		if (!tmp1)
+		{
+			while(str[++j] && str[j] != '=')
+				;
+			if (!ft_strncmp(env->content, str, j))
+				return (printf("you find the list and its content is %s\n", env->content), env);
+		}
+		else if (tmp1)
+		{
+			while(tmp1[++j] && tmp1[j] != '=')
+				;
+			 if (!ft_strncmp(env->content, tmp1, j))
+				return (printf("you find the list and its content is %s\n", env->content), env);
+		}
+		env = env->next;
 	}
-	else
-		par.len = 0;
-	if (!valid_name("export", str, &par))
-	{
-		var_error(from, str, 0);
-		return (1);
-	}
-	return (0);
+	return (NULL);
 }
-
 void	*add_to_env(char	*str, t_list	**envp)
 {
 	t_list	*new;
 	t_list	*env;
+	char	*res;
 
 	env = *envp;
+	res = NULL;
+	if (ft_strchr(str, '+'))
+		res = remove_plus(str, res);
+	if (res)
+		str = res;
 	new = ft_lstnew(ft_strdup(str));
 	if (!new)
-		return (NULL);
+		return (free(res), NULL);
 	ft_lstadd_back(&env, new);
-	return (*envp);
+	return (free(res), *envp);
 }
 
 void	*with_plus(char *str, t_list **env, t_list *old, t_list	*new)
@@ -91,7 +107,7 @@ void	*with_plus(char *str, t_list **env, t_list *old, t_list	*new)
 		return (NULL);
 	while (str[++i])
 		n_s[++j] = str[i];
-	new = ft_getenv_ours(str, *env);
+	new = ex_getenv_ours(str, *env);
 	if (!new)
 		return (free(n_s), NULL);
 	str = my_strjoin(new->content, n_s);
@@ -109,6 +125,7 @@ static void	*edit_env(char *str, t_list **env, t_list *old)
 {
 	t_list	*new;
 
+	printf("EDIT\n");
 	if (!env)
 		return (NULL);
 	if (ft_strchr(str, '+'))
@@ -129,13 +146,14 @@ void	*export1(char	*str, t_list	**env)
 	t_list	*new;
 	t_list	*tmp;
 
-	new = ft_getenv_ours(str, *env);
+	new = ex_getenv_ours(str, *env);
 	if (!new)
-		return (add_to_env(str, env));
+		return (printf("ADD\n"), add_to_env(str, env));
 	else
 	{
 		if (ft_strchr(str, '='))
 		{
+			printf("dkhl lhna\n");
 			tmp = edit_env(str, env, new);
 			if (!tmp)
 				return (NULL);
@@ -154,8 +172,10 @@ int	ft_export(char **opts, t_list **envp)
 	i = -1;
 	ind = 0;
 	ret = 0;
+	if (it_is_with_options(opts, 0, "export"))
+		return (1);
 	if (!opts[0])
-		return (ft_print_lst(*envp, 0), 0);
+		return (ft_print_export(*envp, 0), 0);
 	else
 	{
 		while (opts[++i])
