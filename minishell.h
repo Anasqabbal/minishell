@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/22 16:22:51 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:08:34 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <signal.h>
+/*to remove */
+# ifndef PATH_MAX
+#  define PATH_MAX 1024
+# endif
 
 typedef struct s_prs
 {
@@ -88,6 +92,8 @@ typedef struct s_ndx{
 /*EXECUTION*/
 	/* ----- BUILTINS ----- */
 int				ft_export(char **opts, t_list **envp);
+t_list			*ex_getenv_ours(char *str, t_list *env);
+char			*remove_plus(char *str, char *res);
 int				ft_env(char **opts, t_list *node);
 int				ft_unset(char **str, t_list **env, char **path);
 int				unset1(char *str, t_list **envp, char **path, t_list **new);
@@ -111,7 +117,8 @@ int				valide_par(char *from, char *str);
 void			ft_print_export(t_list *envp, int indice);
 
 /*sort_with_ascii*/
-int				ft_sort_ascii(t_list *n);
+int				ft_sort_ascii(t_list *n1);
+int				ft_envdup_exept(t_list	*envp, char	*str, t_list	**new);
 	/*additional_ft.c*/
 char			**to_free(char **s);
 int				calcul_args(char **args);
@@ -231,4 +238,5 @@ t_prs			*set_values(int indice);
 t_prs			*new_prs(char *cmd, char **opts, char **args);
 void			ft_print_prs(t_prs *c);
 void			ft_print_exec(t_exec *e);
+
 #endif

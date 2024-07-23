@@ -6,71 +6,12 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 18:04:18 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/22 16:27:12 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:05:59 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-
-char	*remove_plus(char *str, char *res)
-{
-	int	len;
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	len = ft_strlen(str);
-	res = malloc(sizeof(char) * len);
-	if (!(res))
-		exit(1);
-	while(str[i])
-	{
-		if (str[i] == '+')
-		{
-			i++;
-			continue;
-		}
-		res[j] = str[i];
-		i++;
-		j++;
-	}
-	res[j] = '\0';
-	return (res);
-}
-
-t_list *ex_getenv_ours(char *str, t_list *env)
-{
-	char	*tmp1;
-	int		j;
-
-	tmp1 = NULL;
-	if (ft_strchr(str, '+'))
-		tmp1 = remove_plus(str, tmp1);
-	if (tmp1)
-		printf("after remove + your content became === %s\n", tmp1);
-	while (env)
-	{
-		j = -1;
-		if (!tmp1)
-		{
-			while(str[++j] && str[j] != '=')
-				;
-			if (!ft_strncmp(env->content, str, j))
-				return (env);
-		}
-		else if (tmp1)
-		{
-			while(tmp1[++j] && tmp1[j] != '=')
-				;
-			 if (!ft_strncmp(env->content, tmp1, j))
-				return ( env);
-		}
-		env = env->next;
-	}
-	return (NULL);
-}
 void	*add_to_env(char	*str, t_list	**envp)
 {
 	t_list	*new;
@@ -103,8 +44,10 @@ void	*with_plus(char *str, t_list **env, t_list *old, t_list	*new)
 	n_s = ft_calloc(sizeof(char), ft_strlen(str + i + 1) + 1);
 	if (!n_s)
 		return (NULL);
-	while (str[++i])
-		n_s[++j] = str[i];
+	if (ft_strchr(old->content, '='))
+		i++ ;
+	while (str[i])
+		n_s[++j] = str[i++];
 	new = ex_getenv_ours(str, *env);
 	if (!new)
 		return (free(n_s), NULL);
@@ -122,11 +65,12 @@ void	*with_plus(char *str, t_list **env, t_list *old, t_list	*new)
 static void	*edit_env(char *str, t_list **env, t_list *old)
 {
 	t_list	*new;
+	char	*add;
 
-	printf("EDIT\n");
 	if (!env)
 		return (NULL);
-	if (ft_strchr(str, '+'))
+	add = ft_strchr(str, '+');
+	if (add && add < ft_strchr(str, '='))
 		return (with_plus(str, env, old, NULL));
 	else
 	{
@@ -151,7 +95,6 @@ void	*export1(char	*str, t_list	**env)
 	{
 		if (ft_strchr(str, '='))
 		{
-			printf("dkhl lhna\n");
 			tmp = edit_env(str, env, new);
 			if (!tmp)
 				return (NULL);
@@ -173,7 +116,7 @@ int	ft_export(char **opts, t_list **envp)
 	if (it_is_with_options(opts, 0, "export"))
 		return (1);
 	if (!opts[0])
-		return (ft_print_export(*envp, 0), 0);
+		return (ft_sort_ascii(*envp), 0);
 	else
 	{
 		while (opts[++i])

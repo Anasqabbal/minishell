@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 15:54:11 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/22 16:27:54 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/23 13:09:36 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,17 @@ int	ft_envdup_exept(t_list	*envp, char	*str, t_list	**new)
 {
 	t_list	*res;
 	t_list	*head;
+	int		j;
+	char	*s;
 
 	head = NULL;
 	while (envp)
 	{
-		if (!str || ft_strncmp(envp->content, str, ft_strlen(str)))
+		j = -1;
+		s = envp->content;
+		while(s[++j] && s[j] != '=')
+			;
+		if (!str || ft_strncmp(envp->content, str, j))
 		{
 			res = ft_lstnew(ft_strdup(envp->content));
 			if (!res)
@@ -63,23 +69,22 @@ int	ft_envdup_exept(t_list	*envp, char	*str, t_list	**new)
 
 int	unset1(char *str, t_list **envp, char **path, t_list **new)
 {
-	char	*tmp;
 	int		pos;
 	t_list	*head;
 	t_list	*env;
 
 	env = *envp;
-	tmp = ft_strjoin(str, "=");
-	if (!tmp)
-		return (1);
-	if (*path && !ft_strncmp(tmp, "PATH=", 5))
-		return (*path = NULL, *new = env, 1);
-	pos = ft_lstget_pos(tmp, env);
+	if (*path && !ft_strncmp(str, "PATH", 5))
+	{
+		if (ft_envdup_exept(env, NULL, &head))
+			return (1);
+		return (*path = NULL, *new = head, 0);
+	}
+	pos = ft_lstget_pos(str, env);
 	if (pos == -1)
-		return (free(tmp), *new = env, 1);
-	if (ft_envdup_exept(env, tmp, &head))
-		return (free(tmp), 1);
-	free(tmp);
+		return (*new = env, 1);
+	if (ft_envdup_exept(env, str, &head))
+		return (1);
 	return (*new = head, 0);
 }
 
@@ -96,6 +101,7 @@ int	ft_unset(char **str, t_list **env, char **path)
 	{
 		while (str[i])
 		{
+			printf("the value of i == %d\n", i);
 			ret = valid_par("unset", str[i]);
 			if (ret)
 				return (ret);

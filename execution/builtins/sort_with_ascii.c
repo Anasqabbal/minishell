@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 14:25:28 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/16 15:55:12 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:08:53 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,33 +41,24 @@ static int	ft_lstcmp(t_list *n)
 		return (0);
 }
 
-static int	ft_check(t_list *n)
+int	ft_sort_ascii(t_list *n1)
 {
-	while (n)
-	{
-		if (ft_lstcmp(n))
-			n = n->next;
-		else
-			return (0);
-	}
-	return (1);
-}
-
-int	ft_sort_ascii(t_list *n)
-{
+	t_list	*n;
 	t_list	*head;
 
+	ft_envdup_exept(n1, NULL, &n);
 	head = n;
-	if (ft_check(n))
-		return (1);
 	while (n)
 	{
 		if (!ft_lstcmp(n))
 		{
 			ft_swap(n);
-			ft_sort_ascii(head);
+			n = head;
+			continue ;
 		}
 		n = n->next;
 	}
+	ft_print_export(head, 0);
+	ft_lstclear(&n, free);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 09:44:32 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/16 16:42:52 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/23 11:02:33 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,33 @@
 
 int	ft_lstget_pos(char *str, t_list *lst)
 {
-	int		i;
+	char	*tmp1;
 	int		j;
-	char	*tmp;
+	int		i;
 
+	tmp1 = NULL;
+	if (ft_strchr(str, '+'))
+		tmp1 = remove_plus(str, tmp1);
+	if (tmp1)
+		printf("after remove + your content became === %s\n", tmp1);
 	i = 0;
 	while (lst)
 	{
 		j = -1;
-		tmp = lst->content;
-		while (tmp[++j] && tmp[j] != '=')
-			;
-		if (!ft_strncmp(lst->content, str, j))
-			return (i);
+		if (!tmp1)
+		{
+			while(str[++j] && str[j] != '=')
+				;
+			if (!ft_strncmp(lst->content, str, j))
+				return (i);
+		}
+		else if (tmp1)
+		{
+			while(tmp1[++j] && tmp1[j] != '=')
+				;
+			 if (!ft_strncmp(lst->content, tmp1, j))
+				return (i);
+		}
 		lst = lst->next;
 		i++;
 	}
