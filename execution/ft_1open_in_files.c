@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/20 16:50:50 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/22 16:50:39 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ char	*read_from_here_doc(char **red, int i, t_list **env, int *ret)
 	char	*res;
 	char	*lim;
 
+	(void)ret;
+	(void)env;
 	here_doc = NULL;
 	while (1 && red && red[i])
 	{
@@ -91,11 +93,11 @@ char	*read_from_here_doc(char **red, int i, t_list **env, int *ret)
 		write(1, "> ", 2);
 		res = get_next_line(0);
 		if (!res || (!ft_strncmp(res, lim, ft_strlen(res) - 1)
-				&& (ft_strlen(res) - 1)) || lim[0] == '\0')
+				&& (ft_strlen(res) - 1 == ft_strlen(lim))) || lim[0] == '\0')
 			break ;
 		tmp = here_doc;
-		res = dollar_sign(res);
-		res = cmd_expa(res, *env, ret);
+		// res = dollar_sign(res);
+		// res = cmd_expa(res, *env, ret);
 		here_doc = my_strjoin(here_doc, res);
 		if (!here_doc)
 			return (free(tmp), free(res),exit(1), NULL);

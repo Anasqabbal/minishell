@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:43:27 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/21 17:10:55 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/22 16:25:54 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,8 @@ int	ft_export_(t_list **env, char **str, t_exec *e)
 {
 	char	*res1;
 	int		i;
-	int		j;
 
 	i = 0;
-	j = 0;
 	while (str && str[i + 1])
 		i++;
 	if (str)

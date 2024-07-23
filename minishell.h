@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/21 13:24:17 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/22 16:22:51 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 # include "./libft/libft.h"
 # include <stdio.h>
-# include <libc.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <sys/types.h>
@@ -180,27 +179,7 @@ int				ft_error_p(char *from, int indice);
 int				ft_error_files(int indice, int ret, char *n);
 int				ft_error(char *from, int indice);
 /*PARSING*/
-// t_list	*ft_envdup(char **env, char *path);
-// t_list			*ft_getenvza(char *str, t_list *env);
-// int				check_syntax(char *input, t_list *env, t_prs **node, int *ret);
-// int				ft_syntax_h1(char *str, int *x);
-// int				ft_syntax_h2(char *str, int x);
-// char			*replacewihte_s(char *str);
-// int				check_qts(char *input, int *count, int *qts);
-// t_prs			*pipe_split(char *cmd, int opp, int qts, t_list *env);
-// int				ft_check_quotes(char c, int *sign);
-// int				arg_count(char **str);
-// void			turn_back(char *str, int ndx);
-// void			free_it(char **arg, int count);
-// void			turn_single(char *str, int ndx);
-// char			*cmd_expa(char *str, t_list *env);
-// void			ft_strcpy(char *s1, char *s2);
-// t_prs			*init_prs(void);
-// void			pipe_split_h(char **splt_pip, \
-// t_prs **curr, t_prs **head, char *com);
-// void			parse_red(char **array, t_prs *node);
-// void			free_it_h(char **splt_pip, char *com, int ndx);
-// char			*dollar_sign(char *str);
+
 t_list	*ft_envduppp(char **env);
 void	ft_getenv_oursss(char *str, t_list *env, char *path);
 int		check_syntax(char *input, t_list *env, t_prs **node, int *ret);

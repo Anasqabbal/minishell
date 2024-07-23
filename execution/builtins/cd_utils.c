@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 12:50:05 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/16 15:59:00 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/22 16:28:14 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	check_dir_access(char **str)
 
 	if (str[0][0] == '-' && ft_strlen(str[0]) == 1)
 		return (0);
-	if (lstat(str[0], &file_stat) == 0)
+	if (stat(str[0], &file_stat) == 0)
 	{
 		if (!S_ISDIR(file_stat.st_mode))
 			return (printf("cd: %s: %s\n", strerror(20), str[0]), 1);

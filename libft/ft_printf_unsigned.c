@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_unsigned.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 21:36:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/02/27 12:43:38 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/03/25 19:58:54 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft__print_unsigned(unsigned int nb, int fd)
 		count += ft__print_unsigned(nb / 10, fd);
 		count += ft__print_unsigned(nb % 10, fd);
 	}
-	if (nb >= 0 && nb <= 9)
+	if ( nb <= 9)
 		count += ft__putchar_fd((nb + 48), fd);
 	return (count);
 }

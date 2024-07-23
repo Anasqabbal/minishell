@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 17:06:21 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/21 13:09:48 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/22 16:28:31 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	move_back(char	*str, t_list	**env)
 {
 	char		o[PATH_MAX];
 	char		n[PATH_MAX];
-	char static	*sp;
+	static char	*sp;
 	static int	i;
 	char		*res;
 

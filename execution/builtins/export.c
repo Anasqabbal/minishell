@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 18:04:18 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/21 17:59:50 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/22 16:27:12 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ char	*remove_plus(char *str, char *res)
 
 t_list *ex_getenv_ours(char *str, t_list *env)
 {
-	char	*tmp;
 	char	*tmp1;
 	int		j;
 
@@ -54,20 +53,19 @@ t_list *ex_getenv_ours(char *str, t_list *env)
 	while (env)
 	{
 		j = -1;
-		tmp = env->content;
 		if (!tmp1)
 		{
 			while(str[++j] && str[j] != '=')
 				;
 			if (!ft_strncmp(env->content, str, j))
-				return (printf("you find the list and its content is %s\n", env->content), env);
+				return (env);
 		}
 		else if (tmp1)
 		{
 			while(tmp1[++j] && tmp1[j] != '=')
 				;
 			 if (!ft_strncmp(env->content, tmp1, j))
-				return (printf("you find the list and its content is %s\n", env->content), env);
+				return ( env);
 		}
 		env = env->next;
 	}

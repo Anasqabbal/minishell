@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 15:54:11 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/16 15:58:21 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/22 16:27:54 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	ft_error2(char *from, char *str, int indice)
 	return (indice);
 }
 
-int static	valid_par(char *from, char *str)
+static int	valid_par(char *from, char *str)
 {
 	t_par	par;
 
@@ -42,11 +42,9 @@ int static	valid_par(char *from, char *str)
 
 int	ft_envdup_exept(t_list	*envp, char	*str, t_list	**new)
 {
-	int		i;
 	t_list	*res;
 	t_list	*head;
 
-	i = 0;
 	head = NULL;
 	while (envp)
 	{
