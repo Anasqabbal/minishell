@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 16:19:08 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/18 15:17:20 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/23 17:16:47 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	valide_par(char *from, char *str)
 	}
 	else
 		par.len = 0;
+	printf("the len of your var == %d\n", par.len);
 	if (!valid_name("export", str, &par))
 	{
 		var_error(from, str, 0);
@@ -88,21 +89,21 @@ int	allowed_char(char c, char *allowed)
 	}
 	return (ind);
 }
+ /* ((str[0] == '=' && str[1] == '\0')) this last condition for = when it is a single the previous function that check it is start the calculation of len from = and when = is alon the par.len == 0 and this is not true*/
 
 int	valid_name(char *from, char *str, t_par *par)
 {
 	int		i;
 
-	i = -1;
-	if (!str || str[0] == '\0')
-	{
-		var_error(from, str, 0);
+	i = 0;
+	(void)from;
+	if (!str || str[0] == '\0' || ((str[0] == '=' && str[1] == '\0')))
 		return (0);
-	}
-	while (str[++i] && i < par->len - 1)
+	if ((i == 0 && !allowed_char(str[i], par->first)))
+		return (0);		
+	while (str[i++] && i < par->len - 1)
 	{
-		if ((i == 0 && !allowed_char(str[i], par->first))
-			|| (i != 0 && !allowed_char(str[i], par->mid)))
+		if ((i != 0 && !allowed_char(str[i], par->mid)))
 			return (0);
 	}
 	if ((i == par->len - 1 && !allowed_char(str[i], par->last)))

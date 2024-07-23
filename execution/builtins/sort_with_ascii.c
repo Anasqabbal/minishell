@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 14:25:28 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/23 15:08:53 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/23 16:53:16 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,15 @@ static int	ft_lstcmp(t_list *n)
 	char	*s1;
 	char	*s2;
 	int		len;
+	int		res;
 
 	if (!n->next)
 		return (1);
 	s1 = n->content;
 	s2 = n->next->content;
 	len = ft_strlen(n->content);
-	if (ft_strncmp(s1, s2, len) < 0)
+	res = ft_strncmp(s1, s2, len);
+	if (res < 0 || !res)
 		return (1);
 	else
 		return (0);

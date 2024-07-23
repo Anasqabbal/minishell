@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 18:04:18 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/23 15:05:59 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/23 17:21:18 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,13 @@ void	*export1(char	*str, t_list	**env)
 	t_list	*new;
 	t_list	*tmp;
 
+	printf("the str that  you want to add is %s\n", str);
 	new = ex_getenv_ours(str, *env);
 	if (!new)
 		return (printf("ADD\n"), add_to_env(str, env));
 	else
 	{
+		printf("the content of new == %s\n", new->content);
 		if (ft_strchr(str, '='))
 		{
 			tmp = edit_env(str, env, new);
@@ -114,7 +116,7 @@ int	ft_export(char **opts, t_list **envp)
 	ind = 0;
 	ret = 0;
 	if (it_is_with_options(opts, 0, "export"))
-		return (1);
+		return (2);
 	if (!opts[0])
 		return (ft_sort_ascii(*envp), 0);
 	else

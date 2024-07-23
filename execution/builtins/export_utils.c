@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 09:45:26 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/23 11:27:49 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/23 16:33:35 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,16 @@ char	*remove_plus(char *str, char *res)
 	return (res);
 }
 
+int		until_equ_sign(char *s, char c)
+{
+	int 	i;
+
+	i = 0;
+	while(s[i] != c && s[i])
+		i++;
+	return (i);
+}
+
 t_list *ex_getenv_ours(char *str, t_list *env)
 {
 	char	*tmp1;
@@ -54,7 +64,7 @@ t_list *ex_getenv_ours(char *str, t_list *env)
 		{
 			while(str[++j] && str[j] != '=')
 				;
-			if (!ft_strncmp(env->content, str, j))
+			if (!ft_strncmp(env->content, str, j) && until_equ_sign(env->content, '=') == j)
 				return (env);
 		}
 		else if (tmp1)
