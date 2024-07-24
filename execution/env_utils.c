@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 13:30:49 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/23 11:29:00 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/21 15:51:38 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,6 @@ t_list	*ft_envdup(char **env, char **path)
 	shlvl = nw_vl(head, 1, NULL, NULL);
 	if (!shlvl)
 		return (ft_lstclear(&head, free), NULL);
-	printf("your shlvl == %s\n", shlvl);
 	export1(shlvl, &head);
 	export1("OLDPWD", &head);
 	return (free(shlvl), head);

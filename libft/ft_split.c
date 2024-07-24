@@ -52,7 +52,7 @@ int	split_strlen(const char *s, char c, int indice)
 
 static char	**cal_alloc_set(const char *s, char c, char **strings, int s_len)
 {
-	char	len;
+	int		len;
 	int		i;
 	int		j;
 	int		res;

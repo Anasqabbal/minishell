@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 20:38:13 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/22 16:36:44 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:46:14 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char *extract_virable(char *str, int *var_len)
 	int y ;
 
 	x = 0;
-	x++;
+	str++;
 	while (ft_isalnum(str[x]) || str[x] == '_')
 		x++;
 	var = (char *)malloc((x + 1) * sizeof(char));

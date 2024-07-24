@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 16:19:08 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/23 17:16:47 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/24 16:05:29 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ int	valide_par(char *from, char *str)
 	}
 	else
 		par.len = 0;
-	printf("the len of your var == %d\n", par.len);
 	if (!valid_name("export", str, &par))
 	{
 		var_error(from, str, 0);
@@ -114,3 +113,4 @@ int	valid_name(char *from, char *str, t_par *par)
 		return (0);
 	return (1);
 }
+

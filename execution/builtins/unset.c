@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 15:54:11 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/23 13:09:36 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:20:50 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	unset1(char *str, t_list **envp, char **path, t_list **new)
 	t_list	*env;
 
 	env = *envp;
-	if (*path && !ft_strncmp(str, "PATH", 5))
+	if (path && *path && (str && !ft_strncmp(str, "PATH", 5)))
 	{
 		if (ft_envdup_exept(env, NULL, &head))
 			return (1);
@@ -82,7 +82,11 @@ int	unset1(char *str, t_list **envp, char **path, t_list **new)
 	}
 	pos = ft_lstget_pos(str, env);
 	if (pos == -1)
-		return (*new = env, 1);
+	{
+		if (ft_envdup_exept(env, NULL, &head))
+			return(1);
+		return (*new = head, 0);
+	}
 	if (ft_envdup_exept(env, str, &head))
 		return (1);
 	return (*new = head, 0);
@@ -93,24 +97,26 @@ int	ft_unset(char **str, t_list **env, char **path)
 	int		i;
 	t_list	*new;
 	int		ret;
+	int		ind;
 
 	i = 0;
+	ind = 0;
 	if (!str || !str[i])
 		return (0);
-	else
+	if (it_is_with_options(str, 0, 0))
+		return (2);
+	while (str[i])
 	{
-		while (str[i])
-		{
-			printf("the value of i == %d\n", i);
-			ret = valid_par("unset", str[i]);
-			if (ret)
-				return (ret);
-			if (unset1(str[i], env, path, &new))
-				return (1);
-			ft_lstclear(env, free);
-			*env = new;
-			i++;
-		}
+		ret = valid_par("unset", str[i]);
+		if (ret && ++ind && i++)
+			continue ;
+		if (unset1(str[i], env, path, &new))
+			return (1);
+		ft_lstclear(env, free);
+		*env = new;
+		i++;
 	}
+	if (ind)
+		return (1);
 	return (0);
 }

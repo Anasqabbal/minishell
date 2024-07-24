@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/22 16:50:39 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/24 14:59:07 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,23 +84,22 @@ char	*read_from_here_doc(char **red, int i, t_list **env, int *ret)
 	char	*res;
 	char	*lim;
 
-	(void)ret;
-	(void)env;
 	here_doc = NULL;
 	while (1 && red && red[i])
 	{
 		lim = red[i + 1];
-		write(1, "> ", 2);
-		res = get_next_line(0);
-		if (!res || (!ft_strncmp(res, lim, ft_strlen(res) - 1)
-				&& (ft_strlen(res) - 1 == ft_strlen(lim))) || lim[0] == '\0')
+		res = readline(">");
+		if (!res || (!ft_strncmp(res, lim, ft_strlen(res))
+				&& (ft_strlen(res) == ft_strlen(lim))) || lim[0] == '\0')
 			break ;
+		if (res[0] != '\0')
+			add_history(res);
 		tmp = here_doc;
-		// res = dollar_sign(res);
-		// res = cmd_expa(res, *env, ret);
+		res = dollar_sign(res);
+		res = cmd_expa(res, *env, ret);
 		here_doc = my_strjoin(here_doc, res);
 		if (!here_doc)
-			return (free(tmp), free(res),exit(1), NULL);
+			return (free(tmp), free(res), exit(1), NULL);
 		free(res);
 		free(tmp);
 	}
@@ -120,7 +119,7 @@ int	open_in_files(t_exec *e, int len, char *file, char *token)
 		e->in[i] = malloc(sizeof(int));
 		if (!e->in[i])
 			return (e->in = to_free_f(e->in, i), exit(1), 1);
-		if (!ft_strncmp(token, "<<", 2) || !ft_strncmp(token, "<<<", 3))
+		if (!ft_strncmp(token, "<<", 2))
 			e->in[i][0] = -1;
 		else if (!ft_strncmp(token, "<", 1))
 			e->in[i][0] = creat_open_file(file, 0, 0);

@@ -87,7 +87,7 @@ void print_lst(t_list *e)
 	{
 		while(e)
 		{
-			printf("lst>>>%s\n",(char *) e->content);
+			printf("lst>>>%s\n", e->content);
 			e = e->next;
 		}
 	}

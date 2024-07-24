@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:18:37 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/20 16:53:03 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/24 14:56:06 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,6 @@ int	calcul_strs(char *s1, char **s2)
 	}
 	return (count);
 }
-// int calcul_heredocs(char **s1)
-// {
-// 	int	i;
-// 	int	count;
-
-// 	i = 0;
-// 	count = 0;
-// 	while (s1[i])
-// 	{
-// 		if (ft_strlen(s1[i]) >= 2 && (!ft_strncmp(s1[i], "<<<", ft_strlen(s1[i]))))
-// 			count++;
-// 		i++;
-// 	}
-// 	return (count);
-// }
 
 int	file_here_docs(char **f, t_exec *e, t_list **env, int *ret)
 {

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 14:14:22 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/23 17:00:32 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/24 16:15:17 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int main(int ac, char **av, char **env)
 		write(2, "error\n", 6);
 		exit(1);
 	}
+	rl_catch_signals = 0;
 	// envp = NULL;
 	// atexit(f);
 	envp = ft_envdup(env, &path);
@@ -47,7 +48,7 @@ int main(int ac, char **av, char **env)
 		if (input && input[0] != '\0')
 		{
 			check_syntax(input, envp, &n, &ret);
-			print_prs(n);
+			// print_prs(n);
 			ret = start_exec(&n, &envp , ret, &path);
 			if (input[0] != '\0')
 				add_history(input);
@@ -56,6 +57,4 @@ int main(int ac, char **av, char **env)
 		}
 	}
 	return (ft_lstclear(&envp, free), clear_prs(&n), ret);
-
-	/* go to start exec/set_here_doc : and check the ambiguous redirections */
 }
