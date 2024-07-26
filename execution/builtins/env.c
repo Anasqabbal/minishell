@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 14:20:04 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/21 13:29:01 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/25 16:10:30 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ int	ft_env(char **opts, t_list *node)
 		return (1);
 	while (node)
 	{
+		if (!ft_strncmp("_=", node->content, 2))
+		{
+			node = node->next;
+			continue ;
+		}
 		if (ft_strchr(node->content, '='))
 			ft_printf("%s\n", node->content);
 		node = node->next;

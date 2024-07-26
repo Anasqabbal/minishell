@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_check_qts.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:30:26 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/20 16:45:23 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/20 18:13:47 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static void	check_qts_h1(char *input, int *count, int *x)
 {
-	if ((input[*x] == '|' || input[*x] == '>' || input[*x] == '<'))
+	if(input[*x] == '|' || input[*x] == '>' || input[*x] == '<')
     	{
-        	if (((input[*x] == '>' && input[*x + 1] == '>') || (input[*x] == '<' && input[*x + 1] == '<')))
+        	if ((input[*x] == '>' && input[*x + 1] == '>') || (input[*x] == '<' && input[*x + 1] == '<'))
         	{
         		(*x)++;
         		(*x)++;

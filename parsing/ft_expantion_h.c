@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expantion_h.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:28:31 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/20 16:45:33 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:47:31 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 
 static int handle_default_case(int var_len, int *x)
 {
@@ -89,8 +90,12 @@ void turn_here_do(char *str)
 		if(str[x] == '<' && str[x + 1] == '<')
 		{
 			x += 3;
-			if (str[x] == '$')
-				str[x] *= -1;	
+			while (str[x] && str[x] != ' ')
+			{
+				if (str[x] == '$')
+					str[x] *= -1;
+				x++;
+			}	
 		}
 		x++;
 	}

@@ -25,14 +25,22 @@ void	ft_print_prs(t_prs *c)
 			if (!ft_strncmp(c->red[i], "<", 1))
 			{
 				ft_printf("    the infile ");
-				ft_printf("%s\n    and its name %s\n", c->red[i], c->red[i + 1]);
+				if (c->red[i + 1])
+				{
+					ft_printf("and its name is %s\n", c->red[i + 1]);
+					i++;
+				}
 			}
 			else if (!ft_strncmp(c->red[i], ">", 1))
 				{
 				ft_printf("    the outfile ");
-				ft_printf("  %s\n    and its name %s\n", c->red[i], c->red[i + 1]);
+				if (c->red[i + 1])
+				{
+					ft_printf("and its name is %s\n", c->red[i + 1]);
+					i++;
+				}
 			}
-			i += 2;
+			i++;
 		}
 	}
 }

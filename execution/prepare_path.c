@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 15:54:03 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/20 14:45:30 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/26 17:12:35 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,22 @@ static int	check_access1(char *cmd, char *content, t_exec *p)
 	int		i;
 
 	i = 0;
-	res = ft_split(content + 1, ':');
-	if (!res)
-		return (1);
-	while (res[i])
+	if (content)
 	{
-		ret = valid_path(cmd, res[i], p);
-		if (!ret)
-			return (to_free(res), 0);
-		else if (ret != 999)
-			return (to_free(res), 0);
-		i++;
+		res = ft_split(content + 1, ':');
+		if (!res)
+			return (1);
+		while (res[i])
+		{
+			ret = valid_path(cmd, res[i], p);
+			if (!ret)
+				return (to_free(res), 0);
+			else if (ret != 999)
+				return (to_free(res), 0);
+			i++;
+		}
+		to_free(res);
 	}
-	to_free(res);
 	return (ft_error(cmd, 127));
 }
 

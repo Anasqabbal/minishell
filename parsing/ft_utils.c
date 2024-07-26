@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:36:31 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/20 16:46:11 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/20 18:13:06 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 
 int    ft_check_quotes(char c, int *sign)
 {
@@ -58,7 +59,7 @@ void turn_back(char *str, int ndx)
                 x++;
             }
 		}
-		if (str[x] != '\0')
+		if (str[x])
 			x++;
 	}
 }

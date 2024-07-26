@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:13:46 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/21 13:08:37 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/25 15:58:02 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,17 @@ static int	skip_n(char **cmd, int *ind)
 	return (i);
 }
 
+static void	print_all(char *s)
+{
+	int	i;
+
+	i = -1;
+	while(s[++i])
+	{
+		ft_printf("%c", s[i]);
+	}
+}
+
 int	ft_echo(t_exec *e, t_list *envp)
 {
 	int		x;
@@ -50,9 +61,8 @@ int	ft_echo(t_exec *e, t_list *envp)
 	x = skip_n(e->cmd, &ind);
 	while (e->cmd[x] != NULL)
 	{
-		ft_printf("%s", e->cmd[x]);
-		if (e->cmd[x + 1] != NULL)
-			ft_printf(" ");
+		print_all(e->cmd[x]);
+		ft_printf(" ");
 		x++;
 	}
 	if (ind == 0)

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:28 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/19 10:25:50 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/26 12:58:32 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	ft_restore_input(void)
 	fd2 = open("/dev/tty", O_RDONLY);
 	if (fd2 < 0)
 	{
-		printf("ft_1open_out_files.c, ft_restore_input()\n");
 		perror("open");
 		return (-1);
 	}
@@ -48,7 +47,6 @@ int	creat_open_file(char *f1, int ind, int VAL)
 		fd = open(f1, O_RDWR | VAL | O_CREAT, 0644);
 	if (fd < 0)
 	{
-		perror("open");
 		return (-1);
 	}
 	return (fd);

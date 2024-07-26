@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_syntax.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:12:54 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/20 16:45:15 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/21 19:29:55 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int ft_syntax_msg(char *str, int len)
 	char last;
     char third_last;
     char fourth_last;
-
+	
 	last = str[len - 1];
 	if (len > 3)
 		third_last = str[len - 3];
@@ -106,6 +106,7 @@ int check_syntax(char *input, t_list *env, t_prs **node, int *ret)
 
 	opp = 0;
 	qts = 0;
+	
 	if (input[0] == '\0')
 		return (1);
 	raw = ft_strdup(input);
@@ -114,7 +115,7 @@ int check_syntax(char *input, t_list *env, t_prs **node, int *ret)
 	if (!ft_syntax(raw))		
 		return (free(raw), *ret = 258, 0);
 	if(!check_qts(raw, &opp, &qts))
-		return (free(raw), *ret = 258, 0);	
+		return (free(raw), *ret = 258, 0);
 	(*node) = pipe_split(raw, opp, env, ret);
 	return (1);
 }

@@ -6,7 +6,7 @@
 #    By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 16:28:17 by zgtaib            #+#    #+#              #
-#    Updated: 2024/07/24 14:37:15 by anqabbal         ###   ########.fr        #
+#    Updated: 2024/07/25 13:21:46 by anqabbal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,6 +47,7 @@ PARSING = parsing/ft_syntax.c\
 	parsing/ft_expantion_h.c\
 	parsing/skipping_dollars.c
 	# parsing/dakchi_l9dim.c
+
 	
 	
 

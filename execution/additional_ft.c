@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:04:37 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/08 08:52:47 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/25 14:44:30 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,12 @@ char	**to_free(char **s)
 {
 	int	i;
 
-	i = -1;
-	while (s && s[++i])
+	i = 0;
+	while (s && s[i])
 	{
 		free(s[i]);
 		s[i] = NULL;
+		i++;
 	}
 	free(s);
 	return (NULL);

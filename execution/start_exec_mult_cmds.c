@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:12 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/21 17:11:48 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/26 15:23:07 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,6 @@ int	mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path)
 		if (complete_work(&a) < 0)
 			return (-1);
 	}
-	// ft_export_(a.envp, NULL, NULL);
+	ft_export_(a.envp, NULL, NULL);
 	return (ft_return(&a.ret, &a.i));
 }

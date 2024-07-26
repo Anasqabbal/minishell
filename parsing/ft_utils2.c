@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 20:38:13 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/20 16:46:14 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/24 14:26:35 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 
 char *expand_variable(char *str, t_list *env, int *ndx)
 {
@@ -84,14 +85,6 @@ void the_turns(char *str, int ndx)
 	{
 		turn_single(str, 1);
 		turn_back_dollar(str);
-		turn_single(str, 1);
 	}
-}
-
-char *cmd_expa_h(char *str)
-{
-	turn_single(str, 1);
-	turn_here_do(str);
-	return (blurr_dollar(str));
 }
 

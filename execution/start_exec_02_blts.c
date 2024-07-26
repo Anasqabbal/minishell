@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:09 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/21 13:22:52 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/26 15:00:25 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	ft_execve2(t_exec *e, int in, int out, t_list **envp)
 		return (perror("fork"), 1);
 	if (pid == 0)
 	{
+		signal(SIGQUIT, SIG_DFL);
 		if (in != -1)
 			close(in);
 		if (out != -1 && dup2(out, STDOUT_FILENO) < 0)

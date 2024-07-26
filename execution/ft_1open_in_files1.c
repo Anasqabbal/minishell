@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:18:37 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/24 14:56:06 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/26 13:02:06 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static int	compare_and_check(char **f, t_exec *e,	int i)
 {
 	if (!ft_strncmp(f[i], "<", ft_strlen(f[i])))
 	{
-		if (check_file_access(f[i + 1], 1))
+		if (check_file_access(f[i + 1], 1, 0))
 			return (1);
 		if (e->in)
 			to_free_f(e->in, 1);
@@ -70,6 +70,8 @@ static int	compare_and_check(char **f, t_exec *e,	int i)
 	else if (!ft_strncmp(f[i], ">", ft_strlen(f[i]))
 		|| !ft_strncmp(f[i], ">>", ft_strlen(f[i])))
 	{
+		if (check_file_access(f[i + 1], 1, 1))
+			return (1);
 		if (e->out)
 			to_free_f(e->out, 1);
 		if (open_out_files(e, 1, f[i + 1], f[i]))
@@ -82,7 +84,7 @@ int	set_and_open(t_exec *e, char **f, int i)
 {
 	while (f && f[++i])
 	{
-		if (!ft_strncmp(f[i], "<<", 2) && ft_strlen(f[i]) == 2)
+		if ((!ft_strncmp(f[i], "<<", 2) && ft_strlen(f[i]) == 2 )|| (!ft_strncmp(f[i], "<<<", 3) && ft_strlen(f[i]) == 3))
 		{
 			e->in = malloc(sizeof(int *) * 1);
 			if (!e->in)
@@ -104,10 +106,9 @@ int	set_here_doc(t_prs *l, t_exec **e, t_list **env, int *ret)
 {
 	t_prs	*l2;
 	t_exec *new;
-	int		i;
+	int i;
 
 	l2 = l;
-	i = -1;
 	while (l)
 	{
 		new = ft_exec_new();
@@ -117,17 +118,20 @@ int	set_here_doc(t_prs *l, t_exec **e, t_list **env, int *ret)
 			return (-1);
 		ft_execadd_back(e, new);
 		l = l->next;
-	}/* here in this case you need to check the ambiguous redirections for the bothe the infile and the outfile */
+	}
 	while (l2)
 	{
+		i = -1;
 		while (l2 && l2->red && l2->red[++i])
 		{
 			if (ft_strncmp(l2->red[i], "<<", 2)
 				&& !ft_strncmp(l2->red[i], "<", ft_strlen(l2->red[i])))
-				check_file_access(l2->red[i + 1], 0);
+				check_file_access(l2->red[i + 1], 0, 0);
+			else if (!ft_strncmp(l2->red[i], ">>", 2)
+				|| !ft_strncmp(l2->red[i], ">", ft_strlen(l2->red[i])))
+				check_file_access(l2->red[i + 1], 0, 1);
 		}
 		l2 = l2->next;
-		i = -1;
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:35:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/19 11:14:24 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/26 17:56:20 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,42 @@ void	set_stdout_and_cmd(t_prs *l, t_exec *e, int *o, int *fd)
 	e->cmd = prepare_cmd(l->cmd, l->opts, l->arg);
 }
 
+int dkchi_t3_signals(int *ret)
+{
+	int r;
+
+	r = 0;
+	while (waitpid(-1, ret, 0) != -1)
+		{
+			if (WIFSIGNALED(*ret))
+       		{
+            	if (WTERMSIG(*ret) == SIGINT)
+            	{
+					r = 130;
+					g_sig = 0;
+           		}
+            	else if (WTERMSIG(*ret) == SIGQUIT)
+            	{
+					r = 131;
+                	write(STDOUT_FILENO, "Quit: 3\n", 8);
+            	}
+        	}
+			else
+				r = WEXITSTATUS(*ret);
+	}
+	return (r);
+}
+
 int	ft_return(int *ret, int *i)
 {
+	int r;
+
+	r = 0;
 	if (!(*ret))
 	{
-		while (waitpid(-1, ret, 0) != -1)
-			;
-		return (WEXITSTATUS(*ret));
+		r = dkchi_t3_signals(ret);
+		signal(SIGINT, ft_handler);
+		return (r);
 	}
 	else
 	{
@@ -101,6 +130,7 @@ int	ft_return(int *ret, int *i)
 int	open_files_and_pipe(t_all *a)
 {
 	int	ret;
+	int	fd2[2];
 
 	a->out = -1;
 	ret = set_and_open((a)->e, (a)->p->red, -1);
@@ -110,6 +140,14 @@ int	open_files_and_pipe(t_all *a)
 			return (-1);
 		(a)->p = (a)->p->next;
 		(a)->e = (a)->e->n;
+		if (!ft_is_pipe(0))
+		{
+			if (pipe(fd2) < 0)
+				return (perror("pipe"), 1);
+			if (dup2(fd2[0], STDIN_FILENO) < 0)
+				return (perror("dup2"), 1);
+			return (close(fd2[1]), close(fd2[0]), 0);
+		}
 		return (1);
 	}
 	if (pipe((a)->fd) < 0)

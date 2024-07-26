@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/24 14:55:49 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/26 15:39:31 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,13 @@ int	ft_execve1(t_exec *e, int in, int out)
 {
 	int		pid;
 
+	signal(SIGINT, ft_handler_fork);
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork"), 1);
 	if (pid == 0)
-	{
+	{	
+		signal(SIGQUIT, SIG_DFL);
 		if (in != -1)
 			close(in);
 		if (out != -1 && dup2(out, STDOUT_FILENO) < 0)
@@ -93,8 +95,10 @@ int	start_exec(t_prs **lst, t_list **envp, int rett, char **path)
 	ret = rett;
 	if (*lst)
 	{
+		(void) path;
 		if (set_here_doc(*lst, &e, envp, &rett))
 			return (ft_clear_exec(&e), exit(1), 1);
+		// ft_2dprint(e->here_doc);
 		e->ex = rett;
 		if (ft_prssize(*lst) != 1)
 		{
@@ -107,7 +111,7 @@ int	start_exec(t_prs **lst, t_list **envp, int rett, char **path)
 		if (ft_restore_input())
 			return (1);
 	}
-	// else
-	// 	export1("_=", envp);
+	else
+		export1("_=", envp);
 	return (clear_prs(lst), ft_clear_exec(&e), ret);
 }

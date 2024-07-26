@@ -6,11 +6,12 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:44:34 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/20 16:46:08 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/18 09:41:52 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 
 void turn_single(char *str, int ndx)
 {
@@ -93,7 +94,7 @@ int	error_msg1h3(char *str, int x)
 		!ft_strncmp(&str[x], "((", ft_strlen("((")) ||
 		!ft_strncmp(&str[x], "(", ft_strlen("(")))
 	{
-		write(2, "minishell: syntax error near unexpected token `'\n", 51);
+		write(2, "minishell: syntax error near unexpected token `('\n", 51);
 		return (0);
 	}
 	else if(!ft_strncmp(&str[x], ") )", ft_strlen(") )")) ||

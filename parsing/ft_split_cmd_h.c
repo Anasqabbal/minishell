@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_cmd_h.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:51:26 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/20 16:45:50 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/25 14:04:32 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,24 @@ char	*skip_unnecessary_quotes(char *str)
 	the_while(str, result);
     return result;
 }
+void expo_turn(char **str)
+{
+	int x;
+	int y;
 
+	y = 0;
+	while (str[y])
+	{
+		x = 0;
+		while (str[y][x])
+		{
+			if (str[y][x] < 0)
+				str[y][x] *= -1;
+			x++;
+		}
+		y++;
+	}
+}
 static char **take_qoutes_off(char **array)
 {
 	int 	y;
@@ -57,7 +74,6 @@ static char **take_qoutes_off(char **array)
 	int		len;
 
 	len = arg_count(array);
-	back_turning(array);
 	cmd = (char **)malloc((len + 1) * sizeof(char *));
 	if (!cmd)
 		return (NULL);
@@ -102,6 +118,7 @@ void	pipe_split_h(char **splt_pip, t_prs **curr, t_prs **head, char *com)
 		if (!no_q)
 			free_it_h2(splt_pip, com, head, new);
 		free_it(splt_space, arg_count(splt_space));
+		// expo_turn(no_q);
 		parse_red(no_q, new);
 		// free_it(no_q, arg_count(no_q));
 		fill_cmd(curr, head, new);

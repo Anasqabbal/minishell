@@ -6,11 +6,13 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 14:14:22 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/24 16:15:17 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/26 17:59:03 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int g_sig;
 
 void	f(void)
 {
@@ -43,6 +45,7 @@ int main(int ac, char **av, char **env)
 	while (1)
 	{
 		input = readline("minishell$ ");
+		
 		if (!input && printf("exit\n"))
 			break ;
 		if (input && input[0] != '\0')
@@ -54,6 +57,11 @@ int main(int ac, char **av, char **env)
 				add_history(input);
 			clear_prs(&n);
 			free(input);
+		}
+		if (g_sig == 1)
+		{
+			ret = 1;
+			g_sig = 0;
 		}
 	}
 	return (ft_lstclear(&envp, free), clear_prs(&n), ret);

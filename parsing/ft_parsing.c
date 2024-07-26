@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parsing.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 16:02:33 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/20 16:45:45 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/24 17:43:14 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 
 static void delete_row(char ***array, int row_d)
 {
@@ -51,6 +52,8 @@ static void parse_cmd(char **array, t_prs *node)
 	int y;
 	
 	y = 1;
+	if (array[0] == NULL|| array[0][0] == '\0')
+		return ;
 	node->cmd = array[0];
 	while (array[y])
 	{	
@@ -80,16 +83,22 @@ void parse_red(char **array, t_prs *node)
 		{
 			add_to_struct(&node->red, array[x]);
 			delete_row(&array, x);
-			add_to_struct(&node->red, array[x]);
-			delete_row(&array, x);
+			if (array[x])
+			{
+				add_to_struct(&node->red, array[x]);
+				delete_row(&array, x);
+			}
 			x = 0;
 		}
 		else if (array[x][0] == '<')
 		{
 			add_to_struct(&node->red, array[x]);
 			delete_row(&array, x);
-			add_to_struct(&node->red, array[x]);
-			delete_row(&array, x); 
+			if (array[x])
+			{
+				add_to_struct(&node->red, array[x]);
+				delete_row(&array, x);
+			}
 			x = 0;
 		}
 		else 

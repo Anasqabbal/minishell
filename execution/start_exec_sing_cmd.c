@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:43:27 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/21 17:10:55 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/26 17:29:00 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,33 @@ int	export_exit_code(t_list **env, t_exec *e)
 	return (0);
 }
 
+int	export_with_equal(char *str, t_list **env)
+{
+	char	*res;
+	char	*res1;
+	char	*add;
+	int		len;
+	int		i;
+
+	i = -1;
+	len = ft_strlen(str) - ft_strlen(ft_strchr(str, '='));
+	res = malloc(sizeof(char) * (len + 1));
+	if (!res)
+		return (exit(1), 1);
+	add = ft_strchr(str, '+');
+	if (add && add < ft_strchr(str, '='))
+		len -= 1;
+	while(++i < len)
+		res[i] = str[i];
+	res[i] = '\0';
+	res1 = my_strjoin("_=", res);
+	if (!res1)
+		return (free(res), free(res1), exit(1), 1);
+	if (!export1(res1, env))
+		return (free(res), free(res1), exit(1), 1);
+	return (0);
+}
+
 int	ft_export_(t_list **env, char **str, t_exec *e)
 {
 	char	*res1;
@@ -41,6 +68,8 @@ int	ft_export_(t_list **env, char **str, t_exec *e)
 	{
 		if ((!ft_strncmp(str[i], "$?", 2)) && ft_strlen(str[i]) == 2)
 			return (export_exit_code(env, e));
+		if (ft_strchr(str[i], '='))
+			return (export_with_equal(str[i], env));
 		res1 = my_strjoin("_=", str[i]);
 	}
 	else
@@ -74,6 +103,7 @@ int	first_work(t_prs **lst, t_list **envp, t_sing *s, char **path)
 		return ((*lst)->ex_code = s->ret, 0);
 	if (s->e->in && !s->ret)
 	{
+		/*this is the firs command and you set the condition !s->ret that hold the previouse return value you set that is must be 0 try failed command before */
 		if (the_input(*lst, s->e))
 			return ((*lst)->ex_code);
 	}
@@ -97,8 +127,10 @@ static int	execute_this(t_prs **lst, t_list **envp, t_exec *e, t_sing *s)
 	}
 	s->ret = ft_execve1(e, -1, s->out);
 	if (ft_prssize(*lst) == 1)
-		waitpid(-1, &(s->ret), 0);
-	s->ret = WEXITSTATUS(s->ret);
+	// 	waitpid(-1, &(s->ret), 0);
+	// s->ret = WEXITSTATUS(s->ret);
+	s->ret = dkchi_t3_signals(&(s->ret));
+	signal(SIGINT, ft_handler);
 	return (s->ret);
 }
 
@@ -110,10 +142,12 @@ int	one_cmd(t_prs **lst, t_list **envp, t_exec *e, char **path)
 	if (initialize_sing(lst, envp, e, &s) < 0)
 		return (close(s.save), 1);
 	ret = first_work(lst, envp, &s, path);
-	if (ret < 0)
-		return (close(s.save), -1);
-	// if (ft_export_(envp, e->cmd, e) < 0)
-	// 	return (close(s.save), 1);
+	if (ret == -1)
+		return (close(s.save), exit(1), 1);
+	if (ret)
+		return (close(s.save), ret);
+	if (ft_export_(envp, e->cmd, e) < 0)
+		return (close(s.save), 1);
 	if (ret)
 		return (close(s.save), ret);
 	if (it_is_builtin((*lst)->cmd))

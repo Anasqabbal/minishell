@@ -6,11 +6,12 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:33:49 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/20 16:45:56 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/26 09:18:31 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 
 static void put_spaces_h(char *cmd, int *x, int *y, char *str)
 {
@@ -48,7 +49,7 @@ static char	*put_spaces(char *cmd, int count)
     char	*str;
 	int		y; 
 
-    str = (char *)malloc((ft_strlen(cmd) + (count * 2)+ 1) * sizeof(char));
+    str = (char *)malloc((ft_strlen(cmd) + (count * 2) + 2) * sizeof(char));
     if (!str)
 	{
 		free(cmd);
@@ -69,8 +70,34 @@ static char	*put_spaces(char *cmd, int count)
     str[y] = '\0';
     return (free(cmd), str);
 }
+void turning_it_back(t_prs *head)
+{
+	t_prs *curr;
+	int x;
 
-t_prs *pipe_split(char *cmd, int opp, t_list *env, int *ret)
+	curr = head;
+	while (curr != NULL)
+	{
+		x = 0;
+		if (curr->cmd)
+		{
+			while (curr->cmd[x])
+			{
+				if (curr->cmd[x] < 0)
+					curr->cmd[x] *= -1;
+				x++;
+			}
+		}
+		if (curr->arg)
+			expo_turn(curr->arg);
+		if (curr->red)
+			expo_turn(curr->red);
+		if (curr->opts)
+			expo_turn(curr->opts);
+		curr = curr->next;
+	}
+}
+t_prs *pipe_split(char *cmd, int opp, t_list *env, int *red)
 {	
 	char **splt_pip;
 	char *final;
@@ -80,18 +107,23 @@ t_prs *pipe_split(char *cmd, int opp, t_list *env, int *ret)
 	final = put_spaces(cmd, opp);	
 	turn_back(final, 1);
 	final = dollar_sign(final);
-	final = cmd_expa(final, env, ret);
-	turn_back(final, 1);
+
+	final = cmd_expa(final, env, red);
+	final = dollar_skipping(final);
+	final = blurr_dollar_digit(final);
+	turn_back(final, 1);	
 	splt_pip = ft_split(final, '|');
+	
 	if (!splt_pip)
 	{
 		free(final);
 		exit(1);
-	} 
+	}
 	// free(final);
 	// exit(0);
 	pipe_split_h(splt_pip, &curr, &head, final);
 	free(final);
 	free_it(splt_pip, arg_count(splt_pip));
+	turning_it_back(head);
 	return (head);
 }
