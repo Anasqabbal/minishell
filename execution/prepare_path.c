@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 15:54:03 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/26 17:12:35 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 14:53:41 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ static int	valid_path(char *cmd, char *content, t_exec *p)
 
 	cmd1 = ft_strjoin("/", cmd);
 	if (!cmd1)
-		return (1);
+		return (-1);
 	path = ft_strjoin(content, cmd1);
 	if (!path)
-		return (free(cmd1), 1);
+		return (free(cmd1), -1);
 	if (!access(path, F_OK))
 	{
 		if (access(path, X_OK) == -1)
@@ -46,12 +46,14 @@ static int	check_access1(char *cmd, char *content, t_exec *p)
 	{
 		res = ft_split(content + 1, ':');
 		if (!res)
-			return (1);
+			return (-1); /* done */
 		while (res[i])
 		{
 			ret = valid_path(cmd, res[i], p);
 			if (!ret)
 				return (to_free(res), 0);
+			else if (ret == -1)
+				return (to_free(res), -1);
 			else if (ret != 999)
 				return (to_free(res), 0);
 			i++;
@@ -61,9 +63,9 @@ static int	check_access1(char *cmd, char *content, t_exec *p)
 	return (ft_error(cmd, 127));
 }
 
-int	check_it_is_directory(char *cmd , t_exec *p, char *path)
+int	check_it_is_directory(char *cmd, t_exec *p, char *path)
 {
-	struct stat s;
+	struct stat	s;
 
 	(void)path;
 	if (ft_strchr(cmd, '/'))
@@ -78,7 +80,7 @@ int	check_it_is_directory(char *cmd , t_exec *p, char *path)
 				return (ft_error_p(cmd, 126));
 			p->path = ft_strdup(cmd);
 			if (!p->path)
-				return (exit(1), -1);
+				return (-1);
 			return (0);
 		}
 		return (ft_error_p(cmd, 127));
@@ -87,7 +89,6 @@ int	check_it_is_directory(char *cmd , t_exec *p, char *path)
 		return (0);
 	return (0);
 }
-
 
 int	check_access(char *cmd, t_exec *p, t_list **env, char *path)
 {
@@ -102,12 +103,12 @@ int	check_access(char *cmd, t_exec *p, t_list **env, char *path)
 		if (cmd[0] == '.' && ft_strlen(cmd) == 1)
 			return (ft_error_p(cmd, 2));
 		if (path)
-			return (check_access1(cmd, ft_strchr(path, '='), p));
+			return (check_access1(cmd, ft_strchr(path, '='), p)); /*returns -1 when the malloc inside this is failure */
 		res = ft_getenv_ours("PATH=", *env);
 		if (!res)
 			return (ft_error_p(cmd, 127));
-		return (check_access1(cmd, ft_strchr(res->content, '='), p));
+		return (check_access1(cmd, ft_strchr(res->content, '='), p)); /*returns -1 when the malloc inside this is failure */
 	}
 	else
-		return (check_it_is_directory(cmd, p, path));
+		return (check_it_is_directory(cmd, p, path)); /*returns -1 when the malloc inside this is failure */
 }

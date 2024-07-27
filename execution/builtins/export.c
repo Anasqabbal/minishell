@@ -6,17 +6,20 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 18:04:18 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/24 14:41:32 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 12:53:35 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+/*5 functions */
 
 void	*add_to_env(char	*str, t_list	**envp)
 {
 	t_list	*new;
 	t_list	*env;
 	char	*res;
+	char	*str1;
 
 	env = *envp;
 	res = NULL;
@@ -24,9 +27,12 @@ void	*add_to_env(char	*str, t_list	**envp)
 		res = remove_plus(str, res);
 	if (res)
 		str = res;
-	new = ft_lstnew(ft_strdup(str));
+	str1 = ft_strdup(str);
+	if (!str1)
+		return (NULL);
+	new = ft_lstnew(str1);
 	if (!new)
-		return (free(res), NULL);
+		return (free(str1), free(res), NULL);
 	ft_lstadd_back(&env, new);
 	return (free(res), *envp);
 }
@@ -48,7 +54,7 @@ void	*with_plus(char *str, t_list **env, t_list *old, t_list	*new)
 		i++ ;
 	while (str[i])
 		n_s[++j] = str[i++];
-	new = ex_getenv_ours(str, *env);
+	new = ex_getenv_ours(str, *env, -1, NULL);
 	if (!new)
 		return (free(n_s), NULL);
 	str = my_strjoin(new->content, n_s);
@@ -87,10 +93,16 @@ void	*export1(char	*str, t_list	**env)
 {
 	t_list	*new;
 	t_list	*tmp;
+	t_list	*res;
 
-	new = ex_getenv_ours(str, *env);
+	new = ex_getenv_ours(str, *env, -1, NULL);
 	if (!new)
-		return (add_to_env(str, env));
+	{
+		res = add_to_env(str, env);
+		if (!res)
+			return (NULL);
+		return (res);
+	}
 	else
 	{
 		if (ft_strchr(str, '='))
@@ -125,7 +137,7 @@ int	ft_export(char **opts, t_list **envp)
 			if (ret && ++ind)
 				continue ;
 			else if (!export1(opts[i], envp))
-				return (1);
+				return (-1); /* my you need to free the all and exit here */
 		}
 	}
 	if (ind)

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:55:21 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/16 16:09:31 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 16:43:30 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	from_lst_to_2d(t_list **s1, char ***env)
 	{
 		res[i] = ft_strdup((s)->content);
 		if (!res[i])
-			return (to_free(res), 1);
+			return (to_free(res), -1);
 		s = (s)->next;
 	}
 	res[len] = NULL;

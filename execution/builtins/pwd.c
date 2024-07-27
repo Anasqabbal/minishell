@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:48:57 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/21 13:35:49 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 10:39:46 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,17 @@ int	check_echo_opts(char **opts)
 	int	j;
 
 	i = -1;
-	while(opts[++i])
+	while (opts[++i])
 	{
 		j = -1;
-		while(opts[i][++j])
+		while (opts[i][++j])
 		{
-			if (j == 0  && opts[i][j]== '-' && opts[i][j + 1])
+			if (j == 0 && opts[i][j] == '-' && opts[i][j + 1])
 			{
 				if (opts[i][j + 1] == 'e' || opts[i][j + 1] == 'E')
 					return (put_error_msg(opts[i], 0));
 			}
-			else if (j == 1 && opts[i][j - 1]== '-' && opts[i][j] == 'n'
+			else if (j == 1 && opts[i][j - 1] == '-' && opts[i][j] == 'n'
 				&& (opts[i][j + 1] == 'e' || opts[i][j + 1] == 'E'))
 				return (put_error_msg(opts[i], 0));
 		}
@@ -60,7 +60,8 @@ int	it_is_with_options(char **opts, int ind1, char *cmd)
 		return (put_error_msg(opts[0], 1));
 	if (opts[0][i] == '-' && opts[0][i + 1])
 	{
-		if (cmd &&  !ft_strncmp("cd", cmd, 2) && ft_strlen(cmd) == 2 && opts[0][i + 1] == '-')
+		if (cmd && !ft_strncmp("cd", cmd, 2)
+			&& ft_strlen(cmd) == 2 && opts[0][i + 1] == '-')
 			return (0);
 		return (put_error_msg(opts[0], 0));
 	}

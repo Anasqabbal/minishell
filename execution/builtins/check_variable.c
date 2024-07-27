@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 16:19:08 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/24 16:05:29 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 10:49:43 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,11 @@ int	allowed_char(char c, char *allowed)
 	}
 	return (ind);
 }
- /* ((str[0] == '=' && str[1] == '\0')) this last condition for = when it is a single the previous function that check it is start the calculation of len from = and when = is alon the par.len == 0 and this is not true*/
+
+/*((str[0] == '=' && str[1] == '\0')) this last
+ condition for = when it is a single the previous function that
+  check it is start the calculation of len from = and
+  when = is alon the par.len == 0 and this is not true*/
 
 int	valid_name(char *from, char *str, t_par *par)
 {
@@ -99,7 +103,7 @@ int	valid_name(char *from, char *str, t_par *par)
 	if (!str || str[0] == '\0' || ((str[0] == '=' && str[1] == '\0')))
 		return (0);
 	if ((i == 0 && !allowed_char(str[i], par->first)))
-		return (0);		
+		return (0);
 	while (str[i++] && i < par->len - 1)
 	{
 		if ((i != 0 && !allowed_char(str[i], par->mid)))
@@ -113,4 +117,3 @@ int	valid_name(char *from, char *str, t_par *par)
 		return (0);
 	return (1);
 }
-

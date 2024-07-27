@@ -6,31 +6,11 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 13:30:49 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/21 15:51:38 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 13:06:12 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-	/*4 functions*/
-
-// t_list	*ft_getenv_ours(char *str, t_list *env)
-// {
-// 	char	*tmp;
-// 	int		f_l;
-
-// 	tmp = ft_strchr(str, '=');
-// 	if (!tmp)
-// 		return (NULL);
-// 	f_l = ft_strlen(str) - ft_strlen(tmp) + 1;
-// 	while (env)
-// 	{
-// 		if (!ft_strncmp(env->content, str, f_l))
-// 			return (env);
-// 		env = env->next;
-// 	}
-// 	return (NULL);
-// }
 
 t_list	*ft_getenv_ours(char *str, t_list *env)
 {
@@ -72,14 +52,23 @@ static	t_list	*env_is_null(t_list **env, char **path)
 {
 	char	buffer[PATH_MAX];
 	char	*res;
+	char	*res1;
+	char	*res2;
 
 	if (getcwd(buffer, sizeof(buffer)) == NULL)
 		perror("getcwd error");
 	res = ft_strjoin("PWD=", buffer);
 	if (!res)
-		return (NULL);
+		return (exit (1), NULL);
+	res1 = ft_strdup("OLDPWD");
+	if (!res1)
+		return (free(res), exit (1), NULL);
+	res2 = ft_strdup("SHLVL=1");
+	if (!res2)
+		return (free(res), free(res1), NULL);
 	ft_lstadd_back(env, ft_lstnew(res));
-	ft_lstadd_back(env, ft_lstnew(ft_strdup("SHLVL=1")));
+	ft_lstadd_back(env, ft_lstnew(res1));
+	ft_lstadd_back(env, ft_lstnew(res2));
 	*path = "PATH=/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:.";
 	return (*env);
 }
@@ -104,12 +93,12 @@ char	*nw_vl(t_list *env, int ii, char *s, char *s1)
 	while (s[i] >= '0' && s[i] <= '9')
 		res = res * 10 + (s[i++] - 48);
 	if (res < 999)
-	s1 = ft_itoa(res + ii);
+		s1 = ft_itoa(res + ii);
 	if (!s1 && res < 999)
 		return (NULL);
 	re = my_strjoin("SHLVL=", s1);
 	if (!re)
-		return (free (s1), printf ("khrjt mn hna\n"), NULL);
+		return (free (s1), NULL);
 	return (free(s1), re);
 }
 
@@ -131,13 +120,13 @@ t_list	*ft_envdup(char **env, char **path)
 			continue ;
 		res = ft_lstnew(ft_strdup(env[i]));
 		if (!res)
-			return (ft_lstclear(&head, free), NULL);
+			return (ft_lstclear(&head, free), exit(1), NULL);
 		ft_lstadd_back(&head, res);
 	}
 	shlvl = nw_vl(head, 1, NULL, NULL);
 	if (!shlvl)
-		return (ft_lstclear(&head, free), NULL);
-	export1(shlvl, &head);
-	export1("OLDPWD", &head);
+		return (ft_lstclear(&head, free), exit(1), NULL);
+	if (!export1(shlvl, &head) || !export1("OLDPWD", &head))
+		return (free(shlvl), exit(1), NULL);
 	return (free(shlvl), head);
 }

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/26 17:24:54 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 15:44:02 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ typedef struct s_ndx{
 /*EXECUTION*/
 	/* ----- BUILTINS ----- */
 int				ft_export(char **opts, t_list **envp);
-t_list			*ex_getenv_ours(char *str, t_list *env);
+t_list			*ex_getenv_ours(char *str, t_list *env, int j, char *tmp1);
 char			*remove_plus(char *str, char *res);
 int				ft_env(char **opts, t_list *node);
 int				ft_unset(char **str, t_list **env, char **path);
@@ -140,7 +140,9 @@ int				open_in_files(t_exec *e, int len, char *file, char *token);
 int				ft_open_files(t_prs *lst, t_exec *e);
 int				set_and_open(t_exec *e, char **f, int i);
 int				check_file_access(char *file, int indice, int outfile);
+char			*add_new_line(char **res);
 char			*read_from_here_doc(char **red, int i, t_list **env, int *ret);
+int				check_ambiguous(char *str, int ind);
 
 	/*ft_1open_out_files.c "3"*/
 int				ft_restore_input(void);
@@ -156,7 +158,7 @@ char			**prepare_cmd(char *cmd, char **opts, char **args);
 	/* prepare_path.c "3"*/
 int				check_access(char *cmd, t_exec *p, t_list **env, char *path);
 	/*start_exec_00.c "4"*/
-int				ft_execve1(t_exec *e, int in, int out);
+int				ft_execve1(t_exec *e, int in, int out, int pid);
 int				ft_is_pipe(int fd);
 int				start_exec(t_prs **lst, t_list **envp, int rett, char **path);
 	/* start_exec_mult_cmds.c */
@@ -165,8 +167,8 @@ int				mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path);
 	/* start_exec_mult_cmdss_utils.c */
 int				the_input(t_prs *lst, t_exec *e);
 int				set_stdin(t_prs *lst, t_exec *e, int indice, int *fd);
-void			set_stdout_and_cmd(t_prs *l, t_exec *e, int *o, int *fd);
-int				ft_return(int *ret, int *i);
+int				set_stdout_and_cmd(t_prs *l, t_exec *e, int *o, int *fd);
+int				ft_return(int *ret, int *i, t_all a);
 int				open_files_and_pipe(t_all *a);
 	/* start_exec_sing_cmd.c */
 int				one_cmd(t_prs **lst, t_list **envp, t_exec *e, char **paht);

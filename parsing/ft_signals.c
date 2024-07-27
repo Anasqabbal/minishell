@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 15:36:33 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/26 17:58:44 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 11:42:36 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_handler(int sig)
 	{
 		g_sig = 1;
 		printf("\n");
-		rl_replace_line("", 0); 
+		// rl_replace_line("", 0);
 		rl_on_new_line();     
     	rl_redisplay();
 	}

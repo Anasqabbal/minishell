@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:13:46 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/25 15:58:02 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 10:49:57 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	print_all(char *s)
 	int	i;
 
 	i = -1;
-	while(s[++i])
+	while (s[++i])
 	{
 		ft_printf("%c", s[i]);
 	}

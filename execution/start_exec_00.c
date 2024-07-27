@@ -6,22 +6,20 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/26 15:39:31 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 18:06:53 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_execve1(t_exec *e, int in, int out)
+int	ft_execve1(t_exec *e, int in, int out, int pid)
 {
-	int		pid;
-
 	signal(SIGINT, ft_handler_fork);
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork"), 1);
 	if (pid == 0)
-	{	
+	{
 		signal(SIGQUIT, SIG_DFL);
 		if (in != -1)
 			close(in);
@@ -93,25 +91,24 @@ int	start_exec(t_prs **lst, t_list **envp, int rett, char **path)
 
 	e = NULL;
 	ret = rett;
+	if (set_here_doc(*lst, &e, envp, &rett) == -1)
+		return (ft_clear_exec(&e), ft_lstclear(envp, free), clear_prs(lst), exit(1), 1);
 	if (*lst)
 	{
-		(void) path;
-		if (set_here_doc(*lst, &e, envp, &rett))
-			return (ft_clear_exec(&e), exit(1), 1);
-		// ft_2dprint(e->here_doc);
 		e->ex = rett;
 		if (ft_prssize(*lst) != 1)
 		{
 			ret = mult_cmds(*lst, envp, e, path);
 			if (ret < 0)
-				return (ret);
+				return (ft_clear_exec(&e), ft_lstclear(envp, free), clear_prs(lst), exit(1), 1);
 		}
 		else
 			ret = one_cmd(lst, envp, e, path);
-		if (ft_restore_input())
-			return (1);
+		if (ret == -1 || ft_restore_input() < 0)
+			return (ft_clear_exec(&e), ft_lstclear(envp, free), clear_prs(lst), exit(1), 1);
 	}
 	else
-		export1("_=", envp);
+		if (!export1("_=", envp))
+			return (ft_lstclear(envp, free), clear_prs(lst), exit(1), 1); /* DONE */
 	return (clear_prs(lst), ft_clear_exec(&e), ret);
 }

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:12 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/26 15:23:07 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 18:07:20 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 
 int	inside_if(t_all *a)
 {
+	if (a->ret == -1)
+		return (-1);
 	a->indice = 1;
 	a->p = a->p->next;
 	a->e = a->e->n;
@@ -42,15 +44,18 @@ int	initialize_t_all(t_prs *p, t_list **envp, t_exec *e, t_all *a)
 /*in the line 62 if sometest failed remmenber 
 	you remove restore input from here*/
 
-void	execute_this(t_all a)
+int	execute_this(t_all a)
 {
+	int r;
+
 	if (ft_prssize(a.p) != 1)
 	{
 		if (it_is_builtin((a.p)->cmd))
-			a.ret = ft_execve1(a.e, a.fd[0], a.out);
+			a.ret = ft_execve1(a.e, a.fd[0], a.out, 0);
 		else
 			a.ret = ft_execve2(a.e, a.fd[0], a.out, a.envp);
-		if (ft_is_pipe(a.out))
+		r = ft_is_pipe(a.out);
+		if (r == 1)
 			close(a.out);
 	}
 	else
@@ -58,22 +63,29 @@ void	execute_this(t_all a)
 		close(a.fd[0]);
 		close(a.fd[1]);
 		if (it_is_builtin(a.p->cmd))
-			a.ret = ft_execve1(a.e, -1, a.out);
+			a.ret = ft_execve1(a.e, -1, a.out, 0);
 		else
 			a.ret = ft_execve2(a.e, -1, a.out, a.envp);
-		ft_restore_input();
+		r = ft_restore_input();
 	}
+	if (r == -1 || a.ret == -1)
+		return (a.ret = 1, -1);
+	return (0); /* DONE */
 }
 
 int	complete_work(t_all *a)
 {
-	a->ret = set_stdin(a->p, a->e, a->indice, a->fd);
-	if (a->ret)
-		return (a->ret);
-	set_stdout_and_cmd(a->p, a->e, &(a->out), a->fd);
-	if (from_lst_to_2d(a->envp, &(a->e->env)) < 0)
+	if (a->ret == -1)
 		return (-1);
-	execute_this(*a);
+	a->ret = set_stdin(a->p, a->e, a->indice, a->fd); /* DONE */
+	if (a->ret)
+		return (a->ret = 1, -1); 
+	if (set_stdout_and_cmd(a->p, a->e, &(a->out), a->fd)) /* DONE */
+		return (-1); 
+	if (from_lst_to_2d(a->envp, &(a->e->env)) < 0) /* DONE */
+		return (-1);
+	if (execute_this(*a) < 0) /* DONE */
+		return (-1);
 	a->p = a->p->next;
 	a->e = a->e->n;
 	a->indice = 0;
@@ -85,26 +97,25 @@ int	mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path)
 {
 	t_all	a;
 
-	initialize_t_all(lst, envp, e, &a);
+	initialize_t_all(lst, envp, e, &a); /* DONE */
 	while (a.p)
 	{
 		a.e->i = a.i;
 		a.e->ex = WEXITSTATUS(a.ret);
-		a.ret = open_files_and_pipe(&a);
+		a.ret = open_files_and_pipe(&a); /* DONE */
 		if (a.ret == -1)
-			return (1);
+			return (-1);
 		else if (a.ret == 1)
 			continue ;
-		a.ret = check_access(a.p->cmd, a.e, a.envp, *path);
+		a.ret = check_access(a.p->cmd, a.e, a.envp, *path); /* DONE */
 		if ((a.ret || !a.p->cmd) && it_is_builtin(a.p->cmd))
 		{
 			if (inside_if(&a) < 0)
-				return (1);
+				return (-1);
 			continue ;
 		}
-		if (complete_work(&a) < 0)
+		if (complete_work(&a) < 0) /* DONE */
 			return (-1);
 	}
-	ft_export_(a.envp, NULL, NULL);
-	return (ft_return(&a.ret, &a.i));
+	return (ft_return(&a.ret, &a.i, a)); /* DONE */
 }

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:18:37 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/26 13:02:06 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 15:52:48 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ int	file_here_docs(char **f, t_exec *e, t_list **env, int *ret)
 		if (!ft_strncmp(f[i], "<<<", ft_strlen(f[i])) && ft_strlen(f[i]) >= 2)
 		{
 			e->here_doc[j] = read_from_here_doc(f, i, env, ret);
+			if (!e->here_doc[j])
+				return (-1);
 			j++;
 		}
 	}
@@ -64,8 +66,8 @@ static int	compare_and_check(char **f, t_exec *e,	int i)
 			return (1);
 		if (e->in)
 			to_free_f(e->in, 1);
-		if (open_in_files(e, 1, f[i + 1], f[i]))
-			return (1);
+		if (open_in_files(e, 1, f[i + 1], f[i])) /*Done with it returns -1 when malloc or open failure*/
+			return (-1);
 	}
 	else if (!ft_strncmp(f[i], ">", ft_strlen(f[i]))
 		|| !ft_strncmp(f[i], ">>", ft_strlen(f[i])))
@@ -74,17 +76,20 @@ static int	compare_and_check(char **f, t_exec *e,	int i)
 			return (1);
 		if (e->out)
 			to_free_f(e->out, 1);
-		if (open_out_files(e, 1, f[i + 1], f[i]))
-			return (1);
+		if (open_out_files(e, 1, f[i + 1], f[i])) /*Done with it returns -1 when malloc or open failure*/
+			return (-1);
 	}
 	return (0);
 }
 
 int	set_and_open(t_exec *e, char **f, int i)
 {
+	int r;
+
 	while (f && f[++i])
 	{
-		if ((!ft_strncmp(f[i], "<<", 2) && ft_strlen(f[i]) == 2 )|| (!ft_strncmp(f[i], "<<<", 3) && ft_strlen(f[i]) == 3))
+		if ((!ft_strncmp(f[i], "<<", 2) && ft_strlen(f[i]) == 2)
+			|| (!ft_strncmp(f[i], "<<<", 3) && ft_strlen(f[i]) == 3))
 		{
 			e->in = malloc(sizeof(int *) * 1);
 			if (!e->in)
@@ -96,25 +101,28 @@ int	set_and_open(t_exec *e, char **f, int i)
 			e->in_f = 2;
 			continue ;
 		}
-		if (compare_and_check(f, e, i))
+		r = compare_and_check(f, e, i);
+		if (r == 1)
 			return (1);
+		else if(r == -1)
+			return (-1);
 	}
-	return (0);
+	return (0); /*go to set and open and check the return */
 }
 
 int	set_here_doc(t_prs *l, t_exec **e, t_list **env, int *ret)
 {
 	t_prs	*l2;
-	t_exec *new;
-	int i;
+	t_exec	*new;
+	int		i;
 
 	l2 = l;
 	while (l)
 	{
 		new = ft_exec_new();
 		if (!new)
-			return (1);
-		if (file_here_docs(l->red, new, env, ret))
+			return (-1);
+		if (file_here_docs(l->red, new, env, ret) == -1)
 			return (-1);
 		ft_execadd_back(e, new);
 		l = l->next;

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 09:35:09 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/16 16:45:19 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 15:18:31 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	**prepare_cmd(char *cmd, char **opts, char **args)
 
 	res = NULL;
 	if (!cmd)
-		return (NULL);
+		return (res);
 	if (opts || args)
 	{
 		res = ft_2dstrjoin(opts, args);
@@ -59,6 +59,5 @@ char	**prepare_cmd(char *cmd, char **opts, char **args)
 	res2 = join_cmd_and_args(cmd, res, calcul_args(res));
 	if (!res2)
 		return (to_free(res), NULL);
-	to_free(res);
-	return (res2);
+	return (to_free(res), res2);
 }

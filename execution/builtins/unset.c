@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 15:54:11 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/24 17:20:50 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/27 10:37:39 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	ft_envdup_exept(t_list	*envp, char	*str, t_list	**new)
 	{
 		j = -1;
 		s = envp->content;
-		while(s[++j] && s[j] != '=')
+		while (s[++j] && s[j] != '=')
 			;
 		if (!str || ft_strncmp(envp->content, str, j))
 		{
@@ -84,7 +84,7 @@ int	unset1(char *str, t_list **envp, char **path, t_list **new)
 	if (pos == -1)
 	{
 		if (ft_envdup_exept(env, NULL, &head))
-			return(1);
+			return (1);
 		return (*new = head, 0);
 	}
 	if (ft_envdup_exept(env, str, &head))
