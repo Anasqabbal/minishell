@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:13:46 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/27 10:49:57 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/28 09:50:29 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,7 @@ static void	print_all(char *s)
 
 	i = -1;
 	while (s[++i])
-	{
 		ft_printf("%c", s[i]);
-	}
 }
 
 int	ft_echo(t_exec *e, t_list *envp)
@@ -62,8 +60,9 @@ int	ft_echo(t_exec *e, t_list *envp)
 	while (e->cmd[x] != NULL)
 	{
 		print_all(e->cmd[x]);
-		ft_printf(" ");
 		x++;
+		if (e->cmd[x])
+			ft_printf(" ");
 	}
 	if (ind == 0)
 		ft_printf("\n");

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/27 15:30:54 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:18:33 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,13 @@ int	check_file_access(char *file, int indice, int outfile)
 {
 	if (file)
 	{
+		if (file[0] == '\0')
+		{
+			if (indice == 0)
+				return (ft_error_files(2, 1, file));
+			else
+				return (1);
+		}
 		if (check_ambiguous(file, 0) && !indice)
 			return (check_ambiguous(file, 1));
 		if (!access(file, F_OK))
@@ -106,7 +113,8 @@ char	*read_from_here_doc(char **red, int i, t_list **env, int *ret)
 			if (!ttyname(0))
 			{
 				g_sig = 1;
-				open(ttyname(2), O_RDWR);
+				if (open(ttyname(2), O_RDWR) == -1)
+					return (NULL);
 				break ;
 			}
 			break ;
@@ -119,8 +127,8 @@ char	*read_from_here_doc(char **red, int i, t_list **env, int *ret)
 		tmp = here_doc;
 		if (ft_strncmp(red[i], "<<<", 3) && ft_strlen(red[i]) != 3)
 		{
-			res = dollar_sign(res); /*wach tt alloci hna ??*/
-			res = cmd_expa(res, *env, ret); /* wach tt alloci hna ?? */
+			res = dollar_sign(res);
+			res = cmd_expa(res, *env, ret);
 			j = -1;
 			while (res[++j])
 			{
@@ -135,7 +143,7 @@ char	*read_from_here_doc(char **red, int i, t_list **env, int *ret)
 		free(tmp);
 	}
 	signal(SIGINT, ft_handler);
-	if (!here_doc) /* mli tykon lheredoc khawi */
+	if (!here_doc)
 	{
 		here_doc = ft_strdup("");
 		if (!here_doc)
@@ -156,13 +164,13 @@ int	open_in_files(t_exec *e, int len, char *file, char *token)
 	{
 		e->in[i] = malloc(sizeof(int));
 		if (!e->in[i])
-			return (e->in = to_free_f(e->in, i), -1); /*you need to return -1 and free the all outside*/
+			return (e->in = to_free_f(e->in, i), -1);
 		if (!ft_strncmp(token, "<<", 2))
 			e->in[i][0] = -1;
 		else if (!ft_strncmp(token, "<", 1))
 			e->in[i][0] = creat_open_file(file, 0, 0);
 		if ((ft_strncmp(token, "<<", 2) && e->in[i][0] == -1))
-			return (e->in = to_free_f(e->in, i), -1); /* when open failure return -1 */
+			return (e->in = to_free_f(e->in, i), -1);
 	}
 	e->in_f = 1;
 	return (e->in_l = 1, 0);

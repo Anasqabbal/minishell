@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:12 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/27 18:07:20 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:27:18 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	initialize_t_all(t_prs *p, t_list **envp, t_exec *e, t_all *a)
 
 int	execute_this(t_all a)
 {
-	int r;
+	int	r;
 
 	if (ft_prssize(a.p) != 1)
 	{
@@ -70,21 +70,21 @@ int	execute_this(t_all a)
 	}
 	if (r == -1 || a.ret == -1)
 		return (a.ret = 1, -1);
-	return (0); /* DONE */
+	return (0);
 }
 
 int	complete_work(t_all *a)
 {
 	if (a->ret == -1)
 		return (-1);
-	a->ret = set_stdin(a->p, a->e, a->indice, a->fd); /* DONE */
+	a->ret = set_stdin(a->p, a->e, a->indice, a->fd);
 	if (a->ret)
-		return (a->ret = 1, -1); 
-	if (set_stdout_and_cmd(a->p, a->e, &(a->out), a->fd)) /* DONE */
-		return (-1); 
-	if (from_lst_to_2d(a->envp, &(a->e->env)) < 0) /* DONE */
+		return (a->ret = 1, -1);
+	if (set_stdout_and_cmd(a->p, a->e, &(a->out), a->fd))
 		return (-1);
-	if (execute_this(*a) < 0) /* DONE */
+	if (from_lst_to_2d(a->envp, &(a->e->env)) < 0)
+		return (-1);
+	if (execute_this(*a) < 0)
 		return (-1);
 	a->p = a->p->next;
 	a->e = a->e->n;
@@ -97,25 +97,27 @@ int	mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path)
 {
 	t_all	a;
 
-	initialize_t_all(lst, envp, e, &a); /* DONE */
+	if (g_sig == 1)
+		return (1);
+	initialize_t_all(lst, envp, e, &a);
 	while (a.p)
 	{
 		a.e->i = a.i;
 		a.e->ex = WEXITSTATUS(a.ret);
-		a.ret = open_files_and_pipe(&a); /* DONE */
+		a.ret = open_files_and_pipe(&a);
 		if (a.ret == -1)
 			return (-1);
-		else if (a.ret == 1)
+		if (a.ret == 1)
 			continue ;
-		a.ret = check_access(a.p->cmd, a.e, a.envp, *path); /* DONE */
+		a.ret = check_access(a.p->cmd, a.e, a.envp, *path);
 		if ((a.ret || !a.p->cmd) && it_is_builtin(a.p->cmd))
 		{
 			if (inside_if(&a) < 0)
 				return (-1);
 			continue ;
 		}
-		if (complete_work(&a) < 0) /* DONE */
+		if (complete_work(&a) < 0)
 			return (-1);
 	}
-	return (ft_return(&a.ret, &a.i, a)); /* DONE */
+	return (ft_return(&a.ret, &a.i, a));
 }

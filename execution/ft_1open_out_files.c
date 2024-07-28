@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:28 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/27 16:54:23 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:19:57 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,20 +55,20 @@ int	open_out_files(t_exec *e, int len, char *file, char *token)
 	e->out = 0;
 	e->out = malloc(sizeof(int *) * len);
 	if (!e->out)
-		return (-1); /* return -1 when malloc failure */
+		return (-1);
 	while (++i < len)
 	{
 		if (check_ambiguous(file, 0))
-			return (1);
+			return (e->out = to_free_f(e->out, i), 1);
 		e->out[i] = malloc(sizeof(int));
 		if (!e->out[i])
-			return (to_free_f(e->out, i), -1); /* return -1 when malloc failure */
+			return (to_free_f(e->out, i), -1);
 		if (!ft_strncmp(token, ">>", 2) && ft_strlen(token) == 2)
 			e->out[i][0] = creat_open_file(file, 1, O_APPEND);
 		else if (!ft_strncmp(token, ">", 1) && ft_strlen(token) == 1)
 			e->out[i][0] = creat_open_file(file, 1, O_TRUNC);
 		if (e->out[i][0] < 0)
-			return (e->out = to_free_f(e->out, i), -1); /* return -1 when open failure */
+			return (e->out = to_free_f(e->out, i), -1);
 	}
 	return (e->out_l = 1, 0);
 }

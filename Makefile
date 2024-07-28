@@ -6,14 +6,14 @@
 #    By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 16:28:17 by zgtaib            #+#    #+#              #
-#    Updated: 2024/07/27 11:45:47 by anqabbal         ###   ########.fr        #
+#    Updated: 2024/07/28 16:16:47 by anqabbal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 F = -g -fsanitize=address
 CC = cc
-CFLAGS = -Wall -Wextra -Werror $F -std=c99
+CFLAGS = -Wall -Wextra -Werror -std=c99 $F
 INCLUDES = minishell.h ./libft/libft.h
 LIBFT = libft/libft.a
 READLINEFLAG = -lreadline

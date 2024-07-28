@@ -24,7 +24,7 @@ void	ft_print_prs(t_prs *c)
 		{
 			if (!ft_strncmp(c->red[i], "<", 1))
 			{
-				ft_printf("    the infile ");
+				ft_printf("    the infile is %s", c->red[i]);
 				if (c->red[i + 1])
 				{
 					ft_printf("and its name is %s\n", c->red[i + 1]);
@@ -33,7 +33,7 @@ void	ft_print_prs(t_prs *c)
 			}
 			else if (!ft_strncmp(c->red[i], ">", 1))
 				{
-				ft_printf("    the outfile ");
+				ft_printf("    the outfile %s", c->red[i]);
 				if (c->red[i + 1])
 				{
 					ft_printf("and its name is %s\n", c->red[i + 1]);

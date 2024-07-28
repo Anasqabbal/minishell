@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:18:37 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/27 15:52:48 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:19:38 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,11 @@ int	file_here_docs(char **f, t_exec *e, t_list **env, int *ret)
 			e->here_doc[j] = read_from_here_doc(f, i, env, ret);
 			if (!e->here_doc[j])
 				return (-1);
+			if (g_sig == 1)
+			{
+				e->here_doc[j] = NULL;
+				return (1);
+			}
 			j++;
 		}
 	}
@@ -60,13 +65,15 @@ int	file_here_docs(char **f, t_exec *e, t_list **env, int *ret)
 
 static int	compare_and_check(char **f, t_exec *e,	int i)
 {
+	int	ret;
+
 	if (!ft_strncmp(f[i], "<", ft_strlen(f[i])))
 	{
 		if (check_file_access(f[i + 1], 1, 0))
 			return (1);
 		if (e->in)
 			to_free_f(e->in, 1);
-		if (open_in_files(e, 1, f[i + 1], f[i])) /*Done with it returns -1 when malloc or open failure*/
+		if (open_in_files(e, 1, f[i + 1], f[i]))
 			return (-1);
 	}
 	else if (!ft_strncmp(f[i], ">", ft_strlen(f[i]))
@@ -76,15 +83,18 @@ static int	compare_and_check(char **f, t_exec *e,	int i)
 			return (1);
 		if (e->out)
 			to_free_f(e->out, 1);
-		if (open_out_files(e, 1, f[i + 1], f[i])) /*Done with it returns -1 when malloc or open failure*/
+		ret = open_out_files(e, 1, f[i + 1], f[i]);
+		if (ret == -1)
 			return (-1);
+		else if (ret)
+			return (1);
 	}
 	return (0);
 }
 
 int	set_and_open(t_exec *e, char **f, int i)
 {
-	int r;
+	int		r;
 
 	while (f && f[++i])
 	{
@@ -104,10 +114,10 @@ int	set_and_open(t_exec *e, char **f, int i)
 		r = compare_and_check(f, e, i);
 		if (r == 1)
 			return (1);
-		else if(r == -1)
+		else if (r == -1)
 			return (-1);
 	}
-	return (0); /*go to set and open and check the return */
+	return (0);
 }
 
 int	set_here_doc(t_prs *l, t_exec **e, t_list **env, int *ret)
@@ -133,11 +143,17 @@ int	set_here_doc(t_prs *l, t_exec **e, t_list **env, int *ret)
 		while (l2 && l2->red && l2->red[++i])
 		{
 			if (ft_strncmp(l2->red[i], "<<", 2)
-				&& !ft_strncmp(l2->red[i], "<", ft_strlen(l2->red[i])))
-				check_file_access(l2->red[i + 1], 0, 0);
+				&& !ft_strncmp(l2->red[i], "<", 1))
+			{
+				if (check_file_access(l2->red[i + 1], 0, 0))
+					break ;
+			}
 			else if (!ft_strncmp(l2->red[i], ">>", 2)
-				|| !ft_strncmp(l2->red[i], ">", ft_strlen(l2->red[i])))
-				check_file_access(l2->red[i + 1], 0, 1);
+				|| !ft_strncmp(l2->red[i], ">", 1))
+			{
+				if (check_file_access(l2->red[i + 1], 0, 1))
+					break ;
+			}
 		}
 		l2 = l2->next;
 	}

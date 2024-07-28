@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 15:54:03 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/27 14:53:41 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:24:26 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	check_access1(char *cmd, char *content, t_exec *p)
 	{
 		res = ft_split(content + 1, ':');
 		if (!res)
-			return (-1); /* done */
+			return (-1);
 		while (res[i])
 		{
 			ret = valid_path(cmd, res[i], p);
@@ -103,12 +103,14 @@ int	check_access(char *cmd, t_exec *p, t_list **env, char *path)
 		if (cmd[0] == '.' && ft_strlen(cmd) == 1)
 			return (ft_error_p(cmd, 2));
 		if (path)
-			return (check_access1(cmd, ft_strchr(path, '='), p)); /*returns -1 when the malloc inside this is failure */
+			return (check_access1(cmd,
+					ft_strchr(path, '='), p));
 		res = ft_getenv_ours("PATH=", *env);
 		if (!res)
 			return (ft_error_p(cmd, 127));
-		return (check_access1(cmd, ft_strchr(res->content, '='), p)); /*returns -1 when the malloc inside this is failure */
+		return (check_access1(cmd,
+				ft_strchr(res->content, '='), p));
 	}
 	else
-		return (check_it_is_directory(cmd, p, path)); /*returns -1 when the malloc inside this is failure */
+		return (check_it_is_directory(cmd, p, path));
 }

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/27 18:06:53 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:25:07 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 int	ft_execve1(t_exec *e, int in, int out, int pid)
 {
+	struct termios	s;
+
+	tcgetattr(STDOUT_FILENO, &s);
 	signal(SIGINT, ft_handler_fork);
 	pid = fork();
 	if (pid < 0)
@@ -109,6 +112,6 @@ int	start_exec(t_prs **lst, t_list **envp, int rett, char **path)
 	}
 	else
 		if (!export1("_=", envp))
-			return (ft_lstclear(envp, free), clear_prs(lst), exit(1), 1); /* DONE */
+			return (ft_lstclear(envp, free), clear_prs(lst), exit(1), 1);
 	return (clear_prs(lst), ft_clear_exec(&e), ret);
 }

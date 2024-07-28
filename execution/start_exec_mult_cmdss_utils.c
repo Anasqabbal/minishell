@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:35:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/27 17:25:09 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:29:05 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	set_stdin(t_prs *lst, t_exec *e, int indice, int *fd)
 	int	fd2[2];
 
 	if (e->in)
-		return (the_input(lst, e)); /* Done when syscall is failed input returns -1  */
+		return (the_input(lst, e));
 	else if ((!e->in && ft_prssize(lst) == 1 && indice))
 	{
 		if (dup2(fd[0], STDIN_FILENO) < 0)
@@ -77,7 +77,7 @@ int	set_stdout_and_cmd(t_prs *l, t_exec *e, int *o, int *fd)
 		*o = fd[1];
 	e->cmd = prepare_cmd(l->cmd, l->opts, l->arg);
 	if (!e->cmd)
-		return (-1); /* DONE */
+		return (-1);
 	return (0);
 }
 
@@ -109,12 +109,14 @@ int	dkchi_t3_signals(int *ret)
 
 int	ft_return(int *ret, int *i, t_all a)
 {
-	int	r;
+	int				r;
+	struct termios	s;
 
 	r = 0;
 	if (!(*ret))
 	{
 		r = dkchi_t3_signals(ret);
+		tcsetattr(STDOUT_FILENO, TCSANOW, &s);
 		signal(SIGINT, ft_handler);
 		if (ft_export_(a.envp, NULL, NULL) < 0)
 			return (*ret = 1, -1);
@@ -137,11 +139,11 @@ int	open_files_and_pipe(t_all *a)
 	int	fd2[2];
 
 	a->out = -1;
-	ret = set_and_open((a)->e, (a)->p->red, -1); /*check here*/
+	ret = set_and_open((a)->e, (a)->p->red, -1);
 	if (ret)
 	{
 		if (ret < 0)
-			return (-1); /*open failure quit */
+			return (-1);
 		(a)->p = (a)->p->next;
 		(a)->e = (a)->e->n;
 		if (!ft_is_pipe(0))
@@ -152,6 +154,7 @@ int	open_files_and_pipe(t_all *a)
 				return (perror("dup2"), -1);
 			return (close(fd2[1]), close(fd2[0]), 0);
 		}
+		a->indice = 1;
 		return (1);
 	}
 	if (pipe((a)->fd) < 0)

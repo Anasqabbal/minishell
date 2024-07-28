@@ -6,11 +6,13 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 15:36:33 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/27 11:42:36 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/28 16:17:43 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+# include <readline/history.h>
+# include <readline/readline.h>
 
 
 void	ft_handler(int sig)
