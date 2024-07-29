@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:35:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/28 19:29:05 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/29 13:37:24 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,13 +110,11 @@ int	dkchi_t3_signals(int *ret)
 int	ft_return(int *ret, int *i, t_all a)
 {
 	int				r;
-	struct termios	s;
 
 	r = 0;
 	if (!(*ret))
 	{
 		r = dkchi_t3_signals(ret);
-		tcsetattr(STDOUT_FILENO, TCSANOW, &s);
 		signal(SIGINT, ft_handler);
 		if (ft_export_(a.envp, NULL, NULL) < 0)
 			return (*ret = 1, -1);
@@ -152,7 +150,7 @@ int	open_files_and_pipe(t_all *a)
 				return (perror("pipe"), -1);
 			if (dup2(fd2[0], STDIN_FILENO) < 0)
 				return (perror("dup2"), -1);
-			return (close(fd2[1]), close(fd2[0]), 0);
+			return (close(fd2[1]), close(fd2[0]), 1);
 		}
 		a->indice = 1;
 		return (1);

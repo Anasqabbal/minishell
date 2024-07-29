@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:43:27 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/28 13:12:30 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/29 14:42:10 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ int	initialize_sing(t_prs **lst, t_list **env, t_exec *e, t_sing *s)
 
 int	first_work(t_prs **lst, t_list **envp, t_sing *s, char **path)
 {
+	if (g_sig == 1)
+		return (1);
 	s->ret = set_and_open(s->e, (*lst)->red, -1);
 	if (s->ret == -1)
 		return (-1);
@@ -143,19 +145,18 @@ static int	execute_this(t_prs **lst, t_list **envp, t_exec *e, t_sing *s)
 int	one_cmd(t_prs **lst, t_list **envp, t_exec *e, char **path)
 {
 	t_sing	s;
-	int		ret;
 
-	if (initialize_sing(lst, envp, e, &s) < 0)
+	if (initialize_sing(lst, envp, e, &s))
 		return (close(s.save), -1);
-	ret = first_work(lst, envp, &s, path);
-	if (ret == -1)
+	s.ret = first_work(lst, envp, &s, path);
+	if (s.ret == -1)
 		return (close(s.save), -1);
-	if (ret)
-		return (close(s.save), ret);
+	if (s.ret)
+		return (close(s.save), s.ret);
 	if (ft_export_(envp, e->cmd, e) < 0)
 		return (close(s.save), -1);
-	if (ret)
-		return (close(s.save), ret);
+	if (s.ret)
+		return (close(s.save), s.ret);
 	if (it_is_builtin((*lst)->cmd))
 	{
 		if (execute_this(lst, envp, e, &s) < 0)

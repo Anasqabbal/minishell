@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 20:38:13 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/24 14:26:35 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/28 19:34:30 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,10 @@ void turn_back_dollar(char *str)
 }
 void the_turns(char *str, int ndx)
 {
-	if (ndx == 0)
+	if(ndx == 1)
 	{
-		turn_back(str, 1);
 		turn_double(str, 1);
-	}
-	else if(ndx == 1)
-	{
-		turn_single(str, 1);
+		turn_back(str, 1);
 		turn_back_dollar(str);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/28 19:25:07 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/29 14:17:52 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 int	ft_execve1(t_exec *e, int in, int out, int pid)
 {
-	struct termios	s;
-
-	tcgetattr(STDOUT_FILENO, &s);
 	signal(SIGINT, ft_handler_fork);
 	pid = fork();
 	if (pid < 0)

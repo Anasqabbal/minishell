@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 15:12:51 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/25 11:03:45 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/29 16:31:10 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,20 @@ int	ft_error_p(char *from, int indice)
 		return (indice);
 	}
 	return (indice);
+}
+
+int	ft_ex_error(char *from, char *nam, int rt)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(from, 2);
+	if (rt == 255)
+	{
+		ft_putstr_fd(nam, 2);
+		ft_putendl_fd(": numeric argument required", 2);
+	}
+	else if (rt == 1)
+		ft_putendl_fd("too many arguments", 2);
+	return (rt);
 }
 
 int	ft_error_files(int indice, int ret, char *n)

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/28 19:18:33 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/29 16:06:44 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@ int	check_ambiguous(char *str, int ind)
 {
 	int	i;
 
-	i = 0;
+	i = -1;
 	if (ind == 0)
 	{
-		if (str[i] == '$' && str[i + 1])
+		while (str[++i] && str[i] != '$')
+			;
+		if (str[i] == '$')
 			return (1);
 		return (0);
 	}
@@ -127,7 +129,8 @@ char	*read_from_here_doc(char **red, int i, t_list **env, int *ret)
 		tmp = here_doc;
 		if (ft_strncmp(red[i], "<<<", 3) && ft_strlen(red[i]) != 3)
 		{
-			res = dollar_sign(res);
+			res = dollar_sign(res, 0);
+			res = blurr_dollar_digit(res, 0);
 			res = cmd_expa(res, *env, ret);
 			j = -1;
 			while (res[++j])

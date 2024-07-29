@@ -6,24 +6,18 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:47:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/16 14:39:16 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/29 16:57:31 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static int	ft_ex_error(char *from, char *nam, int rt)
+static void exit_with(int ret, t_prs *p, t_exec *e, t_list *envp)
 {
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(from, 2);
-	if (rt == 255)
-	{
-		ft_putstr_fd(nam, 2);
-		ft_putendl_fd(": numeric argument required", 2);
-	}
-	else if (rt == 1)
-		ft_putendl_fd("too many arguments", 2);
-	return (rt);
+	ft_clear_exec(&e);
+	ft_lstclear(&envp, free);
+	clear_prs(&p);
+	exit(ret);
 }
 
 static int	atoi_ex(char *str, char **s)
@@ -48,7 +42,7 @@ static int	atoi_ex(char *str, char **s)
 		res = res * 10 + (str[i++] - 48);
 		if ((res < res1 && sign == 1)
 			|| ((res < res1 && res > (LLONG_MIN) && sign == -1)))
-			return (free(s), exit (ft_ex_error("exit: ", str, 255)), 1);
+			return (free(s), ft_ex_error("exit: ", str, 255));
 	}
 	to_free(s);
 	return (res * sign);
@@ -60,10 +54,7 @@ int	a_while(t_exec *e, int i, int ind, char **res)
 
 	if (calcul_args(res) > 1
 		|| (calcul_args(e->cmd + 1) > 1 && calcul_args(res) > 1))
-	{
-		to_free(res);
-		exit (ft_ex_error("exit: ", e->cmd[i], 255));
-	}
+		return (ft_ex_error("exit: ", res[i], 255), to_free(res), 255);
 	j = -1;
 	while (res[i][++j])
 	{
@@ -72,15 +63,12 @@ int	a_while(t_exec *e, int i, int ind, char **res)
 		else if ((res[i][0] == '-' || res[i][0] == '+') && ind == 0)
 			ind = 1;
 		else
-		{
-			to_free(res);
-			exit (ft_ex_error("exit: ", res[i], 255));
-		}
+			return (ft_ex_error("exit: ", res[i], 255), to_free(res), 255);
 	}
 	return (0);
 }
 
-int	prepare_exit_cod(t_exec *e)
+int	prepare_exit_cod(t_exec *e, t_prs *p, t_list *envp)
 {
 	char	**res;
 	int		i;
@@ -97,16 +85,16 @@ int	prepare_exit_cod(t_exec *e)
 	while (res[i])
 	{
 		ret = a_while(e, i, ind, res);
-		if (!ret && res[i + 1])
+		if (ret)
+			exit_with(ret, p, e, envp);
+		else if (!ret && res[i + 1])
 			continue ;
 		i++;
 	}
 	if (calcul_args(e->cmd + 1) > 1)
 		return (to_free(res), ft_ex_error("exit: ", e->cmd[1], 1), 1);
-	ft_clear_exec(&e);
-	return (exit (atoi_ex(res[0], res)), 0);
+	return (exit_with(atoi_ex(res[0], res), p, e, envp), 0);
 }
-/* maybe you need to  clear_prs(l)*/
 
 unsigned char	ft_exit(t_exec *e, t_list **envp, t_prs **l)
 {
@@ -115,15 +103,12 @@ unsigned char	ft_exit(t_exec *e, t_list **envp, t_prs **l)
 	(void)envp;
 	ret = 0;
 	if ((e->cmd[1]))
-		ret = prepare_exit_cod(e);
+		ret = prepare_exit_cod(e, *l, *envp);
 	else
 	{
-		(void) l;
 		ret = e->ex;
-		ft_clear_exec(&e);
-		ft_lstclear(envp, free);
-		clear_prs(l);
-		exit(ret);
+		exit_with(ret, *l, e, *envp);
 	}
+	printf("here\n");
 	return (ret);
 }

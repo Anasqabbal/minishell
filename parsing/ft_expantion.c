@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expantion.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:43:32 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/26 09:18:27 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/29 14:47:09 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,52 @@ void garbag_it(char *str)
 
 static void handle_expa_suc(char *expans, char *cmd, t_ndx *ind, int var_len)
 {	
-	garbag_it(expans);
+	int x;
+	int nd = 0;
+	printf("-+%s+-\n", expans);
+	turn_back(expans, 1);
+	printf("-+%d+-\n", ind->ndx);
+	char **hold = ft_split(expans, ' ');
+	turn_back(expans, 1);
+	if (arg_count(hold) > 1 && ind->ndx != 1)
+	{
+		char *hld = ft_strjoin("\"", expans);
+		free(expans);
+		expans = ft_strjoin(hld, "\"");
+		free(hld);
+		printf("-+%s+-\n", expans);
+		nd = 1;
+ 	}
+	else if (nd == 0)
+	{
+		ind->ndx = 0;
+		printf("QQ\n");
+		x = 0;
+		while (expans[x])
+		{
+			if (expans[x] =='"' || expans[x] == '\'' || expans[x] == '$' || expans[x] == '|')
+				expans[x] *= -1; 
+			x++;
+		}
+	}
 	ft_strcpy(&cmd[ind->y], expans);
 	ind->y += ft_strlen(expans);
 	ind->x += var_len + 1;
 	free(expans);
+}
+int export_ambig(char *str, int x)
+{
+	int len = x - 1;
+	int count = 0;
+	while (len > 0 && (str[len] == '"' || ft_isalnum(str[len])))
+	{	
+		if (str[len] == '"')
+			count++;
+		len--;
+	}
+	if (len - 1 >= 0 && ((str[len - 1] == '>' || str[len - 1] == '<') && (count == 0 || count % 2 == 0)))
+		return(0);
+	return(1);
 }
 static void handle_var_exp(char *str, t_list *env, char *cmd, t_ndx *ind)
 {
@@ -98,8 +139,40 @@ static void handle_var_exp(char *str, t_list *env, char *cmd, t_ndx *ind)
 	var_len = 0;
 	ndx = 0;
 	expans = extra_expa_var(&str[ind->x], env, &var_len, &ndx);
-	if (expans)
-		handle_expa_suc(expans, cmd, ind, var_len);
+	if (expans && expans[0] != '\0')
+	{
+		char **hold = ft_split(expans, ' ');
+
+		int x;
+		int count;
+
+		count = arg_count(hold);
+		free_it(hold, count);
+		if (count > 1 && !export_ambig(str, ind->x))
+		{
+			printf("QQ1\n");
+			x = 0;
+			while (str[ind->x] && x < var_len + 1)
+			{	
+				cmd[ind->y++] = str[ind->x++];
+				x++;
+			}
+
+		}
+		else
+		{ 	int len = ind->x - 1;
+			int count = 0;
+			while (len > 0 && (str[len] == '"' || ft_isalnum(str[len])))
+			{	
+			if (str[len] == '"')
+				count++;
+				len--;
+			}
+			if (count % 2 != 0)
+				ind->ndx = 1;
+			handle_expa_suc(expans, cmd, ind, var_len);
+		}
+	}
 	else if(!expans && ndx == 0)
 	{
 		free(cmd);
@@ -111,6 +184,7 @@ static void handle_var_exp(char *str, t_list *env, char *cmd, t_ndx *ind)
 		z = 0;
 		if (ind->x - 2 >= 0 && (str[ind->x - 2] == '>' || str[ind->x - 2] == '<'))
 		{
+			printf("QQ\n");
 			while (z < var_len + 1)
 			{
 				cmd[ind->y++] = str[ind->x++];
@@ -121,15 +195,7 @@ static void handle_var_exp(char *str, t_list *env, char *cmd, t_ndx *ind)
 		{
 			printf("++%c\n", str[ind->x]);
 			ind->x += var_len + 1;
-		}
-		// else
-		// {
-		// 	while (z < var_len + 1)
-		// 	{
-		// 		cmd[ind->y++] = str[ind->x++];
-		// 		z++;
-		// 	}
-		// }	
+		}	
 	}
 }
 int count_ex(char *cmd)
@@ -241,13 +307,12 @@ char *cmd_expa(char *str, t_list *env, int *red)
 {
 	char	*cmd;
 	
-	t_ndx	xy = {0, 0};
+	t_ndx	xy = {0, 0, 0};
 	cmd = cmd_alloctation(str, env);
-	blurr_dollar(str);
+	turn_back(str, 1);
 	turn_here_do(str);
 	turn_double(str, 1);
-	turn_single(str, 1);
-	turn_double(str, 1);
+	
 	while ((size_t)xy.x < ft_strlen(str))
 	{
 		if(str[xy.x] == '$')

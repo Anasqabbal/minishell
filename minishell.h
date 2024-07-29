@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/28 19:17:52 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/29 16:31:43 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ typedef struct s_sing
 typedef struct s_ndx{
 	int x;
 	int y;
+	int ndx;
 }t_ndx;
 /*EXECUTION*/
 	/* ----- BUILTINS ----- */
@@ -187,6 +188,7 @@ int				set_here_doc(t_prs *l, t_exec **e, t_list **env, int *ret);
 int				ft_error_p(char *from, int indice);
 int				ft_error_files(int indice, int ret, char *n);
 int				ft_error(char *from, int indice);
+int				ft_ex_error(char *from, char *nam, int rt);
 /*PARSING*/
 t_list	*ft_envduppp(char **env);
 void	ft_getenv_oursss(char *str, t_list *env, char *path);
@@ -206,7 +208,6 @@ t_prs	*init_prs(void);
 void	pipe_split_h(char **splt_pip, t_prs **curr, t_prs **head, char *com);
 void	parse_red(char **array, t_prs *node);
 void	free_it_h(char **splt_pip, char *com, t_prs **head);
-char	*dollar_sign(char *str);
 void	ft_handler(int sig);
 void	free_list(t_prs *head);
 void 	back_turning(char **array);
@@ -222,13 +223,12 @@ char	*expand_variable(char *str, t_list *env, int *ndx);
 char	*extract_virable(char *str, int *var_len);
 void 	turn_back_dollar(char *str);
 void 	blurr_dollar(char *str);
-char	*dollar_sign(char *str);
+char	*dollar_sign(char *str, int ndx);
 int		calaculate_expan_len(char *str, t_list *env);
 void	the_turns(char *str, int ndx);
 void	turn_here_do(char *str);
 void	ft_handler_here(int sig);
-char	*dollar_skipping(char *str);
-char	*blurr_dollar_digit(char *str);
+char	*blurr_dollar_digit(char *str, int ndx);
 void	expo_turn(char **str);
 int		count_expantion_here(char *str);
 void	ft_handler_fork(int sig);

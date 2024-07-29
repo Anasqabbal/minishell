@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:28:31 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/21 17:47:31 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/29 12:47:11 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,13 @@ static int calaculate_expan_len_h(char *str, t_list *env, int *x)
 	len = 0;
 	expans = expand_variable(var, env, &ndx);
 	free(var);
-	if (expans)
+	if (expans && expans[0] != '\0')
 		len += handle_successful_expansion(expans, var_len, x);
+	else if (expans && expans[0] == '\0')
+	{
+		len += var_len + 1;
+		*x += (int)var_len + 1;
+	}
 	else if(!expans && ndx == 0)
 	{
 		free(str);
@@ -78,8 +83,9 @@ int calaculate_expan_len(char *str, t_list *env)
 			x++;
 		}
 	}
-	return (len);
+	return (len + 3);
 }
+
 void turn_here_do(char *str)
 {
 	int x;
@@ -93,6 +99,8 @@ void turn_here_do(char *str)
 			while (str[x] && str[x] != ' ')
 			{
 				if (str[x] == '$')
+					str[x] *= -1;
+				else if (str[x] * -1 == '$')
 					str[x] *= -1;
 				x++;
 			}	

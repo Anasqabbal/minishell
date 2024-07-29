@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:12 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/28 19:27:18 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/29 14:41:43 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int	initialize_t_all(t_prs *p, t_list **envp, t_exec *e, t_all *a)
 	a->out = -1;
 	a->indice = 0;
 	a->i = 0;
+	if (g_sig == 1)
+		return (1);
 	return (0);
 }
 
@@ -97,9 +99,8 @@ int	mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path)
 {
 	t_all	a;
 
-	if (g_sig == 1)
+	if(initialize_t_all(lst, envp, e, &a))
 		return (1);
-	initialize_t_all(lst, envp, e, &a);
 	while (a.p)
 	{
 		a.e->i = a.i;
@@ -109,6 +110,8 @@ int	mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path)
 			return (-1);
 		if (a.ret == 1)
 			continue ;
+		if (!a.p)
+			break ;
 		a.ret = check_access(a.p->cmd, a.e, a.envp, *path);
 		if ((a.ret || !a.p->cmd) && it_is_builtin(a.p->cmd))
 		{
