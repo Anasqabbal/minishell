@@ -107,3 +107,31 @@
 // 	the_turns(cmd, 1);
 // 	return (free(str), cmd);
 // }
+static char **delete_row(char **array, int row_d)
+{
+	char **new_array;
+	char *hold
+	int x;
+	int y;
+
+	new_array = (char **)malloc(arg_count(array) * sizeof(char *));
+	if(!new_array)
+		return (NULL);
+	x = 0;
+	y = 0;
+	while (array[x])
+	{
+		if (x == row_d)
+			x++;
+		hold = ft_strdup(array[x]);
+		if (!hold)
+		{
+			free_it(new_array, arg_count(new_array));
+			return (NULL);
+		}
+		new_array[y++] = hold;
+		x++;
+	}
+	new_array[y] = NULL;
+	return(new_array);
+}

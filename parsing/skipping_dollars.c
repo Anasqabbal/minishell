@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:31:43 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/28 17:05:38 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/29 16:26:05 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,97 @@ char *blurr_dollar_digit(char *str, int ndx)
 	cmd[y] = '\0';
 	return (free(str), cmd);
 }
+// void dollar_while_h1(char *str, char *cmd, int *y, int *x)
+// {
+// 	int hold;
+// 	int z;
+// 	int count;
+
+// 	hold = *x;
+// 	count = 0;
+// 	while (str[hold] == '$')
+// 	{
+// 		count++;
+// 		hold++;
+// 	}
+// 	if ((str[hold] == '"' || str[hold] == '\'') && !turn_dollar(str, hold - 1))
+// 	{
+// 		z = 0;
+// 		if (count % 2 != 0)
+// 		{
+// 			(*x)++;
+// 			while (z < count)
+// 			{
+// 				cmd[(*y)++] = str[(*x)++];
+// 				z++;
+// 			}
+// 		} 
+// 		else
+// 		{
+// 			while (z < count)
+// 			{
+// 				cmd[(*y)++] = str[(*x)++];
+// 				z++;
+// 			}
+// 		}
+// 		turn_back(str, 1);
+// 	}
+// }
+
+void dollar_while_h(char *str, char *cmd, int *y, int *x)
+{
+
+	int hold;
+	int count;
+	int z;
+
+	cmd[(*y)++] = str[(*x)++];
+	cmd[(*y)++] = str[(*x)++];
+	cmd[(*y)++] = str[(*x)++];
+	turn_back(str, 1);	
+	while (str[*x] && str[*x] != ' ')
+	{
+		if (str[*x] == '$')
+		{
+			hold = *x;
+			count = 0;
+			while (str[hold] == '$')
+			{
+				count++;
+				hold++;
+			}
+			if ((str[hold] == '"' || str[hold] == '\'') && !turn_dollar(str, hold - 1))
+			{
+				z = 0;
+				if (count % 2 != 0)
+				{
+					(*x)++;
+					while (z < count)
+					{
+						cmd[(*y)++] = str[(*x)++];
+							z++;
+						}
+				} 
+				else
+				{
+					while (z < count)
+					{
+						cmd[(*y)++] = str[(*x)++];
+						z++;
+					}
+				}
+				turn_back(str, 1);
+			}
+			else
+			{
+				while (str[*x] && str[*x] != ' ')
+						cmd[(*y)++] = str[(*x)++];
+			}
+		}
+		else
+			cmd[(*y)++] = str[(*x)++];
+	}
+}
 void dollar_while(char *str, char *cmd, int *y, int ndx)
 {
 	int x;
@@ -114,55 +205,7 @@ void dollar_while(char *str, char *cmd, int *y, int ndx)
 	while (str[x])
 	{
 		if (str[x] == '<' && str[x + 1] == '<' && ndx == 1)
-		{
-			cmd[(*y)++] = str[x++];
-			cmd[(*y)++] = str[x++];
-			cmd[(*y)++] = str[x++];
-			turn_back(str, 1);	
-			while (str[x] && str[x] != ' ')
-			{
-				if (str[x] == '$')
-				{
-					hold = x;
-					count = 0;
-					while (str[hold] == '$')
-					{
-						count++;
-						hold++;
-					}
-				
-					if ((str[hold] == '"' || str[hold] == '\'') && !turn_dollar(str, hold - 1))
-					{
-						z = 0;
-						if (count % 2 != 0)
-						{
-							x++;
-							while (z < count)
-							{
-								cmd[(*y)++] = str[x++];
-								z++;
-							}
-						} 
-						else
-						{
-							while (z < count)
-							{
-								cmd[(*y)++] = str[x++];
-								z++;
-							}
-						}
-						turn_back(str, 1);
-					}
-					else
-					{
-						while (str[x] && str[x] != ' ')
-							cmd[(*y)++] = str[x++];
-					}
-				}
-				else
-					cmd[(*y)++] = str[x++];
-			}
-		}
+			dollar_while_h(str, cmd, y, &x);
 		else if (str[x] == '$')
 		{
 			hold = x;
@@ -229,8 +272,8 @@ void dollar_while(char *str, char *cmd, int *y, int ndx)
 }
 char *dollar_sign(char *str, int ndx)
 {
-    char *cmd;
-    int y;
+    char	*cmd;
+    int		y;
 
     y = 0;
     cmd = (char *)malloc((strlen(str) + 1) * sizeof(char));

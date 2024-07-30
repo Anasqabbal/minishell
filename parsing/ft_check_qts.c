@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:30:26 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/20 18:13:47 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/29 15:41:09 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static void	check_qts_h1(char *input, int *count, int *x)
 {
+	if (input[*x])
+			(*x)++;
 	if(input[*x] == '|' || input[*x] == '>' || input[*x] == '<')
     	{
         	if ((input[*x] == '>' && input[*x + 1] == '>') || (input[*x] == '<' && input[*x + 1] == '<'))
@@ -27,8 +29,8 @@ static void	check_qts_h1(char *input, int *count, int *x)
 
 static char	check_qts_h(char *input, int *count, int *qts)
 {
-	int x;
-	char hold;
+	int		x;
+	char	hold;
 
 	x = 0;
 	while ((size_t)x < ft_strlen(input))
@@ -49,8 +51,6 @@ static char	check_qts_h(char *input, int *count, int *qts)
 				x++;
 			}
 		}
-		if (input[x])
-			x++;
 		check_qts_h1(input, count, &x);
 	}
 	return (hold);

@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:43:32 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/29 14:47:09 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/29 15:28:11 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static void handle_expa_suc(char *expans, char *cmd, t_ndx *ind, int var_len)
 	printf("-+%d+-\n", ind->ndx);
 	char **hold = ft_split(expans, ' ');
 	turn_back(expans, 1);
-	if (arg_count(hold) > 1 && ind->ndx != 1)
+	if (arg_count(hold) > 1 && ind->ndx == 1)
 	{
 		char *hld = ft_strjoin("\"", expans);
 		free(expans);
@@ -168,7 +168,7 @@ static void handle_var_exp(char *str, t_list *env, char *cmd, t_ndx *ind)
 				count++;
 				len--;
 			}
-			if (count % 2 != 0)
+			if (count % 2 != 0 || count == 0)
 				ind->ndx = 1;
 			handle_expa_suc(expans, cmd, ind, var_len);
 		}

@@ -1,0 +1,39 @@
+test : ;; (and) ;;;;; (and) ;;;;;;;;;;;;;;;
+expected : syntax error near unexpected token `;;'
+output : command not found
+
+test :
+expected :
+output :
+
+test :
+expected :
+output :
+
+test :
+expected :
+output :
+
+test :
+expected :
+output :
+
+test :
+expected :
+output :
+
+test :
+expected :
+output :
+
+test :
+expected :
+output :
+
+test :
+expected :
+output :
+
+test :
+expected :
+output :

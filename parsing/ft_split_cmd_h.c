@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:51:26 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/28 14:30:40 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/29 17:43:32 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,8 @@ void	pipe_split_h(char **splt_pip, t_prs **curr, t_prs **head, char *com)
 		if (!no_q)
 			free_it_h2(splt_pip, com, head, new);
 		free_it(splt_space, arg_count(splt_space));
-		// expo_turn(no_q);
 		parse_red(no_q, new);
-		// free_it(no_q, arg_count(no_q));
+		free(no_q);
 		fill_cmd(curr, head, new);
 		y++;	
 	}

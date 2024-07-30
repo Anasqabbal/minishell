@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/29 16:06:44 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/30 14:53:54 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,8 @@ char	*read_from_here_doc(char **red, int i, t_list **env, int *ret)
 		{
 			if (!ttyname(0))
 			{
+				free(res);
+				free(here_doc);
 				g_sig = 1;
 				if (open(ttyname(2), O_RDWR) == -1)
 					return (NULL);
@@ -152,6 +154,7 @@ char	*read_from_here_doc(char **red, int i, t_list **env, int *ret)
 		if (!here_doc)
 			return (NULL);
 	}
+	printf("the address of your here_doc is %p\n", here_doc);
 	return (free(res), here_doc);
 }
 

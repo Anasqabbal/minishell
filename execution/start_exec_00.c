@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/29 14:17:52 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/30 12:56:02 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,5 +110,5 @@ int	start_exec(t_prs **lst, t_list **envp, int rett, char **path)
 	else
 		if (!export1("_=", envp))
 			return (ft_lstclear(envp, free), clear_prs(lst), exit(1), 1);
-	return (clear_prs(lst), ft_clear_exec(&e), ret);
+	return (ft_clear_exec(&e), ret);
 }

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 15:54:03 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/28 19:24:26 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/30 10:04:41 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	check_access(char *cmd, t_exec *p, t_list **env, char *path)
 {
 	t_list	*res;
 
+	
 	if (!cmd || !it_is_builtin(cmd))
 		return (p->path = NULL, 0);
 	if (cmd[0] == '\0')

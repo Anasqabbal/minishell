@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:12:54 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/21 19:29:55 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/29 16:38:41 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int ft_syntax_msg(char *str, int len)
 }
 static char	*ft_syntax_h3(char *str, int x)
 {
-	char hold;
+	char	hold;
 
 	while ((size_t)x < ft_strlen(str))
 	{
@@ -58,7 +58,7 @@ static char	*ft_syntax_h3(char *str, int x)
 
 static int ft_syntax_h(char *str, int *x)
 {
-	int len;
+	int	len;
 
 	turn_back(str, 1);
 	replacewihte_s(str);
@@ -82,31 +82,31 @@ static int ft_syntax_h(char *str, int *x)
 }
 static int ft_syntax(char *stl)
 {
-	int x;
-	int len;
+	int	x;
+	int	len;
 
 	x = 0;
 	len = ft_syntax_h(stl, &x);
 	if (!len)
 		return (0);
-	if(!ft_syntax_h3(stl, x))
+	if (!ft_syntax_h3(stl, x))
 		return(0);
-	if((stl[len - 1] == '|' && stl[len - 2] != '|'))
+	if ((stl[len - 1] == '|' && stl[len - 2] != '|'))
 	{
 		error_msg(stl[len - 1]);
         return(0);
 	}
 	return (1);
 }
-int check_syntax(char *input, t_list *env, t_prs **node, int *ret)
+
+int	check_syntax(char *input, t_list *env, t_prs **node, int *ret)
 {
-	char *raw;
-	int opp;
-	int qts;
+	char	*raw;
+	int		opp;
+	int		qts;
 
 	opp = 0;
 	qts = 0;
-	
 	if (input[0] == '\0')
 		return (1);
 	raw = ft_strdup(input);
@@ -114,7 +114,7 @@ int check_syntax(char *input, t_list *env, t_prs **node, int *ret)
 		return (0);	
 	if (!ft_syntax(raw))		
 		return (free(raw), *ret = 258, 0);
-	if(!check_qts(raw, &opp, &qts))
+	if (!check_qts(raw, &opp, &qts))
 		return (free(raw), *ret = 258, 0);
 	(*node) = pipe_split(raw, opp, env, ret);
 	return (1);

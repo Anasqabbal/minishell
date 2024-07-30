@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:18:37 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/29 11:26:30 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/30 14:38:46 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ int	file_here_docs(char **f, t_exec *e, t_list **env, int *ret)
 		return (0);
 	else if (len > 15)
 		return (ft_putstr_fd("minishell :maximum here-document count exceeded\n"
-				, 2), exit(2), 1);
-	e->here_doc = malloc(sizeof(char *) * (len + 1));
+				, 2), 1);
+	e->here_doc = malloc(sizeof(char *) * (len));
 	if (!e->here_doc)
 		return (-1);
 	while (f && f[++i])
