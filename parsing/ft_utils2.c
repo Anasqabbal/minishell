@@ -6,23 +6,22 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 20:38:13 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/28 19:34:30 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/31 15:12:45 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
-char *expand_variable(char *str, t_list *env, int *ndx)
+char	*expand_variable(char *str, t_list *env, int *ndx)
 {
-	char *hold;
-	t_list *expa;   
-	char *hold_h;
-	int len;
+	char	*hold;
+	t_list	*expa;
+	char	*hold_h;
+	int		len;
 
 	hold = ft_strjoin(str, "=");
-	if(!hold)
-		return(free(str), NULL);
+	if (!hold)
+		return (free(str), NULL);
 	len = ft_strlen(hold);
 	expa = ft_getenv(hold, env);
 	if (!expa)
@@ -30,16 +29,18 @@ char *expand_variable(char *str, t_list *env, int *ndx)
 		(*ndx) = 1;
 		return (free(hold), NULL);
 	}
-	free(hold);	
+	free(hold);
 	hold_h = ft_strdup(expa->content + len);
+	if (!hold_h)
+		return (free(str), NULL);
 	return (hold_h);
 }
 
-char *extract_virable(char *str, int *var_len)
+char	*extract_virable(char *str, int *var_len, t_list *env)
 {
-	int x;
-	char *var;
-	int y ;
+	int		x;
+	char	*var;
+	int		y;
 
 	x = 0;
 	str++;
@@ -48,6 +49,7 @@ char *extract_virable(char *str, int *var_len)
 	var = (char *)malloc((x + 1) * sizeof(char));
 	if (!var)
 	{
+		ft_lstclear(&env, free);
 		free(str);
 		exit(1);
 	}
@@ -62,21 +64,22 @@ char *extract_virable(char *str, int *var_len)
 	return (var);
 }
 
-void turn_back_dollar(char *str)
+void	turn_back_dollar(char *str)
 {
-	int x;
+	int	x;
 
 	x = 0;
 	while (str[x])
 	{
-		if (str[x] * - 1 == '$')
+		if (str[x] * -1 == '$')
 			str[x] *= -1;
 		x++;
 	}
 }
-void the_turns(char *str, int ndx)
+
+void	the_turns(char *str, int ndx)
 {
-	if(ndx == 1)
+	if (ndx == 1)
 	{
 		turn_double(str, 1);
 		turn_back(str, 1);
@@ -84,3 +87,25 @@ void the_turns(char *str, int ndx)
 	}
 }
 
+void	turn_here_do(char *str)
+{
+	int	x;
+
+	x = 0;
+	while ((size_t)x < ft_strlen(str))
+	{
+		if (str[x] == '<' && str[x + 1] == '<')
+		{
+			x += 3;
+			while (str[x] && str[x] != ' ')
+			{
+				if (str[x] == '$')
+					str[x] *= -1;
+				else if (str[x] * -1 == '$')
+					str[x] *= -1;
+				x++;
+			}
+		}
+		x++;
+	}
+}

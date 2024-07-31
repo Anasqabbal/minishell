@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:51:26 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/29 17:43:32 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/30 20:06:36 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,62 +15,46 @@
 static void	the_while(char *str, char *result)
 {
 	int		x;
-    int		y;
+	int		y;
 	int		sign;
 
 	sign = 0;
 	x = 0;
 	y = 0;
-	while (str[x]) 
-    {
-        ft_check_quotes(str[x], &sign);
-        if ((sign == 1 && str[x] == '\'') || (sign == 2 && str[x] == '"')) 
-		{
-            x++;
-            continue;
-        }
-        if ((sign == 0 && (str[x] == '\'' || str[x] == '"'))) 
-		{
-            x++;
-            continue;
-        }
-        result[y++] = str[x++];
-    }
-    result[y] = '\0';  
-}
-char	*skip_unnecessary_quotes(char *str)
-{
-    char	*result; 
-
-    result = (char *)malloc(ft_strlen(str) + 1); 
-	if (!result)
-        return NULL;
-	the_while(str, result);
-    return result;
-}
-void expo_turn(char **str)
-{
-	int x;
-	int y;
-
-	y = 0;
-	while (str[y])
+	while (str[x])
 	{
-		x = 0;
-		while (str[y][x])
+		ft_check_quotes(str[x], &sign);
+		if ((sign == 1 && str[x] == '\'') || (sign == 2 && str[x] == '"'))
 		{
-			if (str[y][x] < 0)
-				str[y][x] *= -1;
 			x++;
+			continue ;
 		}
-		y++;
+		if ((sign == 0 && (str[x] == '\'' || str[x] == '"')))
+		{
+			x++;
+			continue ;
+		}
+		result[y++] = str[x++];
 	}
+	result[y] = '\0';
 }
-static char **take_qoutes_off(char **array)
+
+static char	*skip_unnecessary_quotes(char *str)
 {
-	int 	y;
+	char	*result;
+
+	result = (char *)malloc(ft_strlen(str) + 1);
+	if (!result)
+		return (NULL);
+	the_while(str, result);
+	return (result);
+}
+
+static char	**take_qoutes_off(char **array)
+{
+	int		y;
 	char	*hold;
-	char 	**cmd;
+	char	**cmd;
 	int		len;
 
 	len = arg_count(array);
@@ -89,38 +73,41 @@ static char **take_qoutes_off(char **array)
 	cmd[len] = NULL;
 	return (cmd);
 }
-static void fill_cmd(t_prs **curr, t_prs **head, t_prs *new)
+
+static void	fill_cmd(t_prs **curr, t_prs **head, t_prs *new)
 {
-	  if (*head == NULL) 
-        	*head = new;
-         else 
-            (*curr)->next = new;
-        *curr = new;
+	if (*head == NULL)
+		*head = new;
+	else
+		(*curr)->next = new;
+	*curr = new;
 }
 
-void	pipe_split_h(char **splt_pip, t_prs **curr, t_prs **head, char *com)
+int	pipe_split_h(char **splt_pip, t_prs **curr, t_prs **head, char *com)
 {
-	int y;
-	char **splt_space;
-	char **no_q;
-	t_prs *new;
+	int		y;
+	char	**splt_space;
+	char	**no_q;
+	t_prs	*new;
 
 	y = 0;
 	while (splt_pip[y] != NULL)
 	{
 		new = init_prs();
 		if (!new)
-			free_it_h(splt_pip, com, head);
+			return (free_it_h(splt_pip, com, head), -1);
 		splt_space = ft_split(splt_pip[y], ' ');
-		if(!splt_space)
-			free_it_h2(splt_pip, com, head, new);
+		if (!splt_space)
+			return (free_it_h2(splt_pip, com, head, new), -1);
 		no_q = take_qoutes_off(splt_space);
 		if (!no_q)
-			free_it_h2(splt_pip, com, head, new);
+			return (free_it_h2(splt_pip, com, head, new), -1);
 		free_it(splt_space, arg_count(splt_space));
-		parse_red(no_q, new);
+		if (parse_red(no_q, new) == -1)
+			return (free(no_q), free_it_h2(splt_pip, com, head, new), -1);
 		free(no_q);
 		fill_cmd(curr, head, new);
-		y++;	
+		y++;
 	}
+	return (0);
 }

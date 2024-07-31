@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:30:26 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/29 15:41:09 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/30 15:00:05 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,17 @@
 static void	check_qts_h1(char *input, int *count, int *x)
 {
 	if (input[*x])
+		(*x)++;
+	if (input[*x] == '|' || input[*x] == '>' || input[*x] == '<')
+	{
+		if ((input[*x] == '>' && input[*x + 1] == '>')
+			|| (input[*x] == '<' && input[*x + 1] == '<'))
+		{
 			(*x)++;
-	if(input[*x] == '|' || input[*x] == '>' || input[*x] == '<')
-    	{
-        	if ((input[*x] == '>' && input[*x + 1] == '>') || (input[*x] == '<' && input[*x + 1] == '<'))
-        	{
-        		(*x)++;
-        		(*x)++;
-       		}
-        	(*count)++;
-   	 	}
+			(*x)++;
+		}
+		(*count)++;
+	}
 }
 
 static char	check_qts_h(char *input, int *count, int *qts)
@@ -56,7 +57,7 @@ static char	check_qts_h(char *input, int *count, int *qts)
 	return (hold);
 }
 
-int check_qts(char *input, int *count, int *qts)
+int	check_qts(char *input, int *count, int *qts)
 {
 	char	hold;
 
@@ -66,7 +67,7 @@ int check_qts(char *input, int *count, int *qts)
 		write(2, "minishell: syntax error near unexpected token `", 48);
 		write(2, &hold, 1);
 		write(2, "'\n", 2);
-		return(0);
+		return (0);
 	}
 	return (1);
 }

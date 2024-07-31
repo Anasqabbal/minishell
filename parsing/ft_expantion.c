@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expantion.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
+/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:43:32 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/29 15:28:11 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/31 20:08:19 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static char *cmd_alloctation(char *str, t_list *env)
 	cmd = (char *)malloc((calaculate_expan_len(str, env) + count_expantion_here(str) + 1) * sizeof(char));
 	if (!cmd)
 	{
+		ft_lstclear(&env, free);
 		free(str);
 		exit(1);
 	}
@@ -31,7 +32,7 @@ static char *extra_expa_var(char *str, t_list *env, int *var_len, int *ndx)
 	char 	*var;
 	char	*expans;
 
-	var = extract_virable(str, var_len);
+	var = extract_virable(str, var_len, env);
 	expans = expand_variable(var, env, ndx);
 	free(var);
 	return(expans);
@@ -83,37 +84,17 @@ void garbag_it(char *str)
 static void handle_expa_suc(char *expans, char *cmd, t_ndx *ind, int var_len)
 {	
 	int x;
-	int nd = 0;
-	printf("-+%s+-\n", expans);
-	turn_back(expans, 1);
-	printf("-+%d+-\n", ind->ndx);
-	char **hold = ft_split(expans, ' ');
-	turn_back(expans, 1);
-	if (arg_count(hold) > 1 && ind->ndx == 1)
+	// printf("QQ\n");
+	x = 0;
+	while (expans[x])
 	{
-		char *hld = ft_strjoin("\"", expans);
-		free(expans);
-		expans = ft_strjoin(hld, "\"");
-		free(hld);
-		printf("-+%s+-\n", expans);
-		nd = 1;
- 	}
-	else if (nd == 0)
-	{
-		ind->ndx = 0;
-		printf("QQ\n");
-		x = 0;
-		while (expans[x])
-		{
-			if (expans[x] =='"' || expans[x] == '\'' || expans[x] == '$' || expans[x] == '|')
-				expans[x] *= -1; 
-			x++;
-		}
+		if (expans[x] =='"' || expans[x] == '\'' || expans[x] == '$' || expans[x] == '|')
+			expans[x] *= -1; 
+		x++;
 	}
 	ft_strcpy(&cmd[ind->y], expans);
 	ind->y += ft_strlen(expans);
 	ind->x += var_len + 1;
-	free(expans);
 }
 int export_ambig(char *str, int x)
 {
@@ -139,6 +120,26 @@ static void handle_var_exp(char *str, t_list *env, char *cmd, t_ndx *ind)
 	var_len = 0;
 	ndx = 0;
 	expans = extra_expa_var(&str[ind->x], env, &var_len, &ndx);
+	if (expans && expans[0] == '\0')
+	{
+		int l;
+	
+		l = 0;
+		if (!export_ambig(str, ind->x))
+		{
+			while (str[ind->x] && l < var_len + 1)
+			{	
+				cmd[ind->y++] = str[ind->x++];
+				l++;
+			}
+		}
+		else
+		{
+			ft_strcpy(&cmd[ind->y], expans);
+			ind->y += ft_strlen(expans);
+			ind->x += var_len + 1;
+		}
+	}
 	if (expans && expans[0] != '\0')
 	{
 		char **hold = ft_split(expans, ' ');
@@ -150,41 +151,30 @@ static void handle_var_exp(char *str, t_list *env, char *cmd, t_ndx *ind)
 		free_it(hold, count);
 		if (count > 1 && !export_ambig(str, ind->x))
 		{
-			printf("QQ1\n");
+			// printf("QQ1\n");
 			x = 0;
 			while (str[ind->x] && x < var_len + 1)
 			{	
 				cmd[ind->y++] = str[ind->x++];
 				x++;
 			}
-
 		}
 		else
-		{ 	int len = ind->x - 1;
-			int count = 0;
-			while (len > 0 && (str[len] == '"' || ft_isalnum(str[len])))
-			{	
-			if (str[len] == '"')
-				count++;
-				len--;
-			}
-			if (count % 2 != 0 || count == 0)
-				ind->ndx = 1;
 			handle_expa_suc(expans, cmd, ind, var_len);
-		}
 	}
 	else if(!expans && ndx == 0)
 	{
+		ft_lstclear(&env, free);
 		free(cmd);
 		free(str);
 		exit(1);
 	}
 	else
-	{
+	{	
 		z = 0;
 		if (ind->x - 2 >= 0 && (str[ind->x - 2] == '>' || str[ind->x - 2] == '<'))
 		{
-			printf("QQ\n");
+			// printf("lol\n");
 			while (z < var_len + 1)
 			{
 				cmd[ind->y++] = str[ind->x++];
@@ -193,10 +183,11 @@ static void handle_var_exp(char *str, t_list *env, char *cmd, t_ndx *ind)
 		}
 		else
 		{
-			printf("++%c\n", str[ind->x]);
+			// printf("++%c\n", str[ind->x]);
 			ind->x += var_len + 1;
 		}	
 	}
+	free(expans);
 }
 int count_ex(char *cmd)
 {
@@ -213,7 +204,7 @@ int count_ex(char *cmd)
 	}
 	return (count);
 }
-char *expand_ex_code(char *cmd, int *red)
+char *expand_ex_code(char *cmd, int *red, t_list *env, char *st)
 {
 	int x;
 	int y;
@@ -223,11 +214,21 @@ char *expand_ex_code(char *cmd, int *red)
 	int count;
 
 	ex_code = ft_itoa((*red));
+	if (!ex_code)
+	{
+		ft_lstclear(&env, free);
+		free(st);
+		free(cmd);
+		exit(1);
+	}
 	count = count_ex(cmd);
+	// printf("**%d\n", count);
 	len = ft_strlen(cmd) - (count * 2) + (ft_strlen(ex_code) * count);
 	str = (char *)malloc((len + 2) * sizeof(char));
 	if (!str)
-	{
+	{	
+		ft_lstclear(&env, free);
+		free(st);
 		free(ex_code);
 		free(cmd);
 		exit(1);
@@ -236,11 +237,11 @@ char *expand_ex_code(char *cmd, int *red)
 	y = 0;
 	while (cmd[x])
 	{
-		if (cmd[x] == '$' && cmd[x + 1] == '?' && x - 3 >= 0 && cmd[x - 3] != '<' && cmd[x - 2] != '<')
+		if (cmd[x] == '$' && cmd[x + 1] == '?')
 		{
-				ft_strcpy(&str[y], ex_code);
-				y += ft_strlen(ex_code);
-				x += 2;
+			ft_strcpy(&str[y], ex_code);
+			y += ft_strlen(ex_code);
+			x += 2;
 		}
 		else
 		{
@@ -307,12 +308,11 @@ char *cmd_expa(char *str, t_list *env, int *red)
 {
 	char	*cmd;
 	
-	t_ndx	xy = {0, 0, 0};
+	t_ndx	xy = (t_ndx){0, 0};
 	cmd = cmd_alloctation(str, env);
 	turn_back(str, 1);
 	turn_here_do(str);
 	turn_double(str, 1);
-	
 	while ((size_t)xy.x < ft_strlen(str))
 	{
 		if(str[xy.x] == '$')
@@ -336,8 +336,8 @@ char *cmd_expa(char *str, t_list *env, int *red)
 				cmd[xy.y++] = str[xy.x++];
 		}
 	}	
-	cmd[xy.y] = '\0';
+	cmd[xy.y] = '\0';	
+	cmd = expand_ex_code(cmd, red, env, str);
 	the_turns(cmd, 1);
-	cmd = expand_ex_code(cmd, red);
 	return(free(str), cmd);
 }

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/30 14:53:54 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 17:56:17 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,26 @@ int	check_ambiguous(char *str, int ind)
 	}
 }
 
-int	**to_free_f(int **file, int len)
+static int	complete_work(char *file, int indice, int outfile)
 {
-	if (file)
+	if (!access(file, R_OK) && !outfile)
+		return (0);
+	else if (!outfile)
 	{
-		while (file && --len >= 0)
-		{
-			if (file[len][0] >= 0)
-				close (file[len][0]);
-			free(file[len]);
-			file[len] = NULL;
-		}
-		free(file);
+		if (indice == 1)
+			return (1);
+		else
+			return (ft_error_files(13, 1, file));
 	}
-	return (NULL);
+	if (!access(file, W_OK) && outfile)
+		return (0);
+	else
+	{
+		if (indice == 1)
+			return (1);
+		else
+			return (ft_error_files(13, 1, file));
+	}
 }
 
 int	check_file_access(char *file, int indice, int outfile)
@@ -56,34 +62,15 @@ int	check_file_access(char *file, int indice, int outfile)
 	{
 		if (file[0] == '\0')
 		{
-			if (indice == 0)
-				return (ft_error_files(2, 1, file));
-			else
+			if (indice == 1)
 				return (1);
+			else
+				return (ft_error_files(2, 1, file));
 		}
 		if (check_ambiguous(file, 0) && !indice)
 			return (check_ambiguous(file, 1));
 		if (!access(file, F_OK))
-		{
-			if (!access(file, R_OK) && !outfile)
-				return (0);
-			else if (!outfile)
-			{
-				if (indice == 1)
-					return (1);
-				else
-					return (ft_error_files(13, 1, file));
-			}
-			if (!access(file, W_OK) && outfile)
-				return (0);
-			else
-			{
-				if (indice == 1)
-					return (1);
-				else
-					return (ft_error_files(13, 1, file));
-			}
-		}
+			return (complete_work(file, indice, outfile));
 		else if (!outfile)
 		{
 			if (indice == 1)
@@ -93,69 +80,6 @@ int	check_file_access(char *file, int indice, int outfile)
 		}
 	}
 	return (0);
-}
-
-char	*read_from_here_doc(char **red, int i, t_list **env, int *ret)
-{
-	char	*here_doc;
-	char	*tmp;
-	char	*res;
-	char	*lim;
-	int		j;
-
-	here_doc = NULL;
-	signal(SIGINT, ft_handler_here);
-	while (1 && red && red[i])
-	{
-		lim = red[i + 1];
-		res = readline(">");
-		if (!res || (!ft_strncmp(res, lim, ft_strlen(res))
-				&& (ft_strlen(res) == ft_strlen(lim))) || lim[0] == '\0')
-		{
-			if (!ttyname(0))
-			{
-				free(res);
-				free(here_doc);
-				g_sig = 1;
-				if (open(ttyname(2), O_RDWR) == -1)
-					return (NULL);
-				break ;
-			}
-			break ;
-		}
-		if (res[0] != '\0')
-			add_history(res);
-		res = add_new_line(&res);
-		if (!res)
-			return (NULL);
-		tmp = here_doc;
-		if (ft_strncmp(red[i], "<<<", 3) && ft_strlen(red[i]) != 3)
-		{
-			res = dollar_sign(res, 0);
-			res = blurr_dollar_digit(res, 0);
-			res = cmd_expa(res, *env, ret);
-			j = -1;
-			while (res[++j])
-			{
-				if (res[j] < 0)
-					res[j] *= -1;
-			}
-		}
-		here_doc = my_strjoin(here_doc, res);
-		if (!here_doc)
-			return (free(tmp), free(res), NULL);
-		free(res);
-		free(tmp);
-	}
-	signal(SIGINT, ft_handler);
-	if (!here_doc)
-	{
-		here_doc = ft_strdup("");
-		if (!here_doc)
-			return (NULL);
-	}
-	printf("the address of your here_doc is %p\n", here_doc);
-	return (free(res), here_doc);
 }
 
 int	open_in_files(t_exec *e, int len, char *file, char *token)
@@ -180,4 +104,30 @@ int	open_in_files(t_exec *e, int len, char *file, char *token)
 	}
 	e->in_f = 1;
 	return (e->in_l = 1, 0);
+}
+
+int	set_stdin(t_prs *lst, t_exec *e, int indice, int *fd)
+{
+	int	fd2[2];
+
+	if (e->in)
+		return (the_input(lst, e));
+	else if ((!e->in && ft_prssize(lst) == 1 && indice))
+	{
+		if (dup2(fd[0], STDIN_FILENO) < 0)
+			return (perror("dup2"), -1);
+		return (close(fd[0]), 0);
+	}
+	else if (!e->in && indice && ft_prssize(lst) != 1 && e->i)
+	{
+		if (!ft_is_pipe(0))
+		{
+			if (pipe(fd2) < 0)
+				return (perror("pipe"), -1);
+			if (dup2(fd2[0], STDIN_FILENO) < 0)
+				return (perror("dup2"), -1);
+			return (close(fd2[1]), close(fd2[0]), 0);
+		}
+	}
+	return (0);
 }

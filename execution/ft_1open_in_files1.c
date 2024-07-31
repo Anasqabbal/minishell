@@ -6,62 +6,11 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:18:37 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/30 14:38:46 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 17:17:24 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	calcul_strs(char *s1, char **s2)
-{
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	while (s2 && s2[i])
-	{
-		if (!ft_strncmp(s2[i], s1, ft_strlen(s1)))
-			count++;
-		i++;
-	}
-	return (count);
-}
-
-int	file_here_docs(char **f, t_exec *e, t_list **env, int *ret)
-{
-	int	i;
-	int	len;
-	int	j;
-
-	i = -1;
-	j = 0;
-	len = calcul_strs("<<", f);
-	if (len == 0)
-		return (0);
-	else if (len > 15)
-		return (ft_putstr_fd("minishell :maximum here-document count exceeded\n"
-				, 2), 1);
-	e->here_doc = malloc(sizeof(char *) * (len));
-	if (!e->here_doc)
-		return (-1);
-	while (f && f[++i])
-	{
-		if (!ft_strncmp(f[i], "<<<", ft_strlen(f[i])) && ft_strlen(f[i]) >= 2)
-		{
-			e->here_doc[j] = read_from_here_doc(f, i, env, ret);
-			if (!e->here_doc[j])
-				return (-1);
-			if (g_sig == 1)
-			{
-				e->here_doc[j] = NULL;
-				return (1);
-			}
-			j++;
-		}
-	}
-	return (e->in_h_l = len, e->here_doc[len] = NULL, 0);
-}
 
 static int	compare_and_check(char **f, t_exec *e,	int i)
 {
@@ -109,6 +58,7 @@ int	set_and_open(t_exec *e, char **f, int i)
 				return (-1);
 			e->in[0][0] = -1;
 			e->in_f = 2;
+			e->in_l = 1;
 			continue ;
 		}
 		r = compare_and_check(f, e, i);
@@ -120,23 +70,10 @@ int	set_and_open(t_exec *e, char **f, int i)
 	return (0);
 }
 
-int	set_here_doc(t_prs *l, t_exec **e, t_list **env, int *ret)
+static void	first_file_access_check(t_prs *l2)
 {
-	t_prs	*l2;
-	t_exec	*new;
 	int		i;
 
-	l2 = l;
-	while (l)
-	{
-		new = ft_exec_new();
-		if (!new)
-			return (-1);
-		if (file_here_docs(l->red, new, env, ret) == -1)
-			return (-1);
-		ft_execadd_back(e, new);
-		l = l->next;
-	}
 	while (l2)
 	{
 		i = -1;
@@ -157,5 +94,24 @@ int	set_here_doc(t_prs *l, t_exec **e, t_list **env, int *ret)
 		}
 		l2 = l2->next;
 	}
+}
+
+int	set_here_doc(t_prs *l, t_exec **e, t_list **env, int *ret)
+{
+	t_prs	*l2;
+	t_exec	*new;
+
+	l2 = l;
+	while (l)
+	{
+		new = ft_exec_new();
+		if (!new)
+			return (-1);
+		if (file_here_docs(l->red, new, env, ret) == -1)
+			return (-1);
+		ft_execadd_back(e, new);
+		l = l->next;
+	}
+	first_file_access_check(l2);
 	return (0);
 }

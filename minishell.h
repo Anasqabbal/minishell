@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/30 09:39:26 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 19:54:09 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,11 @@ typedef struct s_sing
 typedef struct s_ndx{
 	int x;
 	int y;
-	int ndx;
 }t_ndx;
+typedef struct s_ndx_c{
+	int x;
+	int y;
+}t_ndx_c;
 /*EXECUTION*/
 	/* ----- BUILTINS ----- */
 int				ft_export(char **opts, t_list **envp);
@@ -127,7 +130,7 @@ char			**ft_2dstrdup(char **s);
 char			**ft_2dstrcpy(char **dst, char **src, int f_len);
 char			**ft_2dstrjoin(char **s1, char **s2);
 	/*additional_ft2.c*/
-int				ft_2dprint(char **str); // remove_it;
+int				calcul_strs(char *s1, char **s2);
 int				ft_prssize(t_prs *lst);
 	/*env_utils*/
 t_list			*ft_envdup(char **env, char **path);
@@ -135,6 +138,9 @@ t_list			*ft_getenv_ours(char *str, t_list *env);
 int				from_lst_to_2d(t_list **s, char ***env);
 char			*nw_vl(t_list *env, int ii, char	*s, char *s1);
 t_list			*ft_getenv_ours_special(char *str, t_list *env);
+int				export_with_equal(char *str, t_list **env);
+int				export_exit_code(t_list **env, t_exec *e);
+int				initialize_t_all(t_prs *p, t_list **envp, t_exec *e, t_all *a);
 	/*ft_1open_in_files.c "5"*/
 int				**to_free_f(int **file, int len);
 int				open_in_files(t_exec *e, int len, char *file, char *token);
@@ -144,6 +150,7 @@ int				check_file_access(char *file, int indice, int outfile);
 char			*add_new_line(char **res);
 char			*read_from_here_doc(char **red, int i, t_list **env, int *ret);
 int				check_ambiguous(char *str, int ind);
+int				file_here_docs(char **f, t_exec *e, t_list **env, int *ret);
 
 	/*ft_1open_out_files.c "3"*/
 int				ft_restore_input(void);
@@ -201,12 +208,11 @@ int		ft_check_quotes(char c, int *sign);
 int		arg_count(char **str);
 void	turn_back(char *str, int ndx);
 void	free_it(char **arg, int count);
-void	turn_single(char *str, int ndx);
 char	*cmd_expa(char *str, t_list *env, int *red);
 void	ft_strcpy(char *s1, char *s2);
 t_prs	*init_prs(void);
-void	pipe_split_h(char **splt_pip, t_prs **curr, t_prs **head, char *com);
-void	parse_red(char **array, t_prs *node);
+int		pipe_split_h(char **splt_pip, t_prs **curr, t_prs **head, char *com);
+int 	parse_red(char **array, t_prs *node);
 void	free_it_h(char **splt_pip, char *com, t_prs **head);
 void	ft_handler(int sig);
 void	free_list(t_prs *head);
@@ -216,23 +222,28 @@ void	free_it_h2(char **splt_pip, char *com, t_prs **head, t_prs *new);
 int		error_msg1(char *str, int x);
 void	error_msg(char c);
 void 	turn_double(char *str, int ndx);
-char	*skip_unnecessary_quotes(char *str);
 int		error_msg1h3(char *str, int x);
 int		turn_dollar(char *str, int y);
 char	*expand_variable(char *str, t_list *env, int *ndx);
-char	*extract_virable(char *str, int *var_len);
+char	*extract_virable(char *str, int *var_len, t_list *env);
 void 	turn_back_dollar(char *str);
-void 	blurr_dollar(char *str);
 char	*dollar_sign(char *str, int ndx);
 int		calaculate_expan_len(char *str, t_list *env);
 void	the_turns(char *str, int ndx);
 void	turn_here_do(char *str);
 void	ft_handler_here(int sig);
 char	*blurr_dollar_digit(char *str, int ndx);
-void	expo_turn(char **str);
 int		count_expantion_here(char *str);
 void	ft_handler_fork(int sig);
-int		dkchi_t3_signals(int *ret);
+void	turning_it_back(t_prs *head);
+void	free_env(char *str, t_list *env);
+void	the_three(char *str, char *cmd, int *y, int *x);
+int		turn_dollar_2(char *str, int y);
+
+/**/
+int		count_expantion_here(char *str);
+void	ft_handler_fork(int sig);
+int		it_is_signals(int *ret);
 
 
 /* clear_functions.c */
@@ -245,4 +256,6 @@ t_prs			*set_values(int indice);
 t_prs			*new_prs(char *cmd, char **opts, char **args);
 void			ft_print_prs(t_prs *c);
 void			ft_print_exec(t_exec *e);
+int				ft_2dprint(char **str);
+
 #endif

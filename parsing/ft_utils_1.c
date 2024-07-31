@@ -6,44 +6,17 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:44:34 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/29 15:34:49 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/31 15:39:37 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
-void turn_single(char *str, int ndx)
-{
-	int x;
-	char hold;
-
-	x = 0;
-	while (str[x] != '\0')
-	{
-		if (str[x] == '\'')
-        {
-          	hold = str[x];
-            x++;
-			if (str[x] == '\0')
-				break ;
-           	while (str[x] != '\0')
-            {
-				if (str[x] == hold)
-                    break ;
-				if (ndx == 1)
-					str[x] *= -1;
-				if (str[x])
-                	x++;
-            }
-		}
-		if (str[x])
-			x++;
-	}
-}
 void	ft_strcpy(char *s1, char *s2)
 {
-	int x = 0;
+	int	x;
+
+	x = 0;
 	while ((size_t)x < ft_strlen(s2))
 	{
 		s1[x] = s2[x];
@@ -52,23 +25,25 @@ void	ft_strcpy(char *s1, char *s2)
 	s1[x] = '\0';
 }
 
-t_prs	*init_prs(void) 
+t_prs	*init_prs(void)
 {
-    t_prs *new_node = (t_prs *)malloc(sizeof(t_prs));
-    if (!new_node)
-        return NULL;
-    new_node->cmd = NULL;
-    new_node->opts = NULL;
-    new_node->arg = NULL;
+	t_prs	*new_node;
+
+	new_node = (t_prs *)malloc(sizeof(t_prs));
+	if (!new_node)
+		return (NULL);
+	new_node->cmd = NULL;
+	new_node->opts = NULL;
+	new_node->arg = NULL;
 	new_node->red = NULL;
-    new_node->ex_code = 0;
-    new_node->next = NULL;
-    return new_node;
+	new_node->ex_code = 0;
+	new_node->next = NULL;
+	return (new_node);
 }
 
-void back_turning(char **array)
+void	back_turning(char **array)
 {
-	int y;
+	int	y;
 
 	y = 0;
 	while (array[y])
@@ -78,28 +53,46 @@ void back_turning(char **array)
 	}
 }
 
-int	error_msg1h3(char *str, int x)
+static int	error_msg1h4(char *str, int x)
 {
-	if (!ft_strncmp(&str[x], "&", ft_strlen("&")) || !ft_strncmp(&str[x], "& &", ft_strlen("& &")))
+	if (!ft_strncmp(&str[x], "&", ft_strlen("&"))
+		|| !ft_strncmp(&str[x], "& &", ft_strlen("& &")))
 	{
 		write(2, "minishell: syntax error near unexpected token `&'\n", 51);
 		return (0);
 	}
-	else if(!ft_strncmp(&str[x], "||", ft_strlen("||")))
+	else if (!ft_strncmp(&str[x], "||", ft_strlen("||")))
 	{
 		write(2, "minishell: syntax error near unexpected token `||'\n", 52);
 		return (0);
 	}
-	else if(!ft_strncmp(&str[x], "( (", ft_strlen("( (")) ||
-		!ft_strncmp(&str[x], "((", ft_strlen("((")) ||
-		!ft_strncmp(&str[x], "(", ft_strlen("(")))
+	else if (!ft_strncmp(&str[x], "()", ft_strlen("()"))
+		|| !ft_strncmp(&str[x], "( )", ft_strlen("( )"))
+		|| !ft_strncmp(&str[x], "( ()", ft_strlen("( ()"))
+		|| !ft_strncmp(&str[x], "( ( )", ft_strlen("( ( )"))
+		|| !ft_strncmp(&str[x], "(()", ft_strlen("(()"))
+		|| !ft_strncmp(&str[x], "(( )", ft_strlen("(( )")))
+	{
+		write(2, "minishell: syntax error near unexpected token `)'\n", 51);
+		return (0);
+	}
+	return (1);
+}
+
+int	error_msg1h3(char *str, int x)
+{
+	if (!error_msg1h4(str, x))
+		return (0);
+	else if (!ft_strncmp(&str[x], "( (", ft_strlen("( ("))
+		|| !ft_strncmp(&str[x], "((", ft_strlen("(("))
+		|| !ft_strncmp(&str[x], "(", ft_strlen("(")))
 	{
 		write(2, "minishell: syntax error near unexpected token `('\n", 51);
 		return (0);
 	}
-	else if(!ft_strncmp(&str[x], ") )", ft_strlen(") )")) ||
-		!ft_strncmp(&str[x], "))", ft_strlen("))")) ||
-		!ft_strncmp(&str[x], ")", ft_strlen(")")))
+	else if (!ft_strncmp(&str[x], ") )", ft_strlen(") )"))
+		|| !ft_strncmp(&str[x], "))", ft_strlen("))"))
+		|| !ft_strncmp(&str[x], ")", ft_strlen(")")))
 	{
 		write(2, "minishell: syntax error near unexpected token `)'\n", 51);
 		return (0);

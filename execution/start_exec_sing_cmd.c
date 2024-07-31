@@ -6,54 +6,11 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:43:27 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/30 11:07:11 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 17:58:23 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	export_exit_code(t_list **env, t_exec *e)
-{
-	char	*itoa_res;
-	char	*res;
-
-	itoa_res = ft_itoa(e->ex);
-	if (!itoa_res)
-		return (-1);
-	res = my_strjoin("_=", itoa_res);
-	if (!res)
-		return (free(itoa_res), -1);
-	if (!export1(res, env))
-		return (free(itoa_res), free(res), -1);
-	return (free(itoa_res), free(res), 0);
-}
-
-int	export_with_equal(char *str, t_list **env)
-{
-	char	*res;
-	char	*res1;
-	char	*add;
-	int		len;
-	int		i;
-
-	i = -1;
-	len = ft_strlen(str) - ft_strlen(ft_strchr(str, '='));
-	res = malloc(sizeof(char) * (len + 1));
-	if (!res)
-		return (-1);
-	add = ft_strchr(str, '+');
-	if (add && add < ft_strchr(str, '='))
-		len -= 1;
-	while (++i < len)
-		res[i] = str[i];
-	res[i] = '\0';
-	res1 = my_strjoin("_=", res);
-	if (!res1)
-		return (free(res), -1);
-	if (!export1(res1, env))
-		return (free(res), free(res1), -1);
-	return (free(res), free(res1), 0);
-}
 
 int	ft_export_(t_list **env, char **str, t_exec *e)
 {
@@ -137,7 +94,7 @@ static int	execute_this(t_prs **lst, t_list **envp, t_exec *e, t_sing *s)
 	}
 	s->ret = ft_execve1(e, -1, s->out, 0);
 	if (ft_prssize(*lst) == 1)
-		s->ret = dkchi_t3_signals(&(s->ret));
+		s->ret = it_is_signals(&(s->ret));
 	signal(SIGINT, ft_handler);
 	return (s->ret);
 }

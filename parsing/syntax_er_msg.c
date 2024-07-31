@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:03:51 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/29 15:39:49 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/31 16:06:43 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,88 +15,93 @@
 void	error_msg(char c)
 {
 	if (c == '|')
-		write(2, "minishell: syntax error near unexpected token `|'\n", 50);
+		write(2, "minishell: syntax error snear unexpected token `|'\n", 50);
 	else if (c == '>')
-		write(2, "minishell: syntax error near unexpected token `newline'\n", 56);
+		write(2,
+			"minishell: syntax error near unexpected token `newline'\n", 56);
 	else if (c == '<')
-		write(2, "minishell: syntax error near unexpected token `newline'\n", 56);
+		write(2,
+			"minishell: syntax error near unexpected token `newline'\n", 56);
 }
+
 static int	error_msg1h(char *str, int x)
 {
-	if (!ft_strncmp(&str[x], "<< |", ft_strlen("<< |")) ||  
-		!ft_strncmp(&str[x], "<<|", ft_strlen("<<|")) ||
-		!ft_strncmp(&str[x], "< |", ft_strlen("< |")) ||
-        !ft_strncmp(&str[x], "<|", ft_strlen("<|")) ||
-        !ft_strncmp(&str[x], "> |", ft_strlen("> |")) ||
-        !ft_strncmp(&str[x], ">> |", ft_strlen(">> |")) ||
-        !ft_strncmp(&str[x], ">>|", ft_strlen(">>|")) ||
-        !ft_strncmp(&str[x], "| |", ft_strlen("| |")) ||
-		!ft_strncmp(&str[x], ">|", ft_strlen(">|")))
+	if (!ft_strncmp(&str[x], "<< |", ft_strlen("<< |"))
+		|| !ft_strncmp(&str[x], "<<|", ft_strlen("<<|"))
+		|| !ft_strncmp(&str[x], "< |", ft_strlen("< |"))
+		|| !ft_strncmp(&str[x], "<|", ft_strlen("<|"))
+		|| !ft_strncmp(&str[x], "> |", ft_strlen("> |"))
+		|| !ft_strncmp(&str[x], ">> |", ft_strlen(">> |"))
+		|| !ft_strncmp(&str[x], ">>|", ft_strlen(">>|"))
+		|| !ft_strncmp(&str[x], "| |", ft_strlen("| |"))
+		|| !ft_strncmp(&str[x], ">|", ft_strlen(">|")))
 	{
 		write(2, "minishell: syntax error near unexpected token `|'\n", 50);
 		return (0);
 	}
-	else if(!ft_strncmp(&str[x], ">>>>", ft_strlen(">>>>")) || 
-		!ft_strncmp(&str[x], ">> >>", ft_strlen(">> >>")) ||
-		!ft_strncmp(&str[x], "< >>", ft_strlen("< >>")) ||
-		!ft_strncmp(&str[x], "<< >>", ft_strlen("<< >>")) ||
-		!ft_strncmp(&str[x], "<<>>", ft_strlen("<<>>")) ||
-		!ft_strncmp(&str[x], "<>>", ft_strlen("<>>")) ||
-		!ft_strncmp(&str[x], "> >>", ft_strlen("> >>")))
+	else if (!ft_strncmp(&str[x], ">>>>", ft_strlen(">>>>"))
+		|| !ft_strncmp(&str[x], ">> >>", ft_strlen(">> >>"))
+		|| !ft_strncmp(&str[x], "< >>", ft_strlen("< >>"))
+		|| !ft_strncmp(&str[x], "<< >>", ft_strlen("<< >>"))
+		|| !ft_strncmp(&str[x], "<<>>", ft_strlen("<<>>"))
+		|| !ft_strncmp(&str[x], "<>>", ft_strlen("<>>"))
+		|| !ft_strncmp(&str[x], "> >>", ft_strlen("> >>")))
 	{
 		write(2, "minishell: syntax error near unexpected token `>>'\n", 52);
 		return (0);
 	}
-	return(1);
+	return (1);
 }
+
 static int	error_msg1h1(char *str, int x)
 {
-	if(!ft_strncmp(&str[x], ">>>", ft_strlen(">>>")) || 
-		!ft_strncmp(&str[x], ">> >", ft_strlen(">> >")))
+	if (!ft_strncmp(&str[x], ">>>", ft_strlen(">>>"))
+		|| !ft_strncmp(&str[x], ">> >", ft_strlen(">> >")))
 	{
 		write(2, "minishell: syntax error near unexpected token `>'\n", 51);
 		return (0);
 	}
-	else if(!ft_strncmp(&str[x], "<<<<", ft_strlen("<<<<")) || 
-		!ft_strncmp(&str[x], "<< <<", ft_strlen("<< <<")) ||
-		!ft_strncmp(&str[x], "><<", ft_strlen("><<")) ||
-		!ft_strncmp(&str[x], ">> <<", ft_strlen(">> <<")) ||
-		!ft_strncmp(&str[x], ">><<", ft_strlen(">><<")) ||
-		!ft_strncmp(&str[x], "> <<", ft_strlen("> <<")) ||
-		!ft_strncmp(&str[x], "< <<", ft_strlen("< <<")))
+	else if (!ft_strncmp(&str[x], "<<<<", ft_strlen("<<<<"))
+		|| !ft_strncmp(&str[x], "<< <<", ft_strlen("<< <<"))
+		|| !ft_strncmp(&str[x], "><<", ft_strlen("><<"))
+		|| !ft_strncmp(&str[x], ">> <<", ft_strlen(">> <<"))
+		|| !ft_strncmp(&str[x], ">><<", ft_strlen(">><<"))
+		|| !ft_strncmp(&str[x], "> <<", ft_strlen("> <<"))
+		|| !ft_strncmp(&str[x], "< <<", ft_strlen("< <<")))
 	{
 		write(2, "minishell: syntax error near unexpected token `<<'\n", 51);
 		return (0);
 	}
-	else if(!ft_strncmp(&str[x], "<<<", ft_strlen("<<<")) || 
-		!ft_strncmp(&str[x], "<< <", ft_strlen("<< <")))
+	else if (!ft_strncmp(&str[x], "<<<", ft_strlen("<<<"))
+		|| !ft_strncmp(&str[x], "<< <", ft_strlen("<< <")))
 	{
 		write(2, "minishell: syntax error near unexpected token `<'\n", 51);
 		return (0);
 	}
-	return(1);
+	return (1);
 }
+
 static int	error_msg1h2(char *str, int x)
 {
-	if(!ft_strncmp(&str[x], "< <", ft_strlen("< <")) ||
-		!ft_strncmp(&str[x], "> <", ft_strlen("> <")) ||
-        !ft_strncmp(&str[x], "><", ft_strlen("><")) ||
-		!ft_strncmp(&str[x], ">> <", ft_strlen(">> <")) ||
-        !ft_strncmp(&str[x], ">><", ft_strlen(">><")))
+	if (!ft_strncmp(&str[x], "< <", ft_strlen("< <"))
+		|| !ft_strncmp(&str[x], "> <", ft_strlen("> <"))
+		|| !ft_strncmp(&str[x], "><", ft_strlen("><"))
+		|| !ft_strncmp(&str[x], ">> <", ft_strlen(">> <"))
+		|| !ft_strncmp(&str[x], ">><", ft_strlen(">><")))
 	{
 		write(2, "minishell: syntax error near unexpected token `<'\n", 51);
 		return (0);
 	}
-	else if(!ft_strncmp(&str[x], "> >", ft_strlen("> >")) || 
-		!ft_strncmp(&str[x], "<>", ft_strlen("<>")) || 
-		!ft_strncmp(&str[x], "< >", ft_strlen("< >")) ||
-		!ft_strncmp(&str[x], "<< >", ft_strlen("<< >")) ||
-        !ft_strncmp(&str[x], "<<>", ft_strlen("<<>")))
+	else if (!ft_strncmp(&str[x], "> >", ft_strlen("> >"))
+		|| !ft_strncmp(&str[x], "<>", ft_strlen("<>"))
+		|| !ft_strncmp(&str[x], "< >", ft_strlen("< >"))
+		|| !ft_strncmp(&str[x], "<< >", ft_strlen("<< >"))
+		|| !ft_strncmp(&str[x], "<<>", ft_strlen("<<>")))
 	{
 		write(2, "minishell: syntax error near unexpected token `>'\n", 51);
 		return (0);
 	}
-	else if(!ft_strncmp(&str[x], "&&", ft_strlen("&&")))
+	else if (!ft_strncmp(&str[x], "&&", ft_strlen("&&")))
 	{
 		write(2, "minishell: syntax error near unexpected token `&&'\n", 52);
 		return (0);
@@ -106,14 +111,13 @@ static int	error_msg1h2(char *str, int x)
 
 int	error_msg1(char *str, int x)
 {
-
 	if (!error_msg1h(str, x))
 		return (0);
-	else if(!error_msg1h1(str, x))
-		return(0);
-	else if(!error_msg1h2(str, x))
+	else if (!error_msg1h1(str, x))
 		return (0);
-	else if(!error_msg1h3(str, x))
+	else if (!error_msg1h2(str, x))
+		return (0);
+	else if (!error_msg1h3(str, x))
 		return (0);
 	return (1);
 }

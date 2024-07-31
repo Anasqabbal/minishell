@@ -6,47 +6,27 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 18:04:18 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/27 12:53:35 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 19:44:03 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-/*5 functions */
-
-void	*add_to_env(char	*str, t_list	**envp)
+static void	first_while(char **str, int *i, int *j)
 {
-	t_list	*new;
-	t_list	*env;
-	char	*res;
-	char	*str1;
-
-	env = *envp;
-	res = NULL;
-	if (ft_strchr(str, '+'))
-		res = remove_plus(str, res);
-	if (res)
-		str = res;
-	str1 = ft_strdup(str);
-	if (!str1)
-		return (NULL);
-	new = ft_lstnew(str1);
-	if (!new)
-		return (free(str1), free(res), NULL);
-	ft_lstadd_back(&env, new);
-	return (free(res), *envp);
+	*j = -1;
+	*i = -1;
+	while (str[0][++(*i)] && str[0][*i] != '=')
+		;
 }
 
-void	*with_plus(char *str, t_list **env, t_list *old, t_list	*new)
+static void	*with_plus(char *str, t_list **env, t_list *old, t_list	*new)
 {
 	char	*n_s;
 	int		i;
 	int		j;
 
-	i = -1;
-	j = -1;
-	while (str[++i] && str[i] != '=')
-		;
+	first_while(&str, &i, &j);
 	n_s = ft_calloc(sizeof(char), ft_strlen(str + i + 1) + 1);
 	if (!n_s)
 		return (NULL);
@@ -72,6 +52,7 @@ static void	*edit_env(char *str, t_list **env, t_list *old)
 {
 	t_list	*new;
 	char	*add;
+	char	*res;
 
 	if (!env)
 		return (NULL);
@@ -80,7 +61,10 @@ static void	*edit_env(char *str, t_list **env, t_list *old)
 		return (with_plus(str, env, old, NULL));
 	else
 	{
-		new = ft_lstnew(ft_strdup(str));
+		res = ft_strdup(str);
+		if (!res)
+			return (NULL);
+		new = ft_lstnew(res);
 		if (!new)
 			return (NULL);
 		if (!ft_lstremplace(env, old, new))
@@ -137,7 +121,7 @@ int	ft_export(char **opts, t_list **envp)
 			if (ret && ++ind)
 				continue ;
 			else if (!export1(opts[i], envp))
-				return (-1); /* my you need to free the all and exit here */
+				return (-1);
 		}
 	}
 	if (ind)

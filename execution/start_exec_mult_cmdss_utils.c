@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:35:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/29 13:37:24 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 17:56:06 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,32 +40,6 @@ int	the_input(t_prs *lst, t_exec *e)
 	return (lst->ex_code = 0, 0);
 }
 
-int	set_stdin(t_prs *lst, t_exec *e, int indice, int *fd)
-{
-	int	fd2[2];
-
-	if (e->in)
-		return (the_input(lst, e));
-	else if ((!e->in && ft_prssize(lst) == 1 && indice))
-	{
-		if (dup2(fd[0], STDIN_FILENO) < 0)
-			return (perror("dup2"), -1);
-		return (close(fd[0]), 0);
-	}
-	else if (!e->in && indice && ft_prssize(lst) != 1 && e->i)
-	{
-		if (!ft_is_pipe(0))
-		{
-			if (pipe(fd2) < 0)
-				return (perror("pipe"), -1);
-			if (dup2(fd2[0], STDIN_FILENO) < 0)
-				return (perror("dup2"), -1);
-			return (close(fd2[1]), close(fd2[0]), 0);
-		}
-	}
-	return (0);
-}
-
 int	set_stdout_and_cmd(t_prs *l, t_exec *e, int *o, int *fd)
 {
 	if (e->out)
@@ -81,7 +55,7 @@ int	set_stdout_and_cmd(t_prs *l, t_exec *e, int *o, int *fd)
 	return (0);
 }
 
-int	dkchi_t3_signals(int *ret)
+int	it_is_signals(int *ret)
 {
 	int	r;
 
@@ -114,7 +88,7 @@ int	ft_return(int *ret, int *i, t_all a)
 	r = 0;
 	if (!(*ret))
 	{
-		r = dkchi_t3_signals(ret);
+		r = it_is_signals(ret);
 		signal(SIGINT, ft_handler);
 		if (ft_export_(a.envp, NULL, NULL) < 0)
 			return (*ret = 1, -1);

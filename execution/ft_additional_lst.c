@@ -6,13 +6,26 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 09:44:32 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/16 16:42:52 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 17:52:25 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/*2 functions*/
+static size_t	ex_str_len(char *str)
+{
+	size_t	i;
+
+	i = -1;
+	if (ft_strchr(str, '='))
+	{
+		while (str[++i] != '=')
+			;
+		return (i);
+	}
+	else
+		return (ft_strlen(str));
+}
 
 int	ft_lstget_pos(char *str, t_list *lst)
 {
@@ -27,7 +40,7 @@ int	ft_lstget_pos(char *str, t_list *lst)
 		tmp = lst->content;
 		while (tmp[++j] && tmp[j] != '=')
 			;
-		if (!ft_strncmp(lst->content, str, j))
+		if (!ft_strncmp(lst->content, str, j) && ex_str_len(str) == (size_t)j)
 			return (i);
 		lst = lst->next;
 		i++;

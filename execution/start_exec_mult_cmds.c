@@ -6,14 +6,11 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:12 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/29 14:41:43 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 19:59:18 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-/* this indice for check the previouse command if is 
-	failed or not here when the command is failed I fill the indice by 1*/
 
 int	inside_if(t_all *a)
 {
@@ -28,23 +25,6 @@ int	inside_if(t_all *a)
 		return (-1);
 	return (0);
 }
-
-int	initialize_t_all(t_prs *p, t_list **envp, t_exec *e, t_all *a)
-{
-	a->p = p;
-	a->e = e;
-	a->envp = envp;
-	a->ret = 0;
-	a->out = -1;
-	a->indice = 0;
-	a->i = 0;
-	if (g_sig == 1)
-		return (1);
-	return (0);
-}
-
-/*in the line 62 if sometest failed remmenber 
-	you remove restore input from here*/
 
 int	execute_this(t_all a)
 {
@@ -95,22 +75,35 @@ int	complete_work(t_all *a)
 	return (0);
 }
 
+static int	first_check(t_all *a)
+{
+	a->e->i = a->i;
+	a->e->ex = WEXITSTATUS(a->ret);
+	a->ret = open_files_and_pipe(a);
+	if (a->ret == -1)
+		return (-1);
+	if (a->ret == 1)
+		return (1);
+	if (!a->p)
+		return (2);
+	return (0);
+}
+
 int	mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path)
 {
 	t_all	a;
+	int		ret;
 
-	if(initialize_t_all(lst, envp, e, &a))
+	if (initialize_t_all(lst, envp, e, &a))
 		return (1);
 	while (a.p)
 	{
-		a.e->i = a.i;
-		a.e->ex = WEXITSTATUS(a.ret);
-		a.ret = open_files_and_pipe(&a);
-		if (a.ret == -1)
+		ret = first_check(&a);
+		if (ret == -1)
 			return (-1);
-		if (a.ret == 1)
+		else if (ret == 1)
 			continue ;
-		if (!a.p)
+		else if (ret == 2)
 			break ;
 		a.ret = check_access(a.p->cmd, a.e, a.envp, *path);
 		if ((a.ret || !a.p->cmd) && it_is_builtin(a.p->cmd))

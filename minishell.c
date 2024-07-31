@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 14:14:22 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/30 10:05:09 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 15:53:36 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ int main(int ac, char **av, char **env)
 	int		ret;
 	t_prs	*n ;
 	t_list	*envp;
-	struct termios ss;
 
 	if (ac == -1 || !av)
 		return (1);
+	// atexit(f);
 	signal(SIGINT, ft_handler);
 	signal(SIGQUIT, SIG_IGN);
 	if (!isatty(STDIN_FILENO))
@@ -60,16 +60,17 @@ int main(int ac, char **av, char **env)
 		if (!input && printf("exit\n"))
 			break ;
 		if (input[0] == '\0')
+		{
 			free(input);
+			continue ;
+		}
 		if (input && input[0] != '\0')
 		{
 			check_syntax(input, envp, &n, &ret);
-			tcgetattr(STDOUT_FILENO, &ss);
-			print_prs(n);
+			// print_prs(n);
 			ret = start_exec(&n, &envp , ret, &path);
 			if (input[0] != '\0')
 				add_history(input);
-			tcsetattr(STDOUT_FILENO,  TCSANOW, &ss);
 			clear_prs(&n);
 			free(input);
 			if (g_sig == 1)

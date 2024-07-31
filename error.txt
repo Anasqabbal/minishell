@@ -2,13 +2,13 @@ test : ;; (and) ;;;;; (and) ;;;;;;;;;;;;;;;
 expected : syntax error near unexpected token `;;'
 output : command not found
 
-test :
-expected :
-output :
+test : exportHOLA=bonjour
+expected : HOLA="bonjourbonjour" (already there is HOLA=bonjour)
+output : command not found
 
 test :
-expected :
-output :
+expected : 
+output : 
 
 test :
 expected :

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 15:54:11 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/27 10:37:39 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 19:39:23 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,33 +40,6 @@ static int	valid_par(char *from, char *str)
 	return (0);
 }
 
-int	ft_envdup_exept(t_list	*envp, char	*str, t_list	**new)
-{
-	t_list	*res;
-	t_list	*head;
-	int		j;
-	char	*s;
-
-	head = NULL;
-	while (envp)
-	{
-		j = -1;
-		s = envp->content;
-		while (s[++j] && s[j] != '=')
-			;
-		if (!str || ft_strncmp(envp->content, str, j))
-		{
-			res = ft_lstnew(ft_strdup(envp->content));
-			if (!res)
-				return (ft_lstclear(&head, free), 1);
-			ft_lstadd_back(&head, res);
-		}
-		envp = envp->next;
-	}
-	*new = head;
-	return (0);
-}
-
 int	unset1(char *str, t_list **envp, char **path, t_list **new)
 {
 	int		pos;
@@ -83,13 +56,20 @@ int	unset1(char *str, t_list **envp, char **path, t_list **new)
 	pos = ft_lstget_pos(str, env);
 	if (pos == -1)
 	{
-		if (ft_envdup_exept(env, NULL, &head))
-			return (1);
+		if (ft_envdup_exept(env, NULL, &head) == -1)
+			return (-1);
 		return (*new = head, 0);
 	}
-	if (ft_envdup_exept(env, str, &head))
-		return (1);
+	if (ft_envdup_exept(env, str, &head) == -1)
+		return (-1);
 	return (*new = head, 0);
+}
+
+static int	small_return(int ind)
+{
+	if (ind)
+		return (1);
+	return (0);
 }
 
 int	ft_unset(char **str, t_list **env, char **path)
@@ -110,13 +90,13 @@ int	ft_unset(char **str, t_list **env, char **path)
 		ret = valid_par("unset", str[i]);
 		if (ret && ++ind && i++)
 			continue ;
-		if (unset1(str[i], env, path, &new))
-			return (1);
+		if (!str[i])
+			break ;
+		if (unset1(str[i], env, path, &new) == -1)
+			return (-1);
 		ft_lstclear(env, free);
 		*env = new;
 		i++;
 	}
-	if (ind)
-		return (1);
-	return (0);
+	return (small_return(ind));
 }

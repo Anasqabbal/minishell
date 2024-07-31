@@ -6,13 +6,13 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:47:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/30 11:10:04 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:09:19 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static void exit_with(int ret, t_prs *p, t_exec *e, t_list *envp)
+static void	exit_with(int ret, t_prs *p, t_exec *e, t_list *envp)
 {
 	ft_clear_exec(&e);
 	ft_lstclear(&envp, free);
@@ -40,7 +40,6 @@ static int	atoi_ex(char *str, char **s)
 		while ((str[i] >= 9 && str[i] <= 13) || str[i] == 32)
 			i++;
 		res = res * 10 + (str[i++] - 48);
-		printf("%lld\n", res);
 		if ((res < res1 && sign == 1)
 			|| ((res < res1 && res > (LLONG_MIN) && sign == -1)))
 			return (free(s), ft_ex_error("exit: ", str, 255));

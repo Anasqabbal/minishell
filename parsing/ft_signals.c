@@ -6,12 +6,11 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 15:36:33 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/26 17:58:44 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 20:29:45 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
 
 void	ft_handler(int sig)
 {
@@ -19,41 +18,25 @@ void	ft_handler(int sig)
 	{
 		g_sig = 1;
 		printf("\n");
-		rl_replace_line("", 0); 
-		rl_on_new_line();     
-    	rl_redisplay();
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
 	}
 }
+
 void	ft_handler_fork(int sig)
 {
-	// puts("jhhhgjggghugug");
 	if (sig == SIGINT)
 	{
 		printf("\n");
-	}	
+	}
 }
-void ft_handler_here(int sig)
+
+void	ft_handler_here(int sig)
 {
-	
 	if (sig == SIGINT)
 	{
 		close(0);
-		printf("\n");	
+		printf("\n");
 	}
 }
-/*
-minishell ✗ << $USER$$USER$f
-
-➜ minishell ✗ export f=
-➜ minishell ✗ > $f
-
-➜ minishell ✗ << $$$f
-
-➜ minishell ✗ << $?
-
-➜ minishell ✗ < $fefe
-
-➜ minishell ✗ export f=$UewfewR
-➜ minishell ✗ > $f
-
-*/

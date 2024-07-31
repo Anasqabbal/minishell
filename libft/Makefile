@@ -6,7 +6,7 @@
 #    By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/21 18:28:40 by anqabbal          #+#    #+#              #
-#    Updated: 2024/02/29 11:14:47 by anqabbal         ###   ########.fr        #
+#    Updated: 2024/07/30 21:34:30 by anqabbal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = libft.a
 
 CC = cc
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror 
 
 FILES = ft_isalpha.c ft_isdigit.c \
 		ft_isalnum.c ft_isascii.c \

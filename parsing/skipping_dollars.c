@@ -3,71 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   skipping_dollars.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
+/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:31:43 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/29 16:26:05 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/07/31 20:07:18 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
-int turn_dollar_2(char *str, int y)
+void	blurr_dollar_digit_wh(char *str, char *cmd, int *y, int ndx)
 {
-	int x;
-	char hold;
-	int ho;
-
-	x = 0;
-	while (str[x] != '\0')
-	{
-		if (str[x] == '\'')
-        {
-          	hold = str[x];
-			ho = x;
-            x++;
-			if (str[x] == '\0')
-				break ;
-           	while (str[x] != '\0')
-            {
-				if (str[x] == hold)
-				{
-					if (str[y] == '$' && y > ho && y < x)
-						return (1);
-					break;
-				}
-                x++;
-            }
-		}
-		x++;
-	}
-	return (0);
-}
-void blurr_dollar(char *str)
-{
-	int x;
-	
-	x = 0;
-	while (str[x])
-	{
-		if (str[x] == '$' && ft_isdigit(str[x + 1]))
-			str[x] *= -1;
-		x++;
-	}
-}
-void blurr_dollar_digit_wh(char *str, char *cmd, int *y, int ndx)
-{
-	int x;
+	int	x;
 
 	x = 0;
 	while (str[x])
 	{
 		if (str[x] && str[x] == '<' && str[x + 1] == '<' && ndx == 1)
-		{	
-			cmd[(*y)++] = str[x++];
-			cmd[(*y)++] = str[x++];
-			cmd[(*y)++] = str[x++];
+		{
+			the_three(str, cmd, y, &x);
 			turn_back(str, 1);
 			while (str[x] && str[x] != ' ')
 			{
@@ -78,83 +32,61 @@ void blurr_dollar_digit_wh(char *str, char *cmd, int *y, int ndx)
 			}
 			turn_back(str, 1);
 		}
-		else if (str[x] == '$' && ft_isdigit(str[x + 1]) && !turn_dollar_2(str, x))
+		else if (str[x] == '$' && ft_isdigit(str[x + 1])
+			&& !turn_dollar_2(str, x))
 			x += 2;
-		else 
+		else
 			cmd[(*y)++] = str[x++];
 	}
 }
-char *blurr_dollar_digit(char *str, int ndx)
+
+char	*blurr_dollar_digit(char *str, int ndx)
 {
-	int x;
-	char *cmd;
-	int y;
-	
+	int		x;
+	char	*cmd;
+	int		y;
+
 	x = 0;
 	y = 0;
 	cmd = malloc((ft_strlen(str) + 1) * sizeof(char));
 	if (!cmd)
-	{
-		free(str);
-		exit(1);
-	}
+		return (free(cmd), NULL);
 	blurr_dollar_digit_wh(str, cmd, &y, ndx);
 	cmd[y] = '\0';
 	return (free(str), cmd);
 }
-// void dollar_while_h1(char *str, char *cmd, int *y, int *x)
-// {
-// 	int hold;
-// 	int z;
-// 	int count;
 
-// 	hold = *x;
-// 	count = 0;
-// 	while (str[hold] == '$')
-// 	{
-// 		count++;
-// 		hold++;
-// 	}
-// 	if ((str[hold] == '"' || str[hold] == '\'') && !turn_dollar(str, hold - 1))
-// 	{
-// 		z = 0;
-// 		if (count % 2 != 0)
-// 		{
-// 			(*x)++;
-// 			while (z < count)
-// 			{
-// 				cmd[(*y)++] = str[(*x)++];
-// 				z++;
-// 			}
-// 		} 
-// 		else
-// 		{
-// 			while (z < count)
-// 			{
-// 				cmd[(*y)++] = str[(*x)++];
-// 				z++;
-// 			}
-// 		}
-// 		turn_back(str, 1);
-// 	}
-// }
-
-void dollar_while_h(char *str, char *cmd, int *y, int *x)
+void	the_three_1(char *str, char *cmd, t_ndx_c *indi)
 {
-
+	cmd[indi->y++] = str[indi->x++];
+	cmd[indi->y++] = str[indi->x++];
+	cmd[indi->y++] = str[indi->x++];
+}
+// void	dollar_while_h1(char *str, char *cmd, t_ndx_c *indi)
+// {
+	
+// }
+void	dollar_while_h(char *str, char *cmd, t_ndx_c *indi)
+{
 	int hold;
 	int count;
 	int z;
+	int ndx;
 
-	cmd[(*y)++] = str[(*x)++];
-	cmd[(*y)++] = str[(*x)++];
-	cmd[(*y)++] = str[(*x)++];
-	turn_back(str, 1);	
-	while (str[*x] && str[*x] != ' ')
+	ndx = 0;
+	the_three_1(str, cmd, indi);
+	turn_back(str, 1);
+	// printf("**%s\n", str);
+	while (str[indi->x])
 	{
-		if (str[*x] == '$')
+		if (str[indi->x] != ' ')
 		{
-			hold = *x;
+			turn_back(str, 1);
+			break ;
+		}
+		if (str[indi->x] == '$')
+		{
+			hold = indi->x;
 			count = 0;
 			while (str[hold] == '$')
 			{
@@ -166,10 +98,10 @@ void dollar_while_h(char *str, char *cmd, int *y, int *x)
 				z = 0;
 				if (count % 2 != 0)
 				{
-					(*x)++;
+					indi->x++;
 					while (z < count)
 					{
-						cmd[(*y)++] = str[(*x)++];
+						cmd[indi->y++] = str[indi->x++];
 							z++;
 						}
 				} 
@@ -177,38 +109,31 @@ void dollar_while_h(char *str, char *cmd, int *y, int *x)
 				{
 					while (z < count)
 					{
-						cmd[(*y)++] = str[(*x)++];
+						cmd[indi->y++] = str[indi->x++];
 						z++;
 					}
 				}
-				turn_back(str, 1);
 			}
 			else
-			{
-				while (str[*x] && str[*x] != ' ')
-						cmd[(*y)++] = str[(*x)++];
-			}
+				cmd[indi->y++] = str[indi->x++];
 		}
 		else
-			cmd[(*y)++] = str[(*x)++];
+			cmd[indi->y++] = str[indi->x++];
 	}
 }
-void dollar_while(char *str, char *cmd, int *y, int ndx)
+void dollar_while(char *str, char *cmd, t_ndx_c *indi, int ndx)
 {
-	int x;
 	int hold;
 	int count;
 	int z;
-
-	x = 0;
 	
-	while (str[x])
+	while (str[indi->x])
 	{
-		if (str[x] == '<' && str[x + 1] == '<' && ndx == 1)
-			dollar_while_h(str, cmd, y, &x);
-		else if (str[x] == '$')
+		if (str[indi->x] == '<' && str[indi->x + 1] == '<' && ndx == 1)
+			dollar_while_h(str, cmd, indi);
+		else if (str[indi->x] == '$')
 		{
-			hold = x;
+			hold = indi->x;
 			count = 0;
 			while (str[hold] == '$')
 			{
@@ -220,12 +145,12 @@ void dollar_while(char *str, char *cmd, int *y, int ndx)
 				z = 0;
 				if (count % 2 != 0 )
 				{
-					x++;
+					indi->x++;
 					while (z < count)
 					{
-						if (str[x] == '$')
-							str[x] *= -1;
-						cmd[(*y)++] = str[x++];
+						if (str[indi->x] == '$')
+							str[indi->x] *= -1;
+						cmd[indi->y++] = str[indi->x++];
 						z++;
 					}
 				}
@@ -233,9 +158,9 @@ void dollar_while(char *str, char *cmd, int *y, int ndx)
 				{
 					while (z < count)
 					{
-						if (str[x] == '$')
-							str[x] *= -1;
-						cmd[(*y)++] = str[x++];
+						if (str[indi->x] == '$')
+							str[indi->x] *= -1;
+						cmd[indi->y++] = str[indi->x++];
 						z++;
 					}
 				}
@@ -247,42 +172,38 @@ void dollar_while(char *str, char *cmd, int *y, int ndx)
 				{
 					while (z < (count - 1))
 					{
-						if (str[x] == '$')
-							str[x] *= -1;
-						cmd[(*y)++] = str[x++];
+						if (str[indi->x] == '$')
+							str[indi->x] *= -1;
+						cmd[indi->y++] = str[indi->x++];
 						z++;
 					}
-					cmd[(*y)++] = str[x++];
+					cmd[indi->y++] = str[indi->x++];
 				}
 				else
 				{
 					while (z < count)
 					{
-						if (str[x] == '$')
-							str[x] *= -1;
-						cmd[(*y)++] = str[x++];
+						if (str[indi->x] == '$')
+							str[indi->x] *= -1;
+						cmd[indi->y++] = str[indi->x++];
 						z++;
 					}
 				}
 			}
 		}
 		else
-			cmd[(*y)++] = str[x++];
+			cmd[indi->y++] = str[indi->x++];
 	}
 }
 char *dollar_sign(char *str, int ndx)
 {
     char	*cmd;
-    int		y;
-
-    y = 0;
+	t_ndx_c indi = (t_ndx_c){0, 0};
+	
     cmd = (char *)malloc((strlen(str) + 1) * sizeof(char));
     if (!cmd) 
-	{
-        free(str);
-        exit(1);
-    }
-	dollar_while(str, cmd, &y, ndx);
-    cmd[y] = '\0';
+		return (free(cmd), NULL);
+	dollar_while(str, cmd, &indi, ndx);
+    cmd[indi.y] = '\0';
   	return (free(str), cmd);
 }

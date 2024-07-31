@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:00:18 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/28 19:17:37 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 17:09:53 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,22 @@ void	ft_clear_exec(t_exec **e)
 		free(tmp);
 	}
 	*e = NULL;
+}
+
+int	**to_free_f(int **file, int len)
+{
+	if (file)
+	{
+		while (file && --len >= 0)
+		{
+			if (file[len][0] >= 0)
+				close (file[len][0]);
+			free(file[len]);
+			file[len] = NULL;
+		}
+		free(file);
+	}
+	return (NULL);
 }
 
 void	clear_prs(t_prs **c)

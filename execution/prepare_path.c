@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 15:54:03 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/30 10:04:41 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:06:54 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,15 +94,16 @@ int	check_access(char *cmd, t_exec *p, t_list **env, char *path)
 {
 	t_list	*res;
 
-	
 	if (!cmd || !it_is_builtin(cmd))
 		return (p->path = NULL, 0);
-	if (cmd[0] == '\0')
+	if (cmd[0] == '\0' || (!ft_strncmp(cmd, "..", 2) && ft_strlen(cmd) == 2))
 		return (ft_error(cmd, 127));
 	if (!ft_strchr(cmd, '/'))
 	{
 		if (cmd[0] == '.' && ft_strlen(cmd) == 1)
 			return (ft_error_p(cmd, 2));
+		if (cmd[0] == '~' && ft_strlen(cmd) == 1)
+			return (ft_error_p(cmd, 252));
 		if (path)
 			return (check_access1(cmd,
 					ft_strchr(path, '='), p));

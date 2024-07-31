@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 13:30:49 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/27 13:06:12 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/31 14:55:56 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ t_list	*ft_getenv_ours(char *str, t_list *env)
 	{
 		j = -1;
 		tmp = env->content;
-		while (tmp[++j] != '=' && tmp[j])
+		while (tmp && tmp[++j] != '=' && tmp[j])
 			;
-		if (!ft_strncmp(env->content, str, j))
+		if (tmp && !ft_strncmp(env->content, str, j))
 			return (env);
 		env = env->next;
 	}
@@ -59,10 +59,10 @@ static	t_list	*env_is_null(t_list **env, char **path)
 		perror("getcwd error");
 	res = ft_strjoin("PWD=", buffer);
 	if (!res)
-		return (exit (1), NULL);
+		return (NULL);
 	res1 = ft_strdup("OLDPWD");
 	if (!res1)
-		return (free(res), exit (1), NULL);
+		return (free(res), NULL);
 	res2 = ft_strdup("SHLVL=1");
 	if (!res2)
 		return (free(res), free(res1), NULL);
@@ -125,8 +125,8 @@ t_list	*ft_envdup(char **env, char **path)
 	}
 	shlvl = nw_vl(head, 1, NULL, NULL);
 	if (!shlvl)
-		return (ft_lstclear(&head, free), exit(1), NULL);
+		return (ft_lstclear(&head, free), NULL);
 	if (!export1(shlvl, &head) || !export1("OLDPWD", &head))
-		return (free(shlvl), exit(1), NULL);
+		return (free(shlvl), NULL);
 	return (free(shlvl), head);
 }

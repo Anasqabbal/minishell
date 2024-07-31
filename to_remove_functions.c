@@ -1,5 +1,29 @@
 #include "minishell.h"
 
+int	ft_2dprint(char **str)
+{
+	int	i;
+
+	if (!str)
+		return (ft_printf("your 2D is NULL\n"), 1);
+	else
+	{
+		i = 0;
+		if (str[i])
+		{
+			while (str[i])
+			{
+				ft_printf("str[%d] = %s\n", i, str[i]);
+				i++;
+			}
+			ft_printf("str[%d] = %s\n", i, str[i]);
+		}
+		else
+			ft_printf("your str[%d] == NULL\n", i);
+	}
+	return (0);
+}
+
 void	ft_print_prs(t_prs *c)
 {
 	if (c->cmd)

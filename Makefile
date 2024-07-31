@@ -6,14 +6,14 @@
 #    By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 16:28:17 by zgtaib            #+#    #+#              #
-#    Updated: 2024/07/30 09:44:35 by anqabbal         ###   ########.fr        #
+#    Updated: 2024/07/31 20:05:12 by anqabbal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 F = -g -fsanitize=address
 CC = cc
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror
 INCLUDES = minishell.h ./libft/libft.h
 LIBFT = libft/libft.a
 READLINEFLAG = -lreadline
@@ -28,9 +28,9 @@ BUILTINS = execution/builtins/check_variable.c execution/builtins/env.c\
 EXECUTION = execution/env_utils.c execution/ft_additional_lst.c  execution/prepare_path.c execution/prepare_cmd.c execution/additional_ft.c\
 execution/start_exec_00.c execution/additional_ft2.c execution/ft_1open_in_files.c execution/ft_1open_out_files.c execution/start_exec_mult_cmds.c\
 execution/exec_functions.c  execution/start_exec_02_blts.c execution/ft_errors.c execution/start_exec_sing_cmd.c execution/start_exec_mult_cmdss_utils.c\
-execution/clear_functions.c  execution/ft_1open_in_files1.c $(BUILTINS) to_remove_functions.c execution/ft_1open_in_files2.c
+execution/clear_functions.c  execution/ft_1open_in_files1.c $(BUILTINS) to_remove_functions.c execution/ft_1open_in_files2.c execution/ft_1open_here_doc.c
 
-PARSING = parsing/ft_syntax.c\
+PARSING =parsing/ft_syntax.c\
 	parsing/ft_syntax_helper.c\
 	parsing/ft_check_qts.c\
 	parsing/ft_utils.c\
@@ -45,7 +45,8 @@ PARSING = parsing/ft_syntax.c\
 	parsing/syntax_er_msg.c\
 	parsing/ft_utils2.c\
 	parsing/ft_expantion_h.c\
-	parsing/skipping_dollars.c
+	parsing/skipping_dollars.c\
+	parsing/ft_utils_3.c
 	# parsing/dakchi_l9dim.c
 
 SRC = minishell.c $(EXECUTION) $(PARSING)

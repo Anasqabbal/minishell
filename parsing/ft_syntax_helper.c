@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ft_syntax_helper.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:18:39 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/18 09:41:38 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/30 20:19:41 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int 	ft_syntax_h2(char *str, int x)
+int	ft_syntax_h2(char *str, int x)
 {
-	if(!error_msg1(str, x))
-		return(0);
+	if (!error_msg1(str, x))
+		return (0);
 	return (1);
 }
 
-static int ft_isspace(char c)
+static int	ft_isspace(char c)
 {
 	if (c == ' ' || (c >= 9 && c <= 13))
 		return (1);
@@ -36,11 +36,11 @@ static void	replacewihte_s_h(char *str, int *len, int *is_space)
 	}
 }
 
-void replacewihte_s(char *str)
+void	replacewihte_s(char *str)
 {
-	int x;
-	int len;
-	int is_space;
+	int	x;
+	int	len;
+	int	is_space;
 
 	x = 0;
 	is_space = 0;

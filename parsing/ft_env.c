@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:54:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/18 09:43:29 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/07/30 15:01:13 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 t_list	*ft_envduppp(char **env)
 {
-	int i;
-	t_list *res;
-	t_list *head;
+	int		i;
+	t_list	*res;
+	t_list	*head;
 
 	i = 0;
 	head = NULL;
@@ -28,7 +28,7 @@ t_list	*ft_envduppp(char **env)
 		ft_lstadd_back(&head, res);
 		i++;
 	}
-	return (head);	
+	return (head);
 }
 
 void	ft_getenv_oursss(char *str, t_list *env, char *path)
