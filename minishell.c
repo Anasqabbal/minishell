@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 14:14:22 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/31 15:53:36 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/01 14:47:07 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,11 @@ int main(int ac, char **av, char **env)
 		}
 		if (input && input[0] != '\0')
 		{
+			if (g_sig == 1)
+			{
+				ret = 1;
+				g_sig = 0;
+			}
 			check_syntax(input, envp, &n, &ret);
 			// print_prs(n);
 			ret = start_exec(&n, &envp , ret, &path);
@@ -73,11 +78,6 @@ int main(int ac, char **av, char **env)
 				add_history(input);
 			clear_prs(&n);
 			free(input);
-			if (g_sig == 1)
-			{
-				ret = 1;
-				g_sig = 0;
-			}
 		}
 	}
 	return (ft_lstclear(&envp, free), clear_prs(&n), ret);

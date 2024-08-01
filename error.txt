@@ -6,17 +6,22 @@ test : exportHOLA=bonjour
 expected : HOLA="bonjourbonjour" (already there is HOLA=bonjour)
 output : command not found
 
-test :
-expected : 
-output : 
+test : echo " $HOLA " | cat -e
+expected :   $
+output : cat -e
 
 test :
-expected :
-output :
+export HOLA=bonjour
+export HOLA=" hola et $HOLA"$HOLA
+echo $HOLA 
 
-test :
-expected :
-output :
+
+expected : work well
+output : export: not a valid identifier: $HOLAhola
+
+test : history
+expected : the history list
+output : command not found
 
 test :
 expected :

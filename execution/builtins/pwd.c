@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 17:48:57 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/27 10:39:46 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/01 11:41:01 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ int	ft_pwd(t_list *env, char **str)
 
 	(void)env;
 	(void)str;
+	if (it_is_with_options(str, 0, "pwd"))
+		return (2);
 	getcwd(fpwd, sizeof(fpwd));
 	ft_printf("%s\n", fpwd);
 	return (0);

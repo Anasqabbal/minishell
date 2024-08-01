@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/31 19:54:09 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/01 13:36:49 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ unsigned char	ft_exit(t_exec *e, t_list **envp, t_prs **l);
 int				ft_echo(t_exec *e, t_list *envp);
 int				ft_pwd(t_list *env, char **str);
 int				it_is_with_options(char **opts, int ind1, char *cmd);
-int				ft_cd(char **str, t_list **env, char *path);
+int				ft_cd(char **str, t_list **env, int ret);
 int				to_old_one(t_list **env, char *lastdir);
 int				to_home(t_list *env);
 int				check_dir_access(char **str);

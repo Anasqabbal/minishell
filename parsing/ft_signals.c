@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 15:36:33 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/31 20:29:45 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/01 15:01:49 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,9 @@ void	ft_handler(int sig)
 
 void	ft_handler_fork(int sig)
 {
-	if (sig == SIGINT)
-	{
-		printf("\n");
-	}
+	(void)sig;
+	g_sig = 1;
+	// rl_catch_signals = 0;
 }
 
 void	ft_handler_here(int sig)

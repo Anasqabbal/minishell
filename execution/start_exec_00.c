@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/31 20:31:28 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/01 14:53:18 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	ft_execve1(t_exec *e, int in, int out, int pid)
 {
+	// rl_catch_signals = 0;
 	signal(SIGINT, ft_handler_fork);
 	pid = fork();
 	if (pid < 0)

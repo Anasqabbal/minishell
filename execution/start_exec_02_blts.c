@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:09 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/26 15:00:25 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/01 13:37:05 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	execvecmd(t_exec *e, t_list **envp, char **path, t_prs **l)
 	if (!ft_strncmp("unset", e->cmd[0], ft_strlen(e->cmd[0])))
 		ret = ft_unset(var + 1, envp, path);
 	if (!ft_strncmp("cd", e->cmd[0], ft_strlen(e->cmd[0])))
-		ret = ft_cd(var + 1, envp, *path);
+		ret = ft_cd(var + 1, envp, 0);
 	if (!ft_strncmp("pwd", e->cmd[0], ft_strlen(e->cmd[0])))
 		ret = ft_pwd(*envp, e->cmd + 1);
 	return (ret);

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 17:06:21 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/21 13:09:48 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/01 17:23:28 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,23 +58,40 @@ char	*move_back1(char *str, char *res, int *i, t_list **env)
 	getcwd(o, sizeof(o));
 	if (!res && !((*i)++))
 		return (ft_strcpy(sp, o), ft_putstr_fd("cd :", 2), perror(str), NULL);
-	else if (!res && i)
+	else if (!res)
 	{
 		ft_putstr_fd("cd: error retrieving current directory", 2);
 		ft_putstr_fd(": getcwd: cannot access parent directories", 2);
 		ft_putendl_fd(": No such file or directory", 2);
 		chdir(str);
-		join_and_export("OLDPWD=", sp, env, "PWD=");
+		if (join_and_export("OLDPWD=", sp, env, "PWD=") == -1)
+			return (NULL);
 		tmp = ft_strjoin(sp, "/");
 		if (!tmp)
 			return (NULL);
 		new_path = my_strjoin(tmp, str);
 		if (!new_path)
-			return (NULL);
+			return (free(tmp), NULL);
 		ft_strcpy(sp, new_path);
 		join_and_export("PWD=", new_path, env, "PWD=");
+		free(tmp);
+		free(new_path);
 	}
 	return (sp);
+}
+static int	check_move_back(char *o, char *sp, t_list **env, int i)
+{
+	if (!i)
+	{
+		if (join_and_export("OLDPWD=", o, env, "PWD=") == -1)
+			return (-1);
+	}
+	else
+	{
+		if (join_and_export("OLDPWD=", sp, env, "PWD=") == -1)
+			return (-1);
+	}
+	return (0);
 }
 
 int	move_back(char	*str, t_list	**env)
@@ -96,26 +113,28 @@ int	move_back(char	*str, t_list	**env)
 		else
 			return (1);
 	}
-	if (!i)
-		join_and_export("OLDPWD=", o, env, "PWD=");
-	else
-		join_and_export("OLDPWD=", sp, env, "PWD=");
-	join_and_export("PWD=", n, env, "PWD=");
+	if (check_move_back(o, sp, env, i) == -1)
+		return (-1);
+	if (join_and_export("PWD=", n, env, "PWD=") == -1)
+		return (-1);
 	return (i = 0, 0);
 }
+/*protect cd*/
 
-int	ft_cd(char **str, t_list **env, char *path)
+int	ft_cd(char **str, t_list **env, int ret)
 {
 	char	s[PATH_MAX];
 
-	(void)path;
 	if (it_is_with_options(str, 0, "cd"))
-		return (1);
+		return (2);
 	if (!str[0] || !ft_strncmp(str[0], "~", ft_strlen(str[0]))
 		|| (!ft_strncmp(str[0], "--", 2) && ft_strlen(str[0]) == 2))
 		return (to_home(*env));
-	if (check_dir_access(str))
-		return (1);
+	ret = check_dir_access(str);
+	if (ret == -1)
+		return (-1);
+	else if (ret)
+		return (ret);
 	if (str[0][0] == '/')
 		cd_absolute_path(str[0], env);
 	else

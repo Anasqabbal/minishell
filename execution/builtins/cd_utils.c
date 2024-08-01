@@ -6,31 +6,59 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 12:50:05 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/16 15:59:00 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/01 17:03:17 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
+int		join_slash_at_the_end(char **str, char **tmp)
+{
+	char	*res;
+	char	*res1;
+
+	if (!(*str))
+		return (0);
+	res = ft_strrchr(*str, '/');
+	if (!res)
+	{
+		res = ft_strdup(*str);
+		if (!res)
+			return (-1);
+		return (*tmp = res, 0);
+	}
+	else
+	{
+		res1 = ft_strjoin(*str, "/");
+		if (!res1)
+			return (-1);
+		return (*tmp = res1, 0);
+	}
+}
+
 int	check_dir_access(char **str)
 {
 	struct stat	file_stat;
+	char	*tmp;
 
+	tmp = NULL;
 	if (str[0][0] == '-' && ft_strlen(str[0]) == 1)
 		return (0);
-	if (lstat(str[0], &file_stat) == 0)
+	if (join_slash_at_the_end(str, &tmp) == -1)
+		return (-1);
+	if (lstat(tmp, &file_stat) == 0)
 	{
 		if (!S_ISDIR(file_stat.st_mode))
-			return (printf("cd: %s: %s\n", strerror(20), str[0]), 1);
+			return (free(tmp), printf("cd: %s: %s\n", strerror(20), str[0]), 1);
 	}
-	if (access(str[0], F_OK) == 0)
+	if (access(tmp, F_OK) == 0)
 	{
-		if (access(str[0], X_OK))
-			return (printf("cd : %s: %s\n", str[0], strerror(13)), 1);
+		if (access(tmp, X_OK))
+			return (free(tmp), printf("cd : %s: %s\n", str[0], strerror(13)), 1);
 	}
 	else
-		return (printf("cd: %s: %s\n", str[0], strerror(2)), 1);
-	return (0);
+		return (free(tmp), printf("cd: %s: %s\n", str[0], strerror(2)), 1);
+	return (free(tmp), 0);
 }
 
 int	join_and_export(char *str, char *new, t_list **env, char *c)
@@ -39,7 +67,7 @@ int	join_and_export(char *str, char *new, t_list **env, char *c)
 
 	old_one = ft_strjoin(str, new);
 	if (!old_one)
-		return (1);
+		return (-1);
 	if (ft_getenv_ours(c, *env) && !export1(old_one, env))
 		return (free(old_one), 1);
 	return (free(old_one), 0);
@@ -53,14 +81,16 @@ int	to_home(t_list *env)
 	if (!ft_getenv_ours("HOME=", env))
 		return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
 	home = ft_getenv_ours("HOME=", env);
-	hm = home->content + ft_strlen("HOME=");
+	hm = home->content + ft_strlen("HOME");
 	if (hm[0] == '\0')
+		return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
+	if (hm[0] == '=' && hm[1] == '\0')
 		return (0);
 	hm = ft_strdup(home->content);
 	if (!hm)
 		return (1);
-	if (chdir(hm + ft_strlen("HOME=")))
-		return (free(hm), 1);
+	if (chdir(hm + ft_strlen("HOME=") - 1))
+		return (perror("minishell: cd"), free(hm), 1);
 	return (free(hm), 0);
 }
 
