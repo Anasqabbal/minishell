@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 17:07:19 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/01 09:12:02 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/02 11:29:39 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,22 @@ static int	first_check(char **res, char *here_doc, char *lim, char **tmp)
 
 static char	*last_check(char **here_doc, char *res, int r)
 {
+	char *tmp;
+
+	tmp = "walo";
 	signal(SIGINT, ft_handler);
 	(void)r;
-	if (!(*here_doc))
+	if (!(*here_doc) && g_sig != 1)
 	{
 		*here_doc = ft_strdup("");
 		if (!(*here_doc))
 			return (NULL);
 	}
 	free(res);
-	return (*here_doc);
+	if (g_sig == 1)
+		return (tmp);
+	else
+		return (*here_doc);
 }
 
 static int	go_to_expand(char **res, t_list **env, int *ret)

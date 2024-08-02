@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/01 13:36:49 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/02 14:35:30 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_prs
 
 typedef struct s_exec
 {
+	int				fo;
 	int				i;
 	int				**in;
 	int				in_f;
@@ -167,7 +168,7 @@ char			**prepare_cmd(char *cmd, char **opts, char **args);
 int				check_access(char *cmd, t_exec *p, t_list **env, char *path);
 	/*start_exec_00.c "4"*/
 int				ft_execve1(t_exec *e, int in, int out, int pid);
-int				ft_is_pipe(int fd);
+int				ft_is_pipe(int fd, int ret);
 int				start_exec(t_prs **lst, t_list **envp, int rett, char **path);
 	/* start_exec_mult_cmds.c */
 int				the_input(t_prs *lst, t_exec *e);

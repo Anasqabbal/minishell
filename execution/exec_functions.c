@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:55:21 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/27 16:43:30 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/02 14:36:21 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_exec	*ft_exec_new(void)
 
 	new = malloc(sizeof(t_exec));
 	if (!new)
-		return (printf("return\n\n"), NULL);
+		return (NULL);
 	new->in = NULL;
 	new->in_f = 0;
 	new->in_l = 0;
@@ -60,6 +60,7 @@ t_exec	*ft_exec_new(void)
 	new->ex = 0;
 	new->i = 0;
 	new->in_h_l = 0;
+	new->fo = 0;
 	return (new);
 }
 

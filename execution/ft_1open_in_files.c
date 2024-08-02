@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/31 17:56:17 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/02 13:12:31 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int	set_stdin(t_prs *lst, t_exec *e, int indice, int *fd)
 	}
 	else if (!e->in && indice && ft_prssize(lst) != 1 && e->i)
 	{
-		if (!ft_is_pipe(0))
+		if (!ft_is_pipe(0, 0))
 		{
 			if (pipe(fd2) < 0)
 				return (perror("pipe"), -1);

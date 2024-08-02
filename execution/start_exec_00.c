@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/01 14:53:18 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/02 15:55:33 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,31 @@
 
 int	ft_execve1(t_exec *e, int in, int out, int pid)
 {
-	// rl_catch_signals = 0;
+	static int p;
 	signal(SIGINT, ft_handler_fork);
 	pid = fork();
-	if (pid < 0)
-		return (perror("fork"), 1);
+	if (pid < 0 && ++p)
+	{
+		if (p == 1)
+			perror("fork");
+		return (close(in), e->fo = -2, 1);
+	}
 	if (pid == 0)
 	{
 		signal(SIGQUIT, SIG_DFL);
 		if (in != -1)
 			close(in);
 		if (out != -1 && dup2(out, STDOUT_FILENO) < 0)
-			return (perror("dup2(0)"), 1);
+			return (perror("dup2(0)"), -1);
 		if (out != -1)
 			close(out);
 		if (execve(e->path, e->cmd, e->env) < 0)
-			return (perror("execve(1)"), 1);
+			return (perror("execve(1)"), -1);
 	}
 	else if (pid)
 	{
 		if (in != -1 && dup2(in, STDIN_FILENO) < 0)
-			return (perror("dup2(1)"), 1);
+			return (perror("dup2(1)"), -1);
 		if (in != -1)
 			close(in);
 	}
@@ -79,8 +83,8 @@ int	single_and_multiple_cmds(t_prs **lst, t_list **envp, t_exec *e, char **path)
 	if (ft_prssize(*lst) != 1)
 	{
 		ret = mult_cmds(*lst, envp, e, path);
-		if (ret < 0)
-			return (-1);
+		if (ret == -1)
+			return (ret);
 	}
 	else
 	{

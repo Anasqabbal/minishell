@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:12 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/31 19:59:18 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/02 14:57:50 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	execute_this(t_all a)
 			a.ret = ft_execve1(a.e, a.fd[0], a.out, 0);
 		else
 			a.ret = ft_execve2(a.e, a.fd[0], a.out, a.envp);
-		r = ft_is_pipe(a.out);
+		r = ft_is_pipe(a.out, a.ret);
 		if (r == 1)
 			close(a.out);
 	}
@@ -55,8 +55,10 @@ int	execute_this(t_all a)
 	return (0);
 }
 
-int	complete_work(t_all *a)
+static int	complete_work(t_all *a)
 {
+	int r;
+
 	if (a->ret == -1)
 		return (-1);
 	a->ret = set_stdin(a->p, a->e, a->indice, a->fd);
@@ -66,8 +68,11 @@ int	complete_work(t_all *a)
 		return (-1);
 	if (from_lst_to_2d(a->envp, &(a->e->env)) < 0)
 		return (-1);
-	if (execute_this(*a) < 0)
-		return (-1);
+	r = execute_this(*a);
+	if (r == -1)
+		return (r);
+	if (a->e->fo == -2)
+		a->ret = 1;
 	a->p = a->p->next;
 	a->e = a->e->n;
 	a->indice = 0;
@@ -83,7 +88,7 @@ static int	first_check(t_all *a)
 	if (a->ret == -1)
 		return (-1);
 	if (a->ret == 1)
-		return (1);
+		return (a->ret = 1, 1);
 	if (!a->p)
 		return (2);
 	return (0);
@@ -96,14 +101,14 @@ int	mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path)
 
 	if (initialize_t_all(lst, envp, e, &a))
 		return (1);
-	while (a.p)
+	while (a.p && a.e->fo != -2)
 	{
 		ret = first_check(&a);
 		if (ret == -1)
 			return (-1);
 		else if (ret == 1)
 			continue ;
-		else if (ret == 2)
+		else if (ret == 2 || a.e->fo == -2)
 			break ;
 		a.ret = check_access(a.p->cmd, a.e, a.envp, *path);
 		if ((a.ret || !a.p->cmd) && it_is_builtin(a.p->cmd))
