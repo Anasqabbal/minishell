@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:33:49 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/31 14:48:22 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/08/03 15:41:47 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ t_prs	*pipe_split(char *cmd, int opp, t_list *env, int *red)
 	final = blurr_dollar_digit(final, 1);
 	free_env(final, env);
 	final = cmd_expa(final, env, red);
+	final = imbig_sing(final, env);
 	turn_back(final, 1);
 	splt_pip = ft_split(final, '|');
 	if (!splt_pip)

@@ -13,7 +13,7 @@
 NAME = minishell
 F = -g -fsanitize=address
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror $F
 INCLUDES = minishell.h ./libft/libft.h
 LIBFT = libft/libft.a
 READLINEFLAG = -lreadline
@@ -30,7 +30,7 @@ execution/start_exec_00.c execution/additional_ft2.c execution/ft_1open_in_files
 execution/exec_functions.c  execution/start_exec_02_blts.c execution/ft_errors.c execution/start_exec_sing_cmd.c execution/start_exec_mult_cmdss_utils.c\
 execution/clear_functions.c  execution/ft_1open_in_files1.c $(BUILTINS) to_remove_functions.c execution/ft_1open_in_files2.c execution/ft_1open_here_doc.c
 
-PARSING =parsing/ft_syntax.c\
+PARSING = parsing/ft_syntax.c\
 	parsing/ft_syntax_helper.c\
 	parsing/ft_check_qts.c\
 	parsing/ft_utils.c\
@@ -46,8 +46,15 @@ PARSING =parsing/ft_syntax.c\
 	parsing/ft_utils2.c\
 	parsing/ft_expantion_h.c\
 	parsing/skipping_dollars.c\
-	parsing/ft_utils_3.c
-	# parsing/dakchi_l9dim.c
+	parsing/ft_utils_3.c\
+	parsing/blurr_dollar_digite.c\
+	parsing/skkiping_dollars_h.c\
+	parsing/ft_utils_4.c\
+	parsing/expand_ex_code.c\
+	parsing/handle_expa.c\
+	parsing/imbig_single.c\
+	parsing/ft_utils_5.c \
+	parsing/ft_utils_6.c
 
 SRC = minishell.c $(EXECUTION) $(PARSING)
 

@@ -73,12 +73,14 @@ char	*move_back1(char *str, char *res, int *i, t_list **env)
 		if (!new_path)
 			return (free(tmp), NULL);
 		ft_strcpy(sp, new_path);
-		join_and_export("PWD=", new_path, env, "PWD=");
+		if (join_and_export("PWD=", new_path, env, "PWD=") == -1)
+			return (NULL);
 		free(tmp);
 		free(new_path);
 	}
 	return (sp);
 }
+
 static int	check_move_back(char *o, char *sp, t_list **env, int i)
 {
 	if (!i)

@@ -12,11 +12,20 @@
 
 #include "../minishell.h"
 
-int	check_ambiguous(char *str, int ind)
+// int complete_ambiguous(char **token)
+// {
+
+// }
+
+int	check_ambiguous(char *token, char *str, int ind)
 {
 	int	i;
 
 	i = -1;
+	if ((!ft_strncmp(token, ">(", 2) &&  ft_strlen(token) == 2) 
+	|| ( !ft_strncmp(token, "<(", 2) &&  ft_strlen(token) == 2)
+	 || (!ft_strncmp(token, ">>(", 3) &&  ft_strlen(token) == 3))
+		return (0);
 	if (ind == 0)
 	{
 		while (str[++i] && str[i] != '$')
@@ -56,8 +65,9 @@ static int	complete_work(char *file, int indice, int outfile)
 	}
 }
 
-int	check_file_access(char *file, int indice, int outfile)
+int	check_file_access(char *token, char *file, int indice, int outfile)
 {
+	(void) token;
 	if (file)
 	{
 		if (file[0] == '\0')
@@ -67,14 +77,16 @@ int	check_file_access(char *file, int indice, int outfile)
 			else
 				return (ft_error_files(2, 1, file));
 		}
-		if (check_ambiguous(file, 0) && !indice)
-			return (check_ambiguous(file, 1));
+		if (check_ambiguous(token, file, 0) && !indice)
+			return (check_ambiguous(token, file, 1));
 		if (!access(file, F_OK))
 			return (complete_work(file, indice, outfile));
 		else if (!outfile)
 		{
 			if (indice == 1)
 				return (1);
+			if (ft_strlen(file) > 255)
+				return (ft_error_files(255, 1, file));
 			else
 				return (ft_error_files(2, 1, file));
 		}
@@ -97,10 +109,8 @@ int	open_in_files(t_exec *e, int len, char *file, char *token)
 			return (e->in = to_free_f(e->in, i), -1);
 		if (!ft_strncmp(token, "<<", 2))
 			e->in[i][0] = -1;
-		else if (!ft_strncmp(token, "<", 1))
+		else if ((!ft_strncmp(token, "<", 1) && ft_strlen(token) == 1 )|| ((!ft_strncmp(token, "<(", 2) && ft_strlen(token) == 2)))
 			e->in[i][0] = creat_open_file(file, 0, 0);
-		if ((ft_strncmp(token, "<<", 2) && e->in[i][0] == -1))
-			return (e->in = to_free_f(e->in, i), -1);
 	}
 	e->in_f = 1;
 	return (e->in_l = 1, 0);

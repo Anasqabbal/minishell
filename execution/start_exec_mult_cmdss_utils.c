@@ -55,28 +55,61 @@ int	set_stdout_and_cmd(t_prs *l, t_exec *e, int *o, int *fd)
 	return (0);
 }
 
-int	it_is_signals(int *ret)
+int	it_is_signals(int *ret, t_all *a)
 {
 	int	r;
+	int	s;
+	int	i;
 
-	r = 0;
-	while (waitpid(-1, ret, 0) != -1)
+	i = -1;
+	while(waitpid(a->l_pid[++i], &s, 0) != -1)
 	{
-		if (WIFSIGNALED(*ret))
+		if (WIFSIGNALED(s))
 		{
-			if (WTERMSIG(*ret) == SIGINT)
+			if (WTERMSIG(s) == SIGINT)
 			{
 				r = 130;
 				g_sig = 0;
 			}
-			else if (WTERMSIG(*ret) == SIGQUIT)
+			else if (WTERMSIG(s) == SIGQUIT)
 			{
 				r = 131;
 				write(STDOUT_FILENO, "Quit: 3\n", 8);
 			}
 		}
 		else
-			r = WEXITSTATUS(*ret);
+			r = WEXITSTATUS(s);
+	}
+	if ((*ret))
+		r = *ret;
+	return (r);
+}
+
+int	it_is_signals11(int *ret)
+{
+	int	r;
+	int	s;
+	int	i;
+
+	i = -1;
+	(void) ret;
+	while(waitpid(-1, &s, 0) != -1)
+	{
+		if (WIFSIGNALED(s))
+		{
+			if (WTERMSIG(s) == SIGINT)
+			{
+				r = 130;
+				g_sig = 0;
+			}
+			else if (WTERMSIG(s) == SIGQUIT)
+			{
+				r = 131;
+				write(STDOUT_FILENO, "Quit: 3\n", 8);
+			}
+		}
+		else
+			r = WEXITSTATUS(s);
 	}
 	return (r);
 }
@@ -86,22 +119,12 @@ int	ft_return(int *ret, int *i, t_all a)
 	int				r;
 
 	r = 0;
-	if (!(*ret))
-	{
-		r = it_is_signals(ret);
-		signal(SIGINT, ft_handler);
-		if (ft_export_(a.envp, NULL, NULL) < 0)
-			return (*ret = 1, -1);
-		return (r);
-	}
-	else
-	{
-		while (waitpid(-1, i, 0) != -1)
-			;
-		if (ft_export_(a.envp, NULL, NULL) < 0)
-			return (*ret = 1, -1);
-		return (*ret);
-	}
+	(void)i;
+	r = it_is_signals(ret, &a);
+	signal(SIGINT, ft_handler);
+	if (ft_export_(a.envp, NULL, NULL) < 0)
+		return (*ret = 1, -1);
+	return (r);
 }
 /* malloc insied set_and_open */
 

@@ -51,6 +51,8 @@ typedef struct s_exec
 	int				in_h_l;
 	int				size;
 	int				ex;
+	int				l_pid[1000];
+	int				p;
 	struct s_exec	*n;
 }	t_exec;
 
@@ -73,6 +75,8 @@ typedef struct s_all
 	int				i;
 	int				indice;
 	int				fd[2];
+	int				l_pid[1000];
+	int				pi;
 }	t_all;
 
 typedef struct s_sing
@@ -89,11 +93,18 @@ typedef struct s_sing
 typedef struct s_ndx{
 	int x;
 	int y;
-}t_ndx;
+}	t_ndx;
+
 typedef struct s_ndx_c{
 	int x;
 	int y;
-}t_ndx_c;
+}	t_ndx_c;
+
+typedef struct s_ndx_v{
+	int var_len;
+	int ndx;
+}	t_ndx_v;
+
 /*EXECUTION*/
 	/* ----- BUILTINS ----- */
 int				ft_export(char **opts, t_list **envp);
@@ -147,10 +158,10 @@ int				**to_free_f(int **file, int len);
 int				open_in_files(t_exec *e, int len, char *file, char *token);
 int				ft_open_files(t_prs *lst, t_exec *e);
 int				set_and_open(t_exec *e, char **f, int i);
-int				check_file_access(char *file, int indice, int outfile);
+int				check_file_access(char *token, char *file, int indice, int outfile);
 char			*add_new_line(char **res);
 char			*read_from_here_doc(char **red, int i, t_list **env, int *ret);
-int				check_ambiguous(char *str, int ind);
+int				check_ambiguous(char *token, char *str, int ind);
 int				file_here_docs(char **f, t_exec *e, t_list **env, int *ret);
 
 	/*ft_1open_out_files.c "3"*/
@@ -167,7 +178,8 @@ char			**prepare_cmd(char *cmd, char **opts, char **args);
 	/* prepare_path.c "3"*/
 int				check_access(char *cmd, t_exec *p, t_list **env, char *path);
 	/*start_exec_00.c "4"*/
-int				ft_execve1(t_exec *e, int in, int out, int pid);
+int				ft_execve1(t_exec *e, int in, int out, t_all *a);
+int				ft_execve11(t_exec *e, int in, int out, int pid);
 int				ft_is_pipe(int fd, int ret);
 int				start_exec(t_prs **lst, t_list **envp, int rett, char **path);
 	/* start_exec_mult_cmds.c */
@@ -240,11 +252,32 @@ void	turning_it_back(t_prs *head);
 void	free_env(char *str, t_list *env);
 void	the_three(char *str, char *cmd, int *y, int *x);
 int		turn_dollar_2(char *str, int y);
+void	dollar_while_h3(char *str, char *cmd, t_ndx_c *indi);
+void	the_three_1(char *str, char *cmd, t_ndx_c *indi);
+void	the_turn_backs(char *str);
+void	expa_inside_here(char *str, char *cmd, t_ndx *xy);
+int		count_expantion_here(char *str);
+char	*expand_ex_code(char *cmd, int *red, t_list *env, char *st);
+int		ft_isspecial(char c);
+void	handle_expa_suc(char *expans, char *cmd, t_ndx *ind, int var_len);
+int		export_ambig(char *str, int x);
+int		ex_code_zero(char *str, int x);
+int		white_spaces(char *expans);
+char	*imbig_sing(char *str, t_list *env);
+char	**pro_split(char *s);
+void	expans_but_nul_2(char *cmd, t_ndx *ind, int var_len, char *expans);
+void	expans_but_nul_1(char *cmd, char *str, t_ndx *ind, int var_len);
+void	expans_but_non_nul(char *cmd, char *str, t_ndx *ind, int var_len);
+void	free_expa_handel(char *cmd, char *str, t_list *env);
+void	its_not_a_var(char *str, char *cmd, t_ndx *ind, int var_len);
+int		handle_loop_ndx(char *str, int *hold);
+int		sp_a_c(char *expans, char *str, char *cmd, t_list *env);
 
 /**/
 int		count_expantion_here(char *str);
 void	ft_handler_fork(int sig);
-int		it_is_signals(int *ret);
+int		it_is_signals(int *ret, t_all *a);
+int		it_is_signals11(int *ret);
 
 
 /* clear_functions.c */

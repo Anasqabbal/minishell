@@ -92,9 +92,9 @@ static int	execute_this(t_prs **lst, t_list **envp, t_exec *e, t_sing *s)
 		if (!export1("SHLVL=1", envp))
 			return (-1);
 	}
-	s->ret = ft_execve1(e, -1, s->out, 0);
+	s->ret = ft_execve1(e, -1, s->out, NULL);
 	if (ft_prssize(*lst) == 1)
-		s->ret = it_is_signals(&(s->ret));
+	s->ret = it_is_signals11(&(s->ret));
 	signal(SIGINT, ft_handler);
 	return (s->ret);
 }

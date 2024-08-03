@@ -38,7 +38,7 @@ static int	first_check(char **res, char *here_doc, char *lim, char **tmp)
 
 static char	*last_check(char **here_doc, char *res, int r)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = "walo";
 	signal(SIGINT, ft_handler);
@@ -63,8 +63,14 @@ static int	go_to_expand(char **res, t_list **env, int *ret)
 	if (!res || !(*res))
 		return (0);
 	*res = dollar_sign(*res, 0);
+	if (!(*res))
+		return (-1);
 	*res = blurr_dollar_digit(*res, 0);
+	if (!(*res))
+		return (-1);
 	*res = cmd_expa(*res, *env, ret);
+	if (!(*res))
+		return (-1);
 	j = 0;
 	while (res[0][j])
 	{
@@ -93,7 +99,8 @@ char	*read_from_here_doc(char **red, int i, t_list **env, int *ret)
 		else if (r == 1 || r == 2)
 			break ;
 		if (ft_strncmp(red[i], "<<<", 3) && ft_strlen(red[i]) != 3)
-			go_to_expand(&res, env, ret);
+			if (go_to_expand(&res, env, ret) == -1)
+				return (NULL);
 		here_doc = my_strjoin(here_doc, res);
 		if (!here_doc)
 			return (free(tmp), free(res), NULL);

@@ -12,7 +12,7 @@
 
 #include "../../minishell.h"
 
-int		join_slash_at_the_end(char **str, char **tmp)
+int	join_slash_at_the_end(char **str, char **tmp)
 {
 	char	*res;
 	char	*res1;
@@ -39,7 +39,7 @@ int		join_slash_at_the_end(char **str, char **tmp)
 int	check_dir_access(char **str)
 {
 	struct stat	file_stat;
-	char	*tmp;
+	char		*tmp;
 
 	tmp = NULL;
 	if (str[0][0] == '-' && ft_strlen(str[0]) == 1)
@@ -54,7 +54,8 @@ int	check_dir_access(char **str)
 	if (access(tmp, F_OK) == 0)
 	{
 		if (access(tmp, X_OK))
-			return (free(tmp), printf("cd : %s: %s\n", str[0], strerror(13)), 1);
+			return (free(tmp),
+				printf("cd : %s: %s\n", str[0], strerror(13)), 1);
 	}
 	else
 		return (free(tmp), printf("cd: %s: %s\n", str[0], strerror(2)), 1);

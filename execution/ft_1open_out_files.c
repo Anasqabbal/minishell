@@ -43,7 +43,7 @@ int	creat_open_file(char *f1, int ind, int VAL)
 	else
 		fd = open(f1, O_RDWR | VAL | O_CREAT, 0644);
 	if (fd < 0)
-		return (-1);
+		return (perror("minishell"), -1);
 	return (fd);
 }
 
@@ -58,17 +58,19 @@ int	open_out_files(t_exec *e, int len, char *file, char *token)
 		return (-1);
 	while (++i < len)
 	{
-		if (check_ambiguous(file, 0))
+		if (check_ambiguous(token, file, 0))
 			return (e->out = to_free_f(e->out, i), 1);
 		e->out[i] = malloc(sizeof(int));
 		if (!e->out[i])
 			return (to_free_f(e->out, i), -1);
-		if (!ft_strncmp(token, ">>", 2) && ft_strlen(token) == 2)
+		if ((!ft_strncmp(token, ">>", 2) && ft_strlen(token) == 2)  || ((!ft_strncmp(token, ">>(", 3) && ft_strlen(token) == 3)))
+		{
 			e->out[i][0] = creat_open_file(file, 1, O_APPEND);
-		else if (!ft_strncmp(token, ">", 1) && ft_strlen(token) == 1)
+		}
+		else if ((!ft_strncmp(token, ">", 1) && ft_strlen(token) == 1 ) || ((!ft_strncmp(token, ">(", 2) && ft_strlen(token) == 2)))
 			e->out[i][0] = creat_open_file(file, 1, O_TRUNC);
 		if (e->out[i][0] < 0)
-			return (e->out = to_free_f(e->out, i), -1);
+			return (e->out_l = 1, 1); //e->out = to_free_f(e->out, i),
 	}
 	return (e->out_l = 1, 0);
 }

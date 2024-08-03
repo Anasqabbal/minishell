@@ -60,6 +60,7 @@ int	initialize_t_all(t_prs *p, t_list **envp, t_exec *e, t_all *a)
 	a->out = -1;
 	a->indice = 0;
 	a->i = 0;
+	a->pi = 0;
 	if (g_sig == 1)
 		return (1);
 	return (0);

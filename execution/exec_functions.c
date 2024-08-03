@@ -61,6 +61,7 @@ t_exec	*ft_exec_new(void)
 	new->i = 0;
 	new->in_h_l = 0;
 	new->fo = 0;
+	new->p = 0;
 	return (new);
 }
 

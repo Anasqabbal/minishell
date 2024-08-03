@@ -26,38 +26,38 @@ int	inside_if(t_all *a)
 	return (0);
 }
 
-int	execute_this(t_all a)
+int	execute_this(t_all *a)
 {
 	int	r;
 
-	if (ft_prssize(a.p) != 1)
+	if (ft_prssize(a->p) != 1)
 	{
-		if (it_is_builtin((a.p)->cmd))
-			a.ret = ft_execve1(a.e, a.fd[0], a.out, 0);
+		if (it_is_builtin((a->p)->cmd))
+			a->ret = ft_execve1(a->e, a->fd[0], a->out, a);
 		else
-			a.ret = ft_execve2(a.e, a.fd[0], a.out, a.envp);
-		r = ft_is_pipe(a.out, a.ret);
+			a->ret = ft_execve2(a->e, a->fd[0], a->out, a->envp);
+		r = ft_is_pipe(a->out, a->ret);
 		if (r == 1)
-			close(a.out);
+			close(a->out);
 	}
 	else
 	{
-		close(a.fd[0]);
-		close(a.fd[1]);
-		if (it_is_builtin(a.p->cmd))
-			a.ret = ft_execve1(a.e, -1, a.out, 0);
+		close(a->fd[0]);
+		close(a->fd[1]);
+		if (it_is_builtin(a->p->cmd))
+			a->ret = ft_execve1(a->e, -1, a->out, a);
 		else
-			a.ret = ft_execve2(a.e, -1, a.out, a.envp);
+			a->ret = ft_execve2(a->e, -1, a->out, a->envp);
 		r = ft_restore_input();
 	}
-	if (r == -1 || a.ret == -1)
-		return (a.ret = 1, -1);
+	if (r == -1 || a->ret == -1)
+		return (a->ret = 1, -1);
 	return (0);
 }
 
 static int	complete_work(t_all *a)
 {
-	int r;
+	int	r;
 
 	if (a->ret == -1)
 		return (-1);
@@ -68,7 +68,7 @@ static int	complete_work(t_all *a)
 		return (-1);
 	if (from_lst_to_2d(a->envp, &(a->e->env)) < 0)
 		return (-1);
-	r = execute_this(*a);
+	r = execute_this(a);
 	if (r == -1)
 		return (r);
 	if (a->e->fo == -2)
@@ -107,7 +107,11 @@ int	mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path)
 		if (ret == -1)
 			return (-1);
 		else if (ret == 1)
+		{
+			if (ft_restore_input())
+				return (-1);
 			continue ;
+		}
 		else if (ret == 2 || a.e->fo == -2)
 			break ;
 		a.ret = check_access(a.p->cmd, a.e, a.envp, *path);

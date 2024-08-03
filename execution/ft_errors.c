@@ -55,6 +55,8 @@ int	ft_error_files(int indice, int ret, char *n)
 		ft_putendl_fd(": Permission denied", 2);
 	else if (indice == 2)
 		ft_putendl_fd(": No such file or directory", 2);
+	else if (indice == 255)
+		ft_putendl_fd(": File name too long", 2);
 	return (ret);
 }
 
