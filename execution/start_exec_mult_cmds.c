@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:12 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/03 20:39:20 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 14:53:20 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	execute_this(t_all *a)
 		if (it_is_builtin((a->p)->cmd))
 			a->ret = ft_execve1(a->e, a->fd[0], a->out, a);
 		else
-			a->ret = ft_execve2(a->e, a->fd[0], a->out, a->envp);
+			a->ret = ft_execve2(a, a->fd[0], a->out, a->envp);
 		r = ft_is_pipe(a->out, a->ret);
 		if (r == 1)
 			close(a->out);
@@ -47,7 +47,7 @@ int	execute_this(t_all *a)
 		if (it_is_builtin(a->p->cmd))
 			a->ret = ft_execve1(a->e, -1, a->out, a);
 		else
-			a->ret = ft_execve2(a->e, -1, a->out, a->envp);
+			a->ret = ft_execve2(a, -1, a->out, a->envp);
 		r = ft_restore_input();
 	}
 	if (r == -1 || a->ret == -1)

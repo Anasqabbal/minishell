@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 10:24:49 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 14:49:34 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,14 @@ int	inside_child(int in, int out, t_exec *e)
 	return (0);
 }
 
-static int	small_check(int *pid, t_all *a, int *in, t_exec *e)
+int	small_check(int *pid, t_all *a, int *in, t_exec *e)
 {
+	(void) e;
 	if (*pid < 0 && ++(a->pr))
 	{
 		if ((a->pr) == 1)
 			perror("fork");
-		return (close((*in)), e->fo = -2, 1);
+		return (close((*in)), a->e->fo = -2, 1);
 	}
 	return (0);
 }

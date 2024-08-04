@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_er_msg.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
+/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:03:51 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/31 16:06:43 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/08/04 12:49:17 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	error_msg(char c)
 {
 	if (c == '|')
-		write(2, "minishell: syntax error snear unexpected token `|'\n", 50);
+		write(2, "minishell: syntax error snear unexpected token `|'\n", 52);
 	else if (c == '>')
 		write(2,
 			"minishell: syntax error near unexpected token `newline'\n", 56);

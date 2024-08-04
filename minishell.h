@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/04 10:29:23 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 14:50:42 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,7 @@ int				one_cmd(t_prs **lst, t_list **envp, t_exec *e, char **paht);
 int				ft_export_(t_list **env, char **str, t_exec *e);
 	/*start_exec_02_blts "1" */
 int				it_is_builtin(char *cmd);
-int				ft_execve2(t_exec *e, int in, int out, t_list **envp);
+int				ft_execve2(t_all *a, int in, int out, t_list **envp);
 int				ft_execve3(int in, int out);
 int				execvecmd(t_exec *e, t_list **envp, char **path, t_prs **l);
 	/*exec_functions*/
@@ -289,6 +289,7 @@ int				count_expantion_here(char *str);
 void			ft_handler_fork(int sig);
 int				it_is_signals(int *ret, t_all *a, int i, int s);
 int				it_is_signals11(int *ret);
+int				small_check(int *pid, t_all *a, int *in, t_exec *e);
 
 /* clear_functions.c */
 void			ft_clear_exec(t_exec **e);
