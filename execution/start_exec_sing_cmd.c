@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:43:27 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/01 09:07:32 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 12:41:33 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,8 @@ int	ft_export_(t_list **env, char **str, t_exec *e)
 {
 	char	*res1;
 	int		i;
-	int		j;
 
 	i = 0;
-	j = 0;
 	while (str && str[i + 1])
 		i++;
 	if (str)
@@ -94,7 +92,7 @@ static int	execute_this(t_prs **lst, t_list **envp, t_exec *e, t_sing *s)
 	}
 	s->ret = ft_execve1(e, -1, s->out, NULL);
 	if (ft_prssize(*lst) == 1)
-	s->ret = it_is_signals11(&(s->ret));
+		s->ret = it_is_signals11(&(s->ret));
 	signal(SIGINT, ft_handler);
 	return (s->ret);
 }

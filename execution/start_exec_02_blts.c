@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:09 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/01 13:37:05 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/03 20:34:48 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	ft_execve2(t_exec *e, int in, int out, t_list **envp)
 		if (in != -1)
 			close(in);
 		if (out != -1 && dup2(out, STDOUT_FILENO) < 0)
-			return (perror("dup2(0)"), 1);
+			return (perror("dup2"), 1);
 		if (out != -1)
 			close(out);
 		exit (execvecmd(e, envp, NULL, NULL));
@@ -60,7 +60,7 @@ int	ft_execve2(t_exec *e, int in, int out, t_list **envp)
 	else if (pid)
 	{
 		if (in != -1 && dup2(in, STDIN_FILENO) < 0)
-			return (perror("dup2(1)"), 1);
+			return (perror("dup2"), 1);
 		if (in != -1)
 			close(in);
 	}

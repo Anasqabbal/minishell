@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signals.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
+/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 15:36:33 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/30 19:22:09 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/08/04 12:34:27 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_handler_fork(int sig)
 {
 	if (sig == SIGINT)
 	{
-		printf("\n");
+		printf("");
 	}
 }
 
@@ -37,6 +37,5 @@ void	ft_handler_here(int sig)
 	if (sig == SIGINT)
 	{
 		close(0);
-		printf("\n");
 	}
 }

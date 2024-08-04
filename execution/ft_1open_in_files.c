@@ -6,25 +6,20 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/02 13:12:31 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/03 20:17:00 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// int complete_ambiguous(char **token)
-// {
-
-// }
 
 int	check_ambiguous(char *token, char *str, int ind)
 {
 	int	i;
 
 	i = -1;
-	if ((!ft_strncmp(token, ">(", 2) &&  ft_strlen(token) == 2) 
-	|| ( !ft_strncmp(token, "<(", 2) &&  ft_strlen(token) == 2)
-	 || (!ft_strncmp(token, ">>(", 3) &&  ft_strlen(token) == 3))
+	if ((!ft_strncmp(token, ">(", 2) && ft_strlen(token) == 2)
+		|| (!ft_strncmp(token, "<(", 2) && ft_strlen(token) == 2)
+		|| (!ft_strncmp(token, ">>(", 3) && ft_strlen(token) == 3))
 		return (0);
 	if (ind == 0)
 	{
@@ -109,7 +104,8 @@ int	open_in_files(t_exec *e, int len, char *file, char *token)
 			return (e->in = to_free_f(e->in, i), -1);
 		if (!ft_strncmp(token, "<<", 2))
 			e->in[i][0] = -1;
-		else if ((!ft_strncmp(token, "<", 1) && ft_strlen(token) == 1 )|| ((!ft_strncmp(token, "<(", 2) && ft_strlen(token) == 2)))
+		else if ((!ft_strncmp(token, "<", 1) && ft_strlen(token) == 1)
+			|| ((!ft_strncmp(token, "<(", 2) && ft_strlen(token) == 2)))
 			e->in[i][0] = creat_open_file(file, 0, 0);
 	}
 	e->in_f = 1;

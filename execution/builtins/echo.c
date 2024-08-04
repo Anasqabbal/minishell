@@ -6,11 +6,23 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:13:46 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/28 09:50:29 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 10:28:10 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+int	join_and_export(char *str, char *new, t_list **env, char *c)
+{
+	char	*old_one;
+
+	old_one = ft_strjoin(str, new);
+	if (!old_one)
+		return (-1);
+	if (ft_getenv_ours(c, *env) && !export1(old_one, env))
+		return (free(old_one), 1);
+	return (free(old_one), 0);
+}
 
 static int	skip_n(char **cmd, int *ind)
 {

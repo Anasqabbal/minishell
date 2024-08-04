@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:12 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/02 14:57:50 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/03 20:39:20 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,11 @@ static int	first_check(t_all *a)
 	if (a->ret == -1)
 		return (-1);
 	if (a->ret == 1)
+	{
+		if (ft_restore_input())
+			return (-1);
 		return (a->ret = 1, 1);
+	}
 	if (!a->p)
 		return (2);
 	return (0);
@@ -107,11 +111,7 @@ int	mult_cmds(t_prs *lst, t_list **envp, t_exec *e, char **path)
 		if (ret == -1)
 			return (-1);
 		else if (ret == 1)
-		{
-			if (ft_restore_input())
-				return (-1);
 			continue ;
-		}
 		else if (ret == 2 || a.e->fo == -2)
 			break ;
 		a.ret = check_access(a.p->cmd, a.e, a.envp, *path);

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:35:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/02 14:53:48 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 12:35:04 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,19 +55,17 @@ int	set_stdout_and_cmd(t_prs *l, t_exec *e, int *o, int *fd)
 	return (0);
 }
 
-int	it_is_signals(int *ret, t_all *a)
+int	it_is_signals(int *ret, t_all *a, int i, int s)
 {
 	int	r;
-	int	s;
-	int	i;
 
-	i = -1;
-	while(waitpid(a->l_pid[++i], &s, 0) != -1)
+	while (waitpid(a->l_pid[++i], &s, 0) != -1)
 	{
 		if (WIFSIGNALED(s))
 		{
 			if (WTERMSIG(s) == SIGINT)
 			{
+				write(STDOUT_FILENO, "\n", 1);
 				r = 130;
 				g_sig = 0;
 			}
@@ -85,42 +83,13 @@ int	it_is_signals(int *ret, t_all *a)
 	return (r);
 }
 
-int	it_is_signals11(int *ret)
-{
-	int	r;
-	int	s;
-	int	i;
-
-	i = -1;
-	(void) ret;
-	while(waitpid(-1, &s, 0) != -1)
-	{
-		if (WIFSIGNALED(s))
-		{
-			if (WTERMSIG(s) == SIGINT)
-			{
-				r = 130;
-				g_sig = 0;
-			}
-			else if (WTERMSIG(s) == SIGQUIT)
-			{
-				r = 131;
-				write(STDOUT_FILENO, "Quit: 3\n", 8);
-			}
-		}
-		else
-			r = WEXITSTATUS(s);
-	}
-	return (r);
-}
-
 int	ft_return(int *ret, int *i, t_all a)
 {
 	int				r;
 
 	r = 0;
 	(void)i;
-	r = it_is_signals(ret, &a);
+	r = it_is_signals(ret, &a, -1, 0);
 	signal(SIGINT, ft_handler);
 	if (ft_export_(a.envp, NULL, NULL) < 0)
 		return (*ret = 1, -1);

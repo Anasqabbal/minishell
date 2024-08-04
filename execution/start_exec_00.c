@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:50:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/02 15:55:33 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 10:24:49 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,28 +18,34 @@ int	inside_child(int in, int out, t_exec *e)
 	if (in != -1)
 		close(in);
 	if (out != -1 && dup2(out, STDOUT_FILENO) < 0)
-		return (perror("dup2(0)"), -1);
+		return (perror("dup2"), -1);
 	if (out != -1)
 		close(out);
 	if (execve(e->path, e->cmd, e->env) < 0)
-		return (perror("execve(1)"), -1);
+		return (perror("execve"), -1);
+	return (0);
+}
+
+static int	small_check(int *pid, t_all *a, int *in, t_exec *e)
+{
+	if (*pid < 0 && ++(a->pr))
+	{
+		if ((a->pr) == 1)
+			perror("fork");
+		return (close((*in)), e->fo = -2, 1);
+	}
 	return (0);
 }
 
 int	ft_execve1(t_exec *e, int in, int out, t_all *a)
 {
-	static int	p;
 	int			pid;
 
 	signal(SIGINT, ft_handler_fork);
 	pid = fork();
-	if (pid < 0 && ++p)
-	{
-		if (p == 1)
-			perror("fork");
-		return (close(in), e->fo = -2, 1);
-	}
-	if (a)
+	if (small_check(&pid, a, &in, e))
+		return (1);
+	if (a && a->pi != 1024)
 		a->l_pid[a->pi++] = pid;
 	if (pid == 0)
 	{
@@ -49,68 +55,11 @@ int	ft_execve1(t_exec *e, int in, int out, t_all *a)
 	else if (pid)
 	{
 		if (in != -1 && dup2(in, STDIN_FILENO) < 0)
-			return (perror("dup2(1)"), -1);
+			return (perror("dup2"), -1);
 		if (in != -1)
 			close(in);
 	}
 	return (0);
-}
-
-// int	ft_execve11(t_exec *e, int in, int out, int pid)
-// {
-// 	static int	p;
-
-// 	signal(SIGINT, ft_handler_fork);
-// 	pid = fork();
-// 	if (pid < 0 && ++p)
-// 	{
-// 		if (p == 1)
-// 			perror("fork");
-// 		return (close(in), e->fo = -2, 1);
-// 	}
-// 	if (pid == 0)
-// 	{
-// 		if (inside_child(in, out, e))
-// 			return (-1);
-// 	}
-// 	else if (pid)
-// 	{
-// 		if (in != -1 && dup2(in, STDIN_FILENO) < 0)
-// 			return (perror("dup2(1)"), -1);
-// 		if (in != -1)
-// 			close(in);
-// 	}
-// 	return (0);
-// }
-
-int	ft_execve3(int in, int out)
-{
-	if (out != -1 && dup2(out, STDOUT_FILENO) < 0)
-		return (perror("dup2"), 1);
-	if (out != -1)
-		close(out);
-	if (in != -1 && dup2(in, STDIN_FILENO) < 0)
-		return (perror("dup2"), 1);
-	if (in != -1)
-		close (in);
-	return (0);
-}
-
-int	ft_prssize(t_prs *lst)
-{
-	int		i;
-	t_prs	*cur;
-
-	if (lst == NULL)
-		return (0);
-	cur = lst;
-	i = 0;
-	while (cur != NULL)
-	{
-		i++;
-		cur = cur->next;
-	}
-	return (i);
 }
 
 int	single_and_multiple_cmds(t_prs **lst, t_list **envp, t_exec *e, char **path)

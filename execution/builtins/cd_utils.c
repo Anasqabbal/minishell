@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 12:50:05 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/01 17:03:17 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 10:27:50 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,26 +62,16 @@ int	check_dir_access(char **str)
 	return (free(tmp), 0);
 }
 
-int	join_and_export(char *str, char *new, t_list **env, char *c)
-{
-	char	*old_one;
-
-	old_one = ft_strjoin(str, new);
-	if (!old_one)
-		return (-1);
-	if (ft_getenv_ours(c, *env) && !export1(old_one, env))
-		return (free(old_one), 1);
-	return (free(old_one), 0);
-}
-
-int	to_home(t_list *env)
+int	to_home(t_list **env)
 {
 	t_list	*home;
 	char	*hm;
+	char	ol[PATH_MAX];
+	char	cur[PATH_MAX];
 
-	if (!ft_getenv_ours("HOME=", env))
+	if (!ft_getenv_ours("HOME=", *env))
 		return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
-	home = ft_getenv_ours("HOME=", env);
+	home = ft_getenv_ours("HOME=", *env);
 	hm = home->content + ft_strlen("HOME");
 	if (hm[0] == '\0')
 		return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
@@ -90,8 +80,13 @@ int	to_home(t_list *env)
 	hm = ft_strdup(home->content);
 	if (!hm)
 		return (1);
-	if (chdir(hm + ft_strlen("HOME=") - 1))
+	getcwd(ol, sizeof(ol));
+	if (chdir(hm + 5))
 		return (perror("minishell: cd"), free(hm), 1);
+	getcwd(cur, sizeof(cur));
+	if (join_and_export("PWD=", cur, env, "PWD=") == -1
+		|| join_and_export("OLDPWD=", ol, env, "PWD=") == -1)
+		return (free(hm), -1);
 	return (free(hm), 0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:40:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/02 13:12:24 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 11:22:52 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int	initialize_t_all(t_prs *p, t_list **envp, t_exec *e, t_all *a)
 	a->indice = 0;
 	a->i = 0;
 	a->pi = 0;
+	a->pr = 0;
 	if (g_sig == 1)
 		return (1);
 	return (0);
@@ -88,6 +89,8 @@ int	ft_envdup_exept(t_list	*envp, char	*str, t_list	**new)
 	char	*s;
 
 	head = NULL;
+	if (!envp)
+		return (0);
 	while (envp)
 	{
 		j = -1;

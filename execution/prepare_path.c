@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/12 15:54:03 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/31 11:06:54 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 11:31:20 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int	check_access(char *cmd, t_exec *p, t_list **env, char *path)
 					ft_strchr(path, '='), p));
 		res = ft_getenv_ours("PATH=", *env);
 		if (!res)
-			return (ft_error_p(cmd, 127));
+			return (ft_error(cmd, 127));
 		return (check_access1(cmd,
 				ft_strchr(res->content, '='), p));
 	}

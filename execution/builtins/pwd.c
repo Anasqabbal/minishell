@@ -71,12 +71,20 @@ int	it_is_with_options(char **opts, int ind1, char *cmd)
 int	ft_pwd(t_list *env, char **str)
 {
 	char	fpwd[PATH_MAX];
+	t_list	*res;
 
-	(void)env;
 	(void)str;
 	if (it_is_with_options(str, 0, "pwd"))
 		return (2);
-	getcwd(fpwd, sizeof(fpwd));
-	ft_printf("%s\n", fpwd);
+	if (!getcwd(fpwd, sizeof(fpwd)))
+	{
+		res = ft_getenv_ours("PWD=", env);
+		if (res)
+			printf("%s\n", res->content + 4);
+		else
+			ft_printf("%s\n", fpwd);
+	}
+	else
+		ft_printf("%s\n", fpwd);
 	return (0);
 }
