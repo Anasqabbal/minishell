@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/04 14:50:42 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 17:07:45 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ typedef struct s_exec
 	int				in_h_l;
 	int				size;
 	int				ex;
-	int				l_pid[1000];
-	int				p;
+	// int				l_pid[1000];
+	// int				p;
 	struct s_exec	*n;
 }	t_exec;
 
@@ -75,7 +75,7 @@ typedef struct s_all
 	int				i;
 	int				indice;
 	int				fd[2];
-	int				l_pid[1024];
+	int				l_pid[10000];
 	int				pi;
 	int				pr;
 }	t_all;
@@ -111,10 +111,10 @@ typedef struct s_ndx_v
 
 /*EXECUTION*/
 	/* ----- BUILTINS ----- */
-int				ft_export(char **opts, t_list **envp);
+int				ft_export(char **opts, t_list **envp, char **path);
 t_list			*ex_getenv_ours(char *str, t_list *env, int j, char *tmp1);
 char			*remove_plus(char *str, char *res);
-int				ft_env(char **opts, t_list *node);
+int				ft_env(char **opts, t_list *node, char **path);
 int				ft_unset(char **str, t_list **env, char **path);
 int				unset1(char *str, t_list **envp, char **path, t_list **new);
 unsigned char	ft_exit(t_exec *e, t_list **envp, t_prs **l);
@@ -136,10 +136,10 @@ t_list			*ft_getenv(char *str, t_list *env);
 void			var_error(char *from, char *str, int indice);
 int				valid_name(char *from, char *str, t_par *par);
 int				valide_par(char *from, char *str);
-void			ft_print_export(t_list *envp, int indice);
+void			ft_print_export(t_list *envp, char **path);
 
 /*sort_with_ascii*/
-int				ft_sort_ascii(t_list *n);
+int				ft_sort_ascii(t_list *n, char **path);
 int				ft_envdup_exept(t_list	*envp, char	*str, t_list	**new);
 	/*additional_ft.c*/
 char			**to_free(char **s);

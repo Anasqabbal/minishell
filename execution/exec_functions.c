@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 12:55:21 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 11:12:57 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 17:06:25 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ t_exec	*ft_exec_new(void)
 	new->i = 0;
 	new->in_h_l = 0;
 	new->fo = 0;
-	new->p = 0;
 	return (new);
 }
 

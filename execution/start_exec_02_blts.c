@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:09 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 14:56:12 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 15:36:20 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ int	execvecmd(t_exec *e, t_list **envp, char **path, t_prs **l)
 	ret = 0;
 	var = e->cmd;
 	if (!ft_strncmp("export", e->cmd[0], ft_strlen(e->cmd[0])))
-		ret = ft_export(e->cmd + 1, envp);
+		ret = ft_export(e->cmd + 1, envp, path);
 	else if (!ft_strncmp("env", e->cmd[0], ft_strlen(e->cmd[0])))
-		ret = ft_env(e->cmd + 1, *envp);
+		ret = ft_env(e->cmd + 1, *envp, path);
 	else if (!ft_strncmp("echo", e->cmd[0], ft_strlen(e->cmd[0])))
 		ret = ft_echo(e, *envp);
 	else if (!ft_strncmp("exit", e->cmd[0],

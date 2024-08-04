@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 12:50:05 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 10:27:50 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 17:03:20 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,9 @@ int	to_old_one(t_list **env, char *lastdir)
 				, ft_putstr_fd(": ", 2), perror(NULL), 1);
 		ft_printf("%s\n", old->content + 7);
 	}
-	join_and_export("PWD=", old->content + 7, env, "PWD=");
-	join_and_export("OLDPWD=", lastdir, env, "PWD=");
+	if (join_and_export("PWD=", old->content + 7, env, "PWD=") == -1
+		|| join_and_export("OLDPWD=", lastdir, env, "PWD=") == -1)
+		return (-1);
 	return (0);
 }
 

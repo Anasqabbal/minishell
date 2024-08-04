@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_cmd_h.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
+/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:51:26 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/30 20:06:36 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/08/04 16:22:14 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	pipe_split_h(char **splt_pip, t_prs **curr, t_prs **head, char *com)
 		new = init_prs();
 		if (!new)
 			return (free_it_h(splt_pip, com, head), -1);
-		splt_space = ft_split(splt_pip[y], ' ');
+		splt_space = pro_split(splt_pip[y]);
 		if (!splt_space)
 			return (free_it_h2(splt_pip, com, head, new), -1);
 		no_q = take_qoutes_off(splt_space);

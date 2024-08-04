@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 18:04:18 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/31 19:44:03 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 17:02:48 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	*export1(char	*str, t_list	**env)
 	return (str);
 }
 
-int	ft_export(char **opts, t_list **envp)
+int	ft_export(char **opts, t_list **envp, char **path)
 {
 	int	i;
 	int	ret;
@@ -112,7 +112,7 @@ int	ft_export(char **opts, t_list **envp)
 	if (it_is_with_options(opts, 0, "export"))
 		return (2);
 	if (!opts[0])
-		return (ft_sort_ascii(*envp), 0);
+		return (ft_sort_ascii(*envp, path), 0);
 	else
 	{
 		while (opts[++i])

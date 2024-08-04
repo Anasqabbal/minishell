@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/03 20:17:00 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 16:55:49 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,7 @@ int	check_ambiguous(char *token, char *str, int ind)
 		return (0);
 	if (ind == 0)
 	{
-		while (str[++i] && str[i] != '$')
-			;
-		if (str[i] == '$')
+		if (str[0] == '$' && str[1] && str[1] != '$')
 			return (1);
 		return (0);
 	}

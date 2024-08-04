@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 13:30:49 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/31 14:55:56 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 15:54:00 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ static	t_list	*env_is_null(t_list **env, char **path)
 	char	*res;
 	char	*res1;
 	char	*res2;
+	char	*res3;
 
 	if (getcwd(buffer, sizeof(buffer)) == NULL)
 		perror("getcwd error");
@@ -64,11 +65,13 @@ static	t_list	*env_is_null(t_list **env, char **path)
 	if (!res1)
 		return (free(res), NULL);
 	res2 = ft_strdup("SHLVL=1");
-	if (!res2)
-		return (free(res), free(res1), NULL);
+	res3 = ft_strdup("PATH=/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:.");
+	if (!res3 || !res2)
+		return (free(res), free(res1), free(res2), NULL);
 	ft_lstadd_back(env, ft_lstnew(res));
 	ft_lstadd_back(env, ft_lstnew(res1));
 	ft_lstadd_back(env, ft_lstnew(res2));
+	ft_lstadd_back(env, ft_lstnew(res3));
 	*path = "PATH=/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:.";
 	return (*env);
 }

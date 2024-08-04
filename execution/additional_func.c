@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 10:22:51 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 12:37:32 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 15:19:16 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	it_is_signals11(int *ret)
 		{
 			if (WTERMSIG(s) == SIGINT)
 			{
-                write(STDOUT_FILENO, "\n", 1);
+				write(STDOUT_FILENO, "\n", 1);
 				r = 130;
 				g_sig = 0;
 			}

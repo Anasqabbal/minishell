@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 15:54:11 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 11:43:33 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 15:32:56 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	unset1(char *str, t_list **envp, char **path, t_list **new)
 	env = *envp;
 	if (path && *path && (str && !ft_strncmp(str, "PATH", 5)))
 	{
-		if (ft_envdup_exept(env, NULL, &head))
+		if (ft_envdup_exept(env, "PATH", &head))
 			return (1);
 		return (*path = NULL, *new = head, 0);
 	}

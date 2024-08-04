@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:47:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 14:23:38 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 15:20:04 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ int	prepare_exit_cod(t_exec *e, t_prs *p, t_list *envp)
 	if (!res)
 		return (1);
 	if (res[0] == NULL)
-		return (ft_ex_error("exit: ", res[0], 255), to_free(res), exit_with(255, p, e, envp), 1);
+		return (ft_ex_error("exit: ", res[0], 255),
+			to_free(res), exit_with(255, p, e, envp), 1);
 	while (res[i])
 	{
 		ret = a_while(e, i, ind, res);
@@ -109,7 +110,6 @@ unsigned char	ft_exit(t_exec *e, t_list **envp, t_prs **l)
 			ret = ft_ex_error("exit: ", e->cmd[1], 255);
 			exit_with(ret, *l, e, *envp);
 		}
-			
 		ret = prepare_exit_cod(e, *l, *envp);
 	}
 	else
@@ -119,5 +119,3 @@ unsigned char	ft_exit(t_exec *e, t_list **envp, t_prs **l)
 	}
 	return (ret);
 }
-
-

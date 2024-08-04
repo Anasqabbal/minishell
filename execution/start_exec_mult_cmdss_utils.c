@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:35:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 12:35:04 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 15:28:05 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ int	ft_return(int *ret, int *i, t_all a)
 		return (*ret = 1, -1);
 	return (r);
 }
-/* malloc insied set_and_open */
 
 int	open_files_and_pipe(t_all *a)
 {

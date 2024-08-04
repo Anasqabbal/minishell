@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/04 16:19:08 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/07/27 10:49:43 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 17:04:33 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,30 @@ void	var_error(char *from, char *str, int indice)
 	ft_putendl_fd(str, 2);
 }
 
-void	ft_print_export(t_list *envp, int indice)
+void	ft_print_export(t_list *envp, char **path)
 {
 	char	*str;
 	int		i;
 
-	if (indice == 0)
+	while (envp)
 	{
-		while (envp)
+		str = envp->content;
+		if (!ft_strncmp("PATH=", envp->content, 5) && (path && *path))
 		{
-			str = envp->content;
-			if (ft_strchr(str, '=') && !ft_strnstr(str, "_=", 2))
-			{
-				i = -1;
-				ft_printf("declare -x ");
-				while (str[++i] != '=')
-					ft_printf("%c", str[i]);
-				ft_printf("%c\"%s\"\n", str[i], (str + i + 1));
-			}
-			else if (!ft_strnstr(str, "_=", 2))
-				ft_printf("declare -x %s\n", envp->content);
 			envp = envp->next;
+			continue ;
 		}
+		if (ft_strchr(str, '=') && !ft_strnstr(str, "_=", 2))
+		{
+			i = -1;
+			ft_printf("declare -x ");
+			while (str[++i] != '=')
+				ft_printf("%c", str[i]);
+			ft_printf("%c\"%s\"\n", str[i], (str + i + 1));
+		}
+		else if (!ft_strnstr(str, "_=", 2))
+			ft_printf("declare -x %s\n", envp->content);
+		envp = envp->next;
 	}
 }
 
@@ -88,11 +90,6 @@ int	allowed_char(char c, char *allowed)
 	}
 	return (ind);
 }
-
-/*((str[0] == '=' && str[1] == '\0')) this last
- condition for = when it is a single the previous function that
-  check it is start the calculation of len from = and
-  when = is alon the par.len == 0 and this is not true*/
 
 int	valid_name(char *from, char *str, t_par *par)
 {
