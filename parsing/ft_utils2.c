@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 20:38:13 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/04 17:20:52 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/05 12:48:26 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ char	*extract_virable(char *str, int *var_len, t_list *env)
 	char	*var;
 	int		y;
 
-	x = 1;
+	x = 0;
+	str++;
 	while (ft_isalnum(str[x]) || str[x] == '_')
 		x++;
 	var = (char *)malloc((x + 1) * sizeof(char));

@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 21:27:31 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/02 21:49:41 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/08/05 13:00:20 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ static int	cmd_expa_h1(char *str, t_ndx *ind)
 	grip = 0;
 	while (str[hold])
 	{
-		if (str[hold] == '<' && str[hold + 1] == '<')
+		if (str[hold] == '<' && str[hold + 1] == '<'
+			&& !turn_dollar_here(str, hold))
 		{
 			grip = hold;
 			hold += 3;

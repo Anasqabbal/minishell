@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_er_msg.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 20:03:51 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/04 12:49:17 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:33:35 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ void	error_msg(char c)
 		write(2, "minishell: syntax error snear unexpected token `|'\n", 52);
 	else if (c == '>')
 		write(2,
-			"minishell: syntax error near unexpected token `newline'\n", 56);
+			"minishell: syntax error near unexpected token `newline'\n", 57);
 	else if (c == '<')
 		write(2,
-			"minishell: syntax error near unexpected token `newline'\n", 56);
+			"minishell: syntax error near unexpected token `newline'\n", 57);
 }
 
 static int	error_msg1h(char *str, int x)
@@ -36,7 +36,7 @@ static int	error_msg1h(char *str, int x)
 		|| !ft_strncmp(&str[x], "| |", ft_strlen("| |"))
 		|| !ft_strncmp(&str[x], ">|", ft_strlen(">|")))
 	{
-		write(2, "minishell: syntax error near unexpected token `|'\n", 50);
+		write(2, "minishell: syntax error near unexpected token `|'\n", 51);
 		return (0);
 	}
 	else if (!ft_strncmp(&str[x], ">>>>", ft_strlen(">>>>"))
@@ -69,7 +69,7 @@ static int	error_msg1h1(char *str, int x)
 		|| !ft_strncmp(&str[x], "> <<", ft_strlen("> <<"))
 		|| !ft_strncmp(&str[x], "< <<", ft_strlen("< <<")))
 	{
-		write(2, "minishell: syntax error near unexpected token `<<'\n", 51);
+		write(2, "minishell: syntax error near unexpected token `<<'\n", 52);
 		return (0);
 	}
 	else if (!ft_strncmp(&str[x], "<<<", ft_strlen("<<<"))

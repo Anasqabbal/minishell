@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:24:25 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/02 11:25:57 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/05 13:11:15 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	first_work(char **f, t_exec *e, int *i, int *j)
 	else if (len > 15)
 		return (ft_putstr_fd("minishell :maximum here-document count exceeded\n"
 				, 2), 1);
-	e->here_doc = malloc(sizeof(char *) * (len + 1));
+	e->here_doc = ft_calloc(sizeof(char *), (len + 1));
 	if (!e->here_doc)
 		return (-1);
 	e->in_h_l = len;

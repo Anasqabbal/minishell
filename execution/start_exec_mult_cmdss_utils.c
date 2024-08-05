@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:35:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 15:28:05 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/05 08:47:30 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,20 @@ int	the_input(t_prs *lst, t_exec *e)
 		if (pipe(fd) < 0)
 			return (perror("pipe"), -1);
 		if (e->here_doc[e->in_h_l - 1])
-			write(fd[1], e->here_doc[e->in_h_l - 1],
-				ft_strlen(e->here_doc[e->in_h_l - 1]));
+			ft_putstr_fd(e->here_doc[e->in_h_l - 1], fd[1]);
 		if (dup2(fd[0], STDIN_FILENO) < 0)
-			return (perror("dup2"), lst->ex_code = 1, -1);
+			return (perror("dup2"), -1);
 		close(fd[0]);
 		close(fd[1]);
 	}
 	else
 	{
 		if (dup2(e->in[e->in_l - 1][0], STDIN_FILENO) < 0)
-			return (perror("dup2"), lst->ex_code = 1, -1);
+			return (perror("dup2"), -1);
 		close(e->in[e->in_l - 1][0]);
 		e->in[e->in_l - 1][0] = -1;
 	}
-	return (lst->ex_code = 0, 0);
+	return (0);
 }
 
 int	set_stdout_and_cmd(t_prs *l, t_exec *e, int *o, int *fd)

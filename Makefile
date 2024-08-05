@@ -6,14 +6,13 @@
 #    By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 16:28:17 by zgtaib            #+#    #+#              #
-#    Updated: 2024/08/04 14:25:28 by anqabbal         ###   ########.fr        #
+#    Updated: 2024/08/05 13:16:37 by anqabbal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
-F = -g -fsanitize=address
 CC = cc
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror
 INCLUDES = minishell.h ./libft/libft.h
 LIBFT = libft/libft.a
 READLINEFLAG = -lreadline
@@ -23,7 +22,7 @@ READLINE_I = $(shell brew --prefix readline)/include
 BUILTINS = execution/builtins/check_variable.c execution/builtins/env.c\
 			execution/builtins/export.c execution/builtins/sort_with_ascii.c\
 			execution/builtins/unset.c execution/builtins/exit.c\
-			execution/builtins/echo.c execution/builtins/cd_utils.c\
+			execution/builtins/echo.c execution/builtins/cd_utils.c execution/builtins/cd_utils2.c\
 			execution/builtins/pwd.c execution/builtins/cd.c execution/builtins/export_utils.c
 EXECUTION = execution/env_utils.c execution/ft_additional_lst.c  execution/prepare_path.c execution/prepare_cmd.c execution/additional_ft.c\
 execution/start_exec_00.c execution/additional_ft2.c execution/ft_1open_in_files.c execution/ft_1open_out_files.c execution/start_exec_mult_cmds.c\
@@ -55,7 +54,9 @@ PARSING = parsing/ft_syntax.c\
 	parsing/handle_expa.c\
 	parsing/imbig_single.c\
 	parsing/ft_utils_5.c \
-	parsing/ft_utils_6.c
+	parsing/ft_utils_6.c\
+	parsing/ft_utils_7.c
+
 
 SRC = minishell.c $(EXECUTION) $(PARSING)
 

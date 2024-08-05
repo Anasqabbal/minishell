@@ -6,13 +6,13 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 21:31:51 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/04 16:58:32 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/05 13:20:23 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	export_ambig(char *str, int x)
+int	exig(char *str, int x)
 {
 	int	len;
 	int	count;
@@ -32,14 +32,14 @@ int	export_ambig(char *str, int x)
 	return (1);
 }
 
-void	expans_but_nul_1(char *cmd, char *str, t_ndx *ind, int var_len)
+void	expans_but_nul_1(char *cmd, char *str, t_ndx *ind)
 {
 	int	l;
 
 	l = 0;
-	if (!export_ambig(str, ind->x))
+	if (!exig(str, ind->x))
 	{
-		while (str[ind->x] && l < var_len + 1)
+		while (str[ind->x] && l < ind->var_len + 1)
 		{
 			cmd[ind->y++] = str[ind->x++];
 			l++;
@@ -47,48 +47,56 @@ void	expans_but_nul_1(char *cmd, char *str, t_ndx *ind, int var_len)
 	}
 }
 
-void	expans_but_non_nul(char *cmd, char *str, t_ndx *ind, int var_len)
+void	expans_but_non_nul(char *cmd, char *str, t_ndx *ind)
 {
 	int	x;
 
 	x = 0;
-	while (str[ind->x] && x < var_len + 1)
+	while (str[ind->x] && x < ind->var_len + 1)
 	{
 		cmd[ind->y++] = str[ind->x++];
 		x++;
 	}
 }
 
-void	its_not_a_var(char *str, char *cmd, t_ndx *ind, int var_len)
+void	its_not_a_var(char *str, char *cmd, t_ndx *ind)
 {
 	int	z;
 
 	z = 0;
 	if (ind->x - 2 >= 0 && (str[ind->x - 2] == '>' || str[ind->x - 2] == '<'))
 	{
-		while (z < var_len + 1)
+		while (z < ind->var_len + 1)
 		{
 			cmd[ind->y++] = str[ind->x++];
 			z++;
 		}
 	}
 	else
-		ind->x += var_len + 1;
+		ind->x += ind->var_len + 1;
 }
 
-void	handle_expa_suc(char *expans, char *cmd, t_ndx *ind, int var_len)
+void	handle_expa_suc(char *expans, char *cmd, t_ndx *ind, char *str)
 {
-	int	x;
+	int	blink;
 
-	x = 0;
-	while (expans[x])
+	blink = 0;
+	turn_expans(expans);
+	if ((eqaulsign(str, ind) || w_s(expans))
+		&& count_exp_qts(str, ind))
 	{
-		if (expans[x] == '"' || expans[x] == '\''
-			|| expans[x] == '$' || expans[x] == '|')
-			expans[x] *= -1;
-		x++;
+		ft_strcpy(&cmd[ind->y], "\"");
+		ind->y += 1;
+		blink = 1;
 	}
 	ft_strcpy(&cmd[ind->y], expans);
-	ind->y += ft_strlen(expans);
-	ind->x += var_len + 1;
+	if (blink == 1)
+	{
+		ind->y += ft_strlen(expans);
+		ft_strcpy(&cmd[ind->y], "\"");
+		ind->y += 1;
+	}
+	else
+		ind->y += ft_strlen(expans);
+	ind->x += ind->var_len + 1;
 }

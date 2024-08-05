@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 12:50:05 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 17:03:20 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/05 09:28:22 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	to_home(t_list **env)
 		return (0);
 	hm = ft_strdup(home->content);
 	if (!hm)
-		return (1);
+		return (-1);
 	getcwd(ol, sizeof(ol));
 	if (chdir(hm + 5))
 		return (perror("minishell: cd"), free(hm), 1);

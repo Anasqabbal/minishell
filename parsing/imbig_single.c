@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 15:10:41 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/03 15:40:48 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/08/05 13:01:03 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ static int	return_ndx(char *str, int x)
 	hold = x;
 	while (str[hold])
 	{
-		if (str[hold] == '>' || (str[hold] == '<' && str[hold + 1] != '<'))
+		if ((str[hold] == '>' || (str[hold] == '<' && str[hold + 1] != '<'))
+			&& !turn_dollar_here(str, hold))
 		{
 			count = handle_spe_ndx(str, &hold, &grip);
 			if (count != 0)
@@ -120,11 +121,10 @@ char	*imbig_sing(char *str, t_list *env)
 	}
 	while (str[x])
 	{
+		if (str[x] && str[x] == '<' && str[x + 1] == '<' && str[x + 2] == '<')
+			the_three(str, cmd, &y, &x);
 		if (x == return_ndx(str, x))
-		{
-			cmd[y++] = str[x++];
-			cmd[y++] = '(';
-		}
+			retunr_ndx_cop(str, cmd, &y, &x);
 		else
 			cmd[y++] = str[x++];
 	}

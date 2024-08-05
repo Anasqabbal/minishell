@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/04 17:07:45 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/05 13:35:17 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,9 @@
 # define MINISHELL_H
 # include "./libft/libft.h"
 # include <stdio.h>
-# include <libc.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <sys/types.h>
 # include <sys/stat.h>
-# include <sys/wait.h>
 # include <signal.h>
 # include <termios.h>
 
@@ -51,8 +48,6 @@ typedef struct s_exec
 	int				in_h_l;
 	int				size;
 	int				ex;
-	// int				l_pid[1000];
-	// int				p;
 	struct s_exec	*n;
 }	t_exec;
 
@@ -95,6 +90,8 @@ typedef struct s_ndx
 {
 	int	x;
 	int	y;
+	int	ndx;
+	int	var_len;
 }	t_ndx;
 
 typedef struct s_ndx_c
@@ -102,12 +99,6 @@ typedef struct s_ndx_c
 	int	x;
 	int	y;
 }	t_ndx_c;
-
-typedef struct s_ndx_v
-{
-	int	var_len;
-	int	ndx;
-}	t_ndx_v;
 
 /*EXECUTION*/
 	/* ----- BUILTINS ----- */
@@ -126,6 +117,8 @@ int				cd_absolute_path(char *str, t_list **env);
 int				cd_relative_path(char *str, t_list **env);
 int				to_old_one(t_list **env, char *lastdir);
 int				to_home(t_list **env);
+int				ft_do_cd(char **str, t_list **env);
+int				move_back(char	*str, t_list	**env);
 int				check_dir_access(char **str);
 int				join_and_export(char *str, char *new, t_list **env, char *c);
 int				ft_check_dir(char	*str);
@@ -162,7 +155,6 @@ int				initialize_t_all(t_prs *p, t_list **envp, t_exec *e, t_all *a);
 	/*ft_1open_in_files.c "5"*/
 int				**to_free_f(int **file, int len);
 int				open_in_files(t_exec *e, int len, char *file, char *token);
-int				ft_open_files(t_prs *lst, t_exec *e);
 int				set_and_open(t_exec *e, char **f, int i);
 int				check_file_access(char *token, char *file,
 					int indice, int outfile);
@@ -185,7 +177,6 @@ char			**prepare_cmd(char *cmd, char **opts, char **args);
 int				check_access(char *cmd, t_exec *p, t_list **env, char *path);
 	/*start_exec_00.c "4"*/
 int				ft_execve1(t_exec *e, int in, int out, t_all *a);
-int				ft_execve11(t_exec *e, int in, int out, int pid);
 int				ft_is_pipe(int fd, int ret);
 int				start_exec(t_prs **lst, t_list **envp, int rett, char **path);
 	/* start_exec_mult_cmds.c */
@@ -208,7 +199,6 @@ int				execvecmd(t_exec *e, t_list **envp, char **path, t_prs **l);
 	/*exec_functions*/
 t_exec			*ft_exec_new(void);
 void			ft_execadd_back(t_exec	**h, t_exec	*n);
-void			ft_print_exec(t_exec *e);
 int				set_here_doc(t_prs *l, t_exec **e, t_list **env, int *ret);
 /*FT_ERRORS.C*/
 int				ft_error_p(char *from, int indice);
@@ -268,39 +258,32 @@ int				count_expantion_here(char *str);
 char			*expand_ex_code(char *cmd, int *red, t_list *env, char *st);
 int				ft_isspecial(char c);
 void			handle_expa_suc(char *expans, char *cmd,
-					t_ndx *ind, int var_len);
-int				export_ambig(char *str, int x);
+					t_ndx *ind, char *str);
+int				exig(char *str, int x);
 int				ex_code_zero(char *str, int x);
-int				white_spaces(char *expans);
+int				w_s(char *expans);
 char			*imbig_sing(char *str, t_list *env);
 char			**pro_split(char *s);
-void			expans_but_nul_2(char *cmd, t_ndx *ind,
-					int var_len, char *expans);
+void			expans_but_nul_2(char *cmd, t_ndx *ind, char *expans);
 void			expans_but_nul_1(char *cmd, char *str,
-					t_ndx *ind, int var_len);
+					t_ndx *ind);
 void			expans_but_non_nul(char *cmd, char *str,
-					t_ndx *ind, int var_len);
+					t_ndx *ind);
 void			free_expa_handel(char *cmd, char *str, t_list *env);
-void			its_not_a_var(char *str, char *cmd, t_ndx *ind, int var_len);
+void			its_not_a_var(char *str, char *cmd, t_ndx *ind);
 int				handle_loop_ndx(char *str, int *hold);
-int				sp_a_c(char *expans, char *str, char *cmd, t_list *env);
-/**/
+int				spac(char *expans, char *str, char *cmd, t_list *env);
+int				eqaulsign(char *str, t_ndx *ind);
+void			turn_expans(char *expans);
+int				count_exp_qts(char *str, t_ndx *ind);
+void			retunr_ndx_cop(char *str, char *cmd, int *y, int *x);
+int				turn_dollar_here(char *str, int y);
 int				count_expantion_here(char *str);
 void			ft_handler_fork(int sig);
 int				it_is_signals(int *ret, t_all *a, int i, int s);
 int				it_is_signals11(int *ret);
 int				small_check(int *pid, t_all *a, int *in, t_exec *e);
 
-/* clear_functions.c */
 void			ft_clear_exec(t_exec **e);
 void			clear_prs(t_prs **c);
-/*to remove*/
-void			print_lst(t_list *e);
-void			print_prs(t_prs *p);
-t_prs			*set_values(int indice);
-t_prs			*new_prs(char *cmd, char **opts, char **args);
-void			ft_print_prs(t_prs *c);
-void			ft_print_exec(t_exec *e);
-int				ft_2dprint(char **str);
-
 #endif

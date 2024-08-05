@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 17:06:21 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/04 10:27:36 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/05 10:00:16 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,8 @@ int	move_back(char	*str, t_list	**env)
 
 int	ft_cd(char **str, t_list **env, int ret)
 {
-	char	s[PATH_MAX];
-
+	if (str && str[0] && str[0][0] == '\0')
+		return (0);
 	if (it_is_with_options(str, 0, "cd"))
 		return (2);
 	if (!str[0] || !ft_strncmp(str[0], "~", ft_strlen(str[0]))
@@ -108,17 +108,5 @@ int	ft_cd(char **str, t_list **env, int ret)
 		return (-1);
 	else if (ret)
 		return (ret);
-	if (str[0][0] == '/')
-		cd_absolute_path(str[0], env);
-	else
-	{
-		if (ft_strnstr("..", str[0]
-				, ft_strlen(str[0])) && ft_strlen(str[0]) % 2 == 0)
-			return (move_back(str[0], env));
-		cd_relative_path(str[0], env);
-		getcwd(s, sizeof(s));
-		if (join_and_export("PWD=", s, env, "PWD="))
-			return (1);
-	}
-	return (0);
+	return (ft_do_cd(str, env));
 }

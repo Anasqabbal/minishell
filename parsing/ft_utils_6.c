@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_6.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
+/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/03 13:23:34 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/03 14:29:44 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/08/05 13:20:00 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	free_expa_handel(char *cmd, char *str, t_list *env)
 	exit(1);
 }
 
-int	sp_a_c(char *expans, char *str, char *cmd, t_list *env)
+int	spac(char *expans, char *str, char *cmd, t_list *env)
 {
 	char	**hold;
 	int		count;
@@ -40,11 +40,11 @@ int	sp_a_c(char *expans, char *str, char *cmd, t_list *env)
 	return (count);
 }
 
-void	expans_but_nul_2(char *cmd, t_ndx *ind, int var_len, char *expans)
+void	expans_but_nul_2(char *cmd, t_ndx *ind, char *expans)
 {
 	ft_strcpy(&cmd[ind->y], expans);
 	ind->y += ft_strlen(expans);
-	ind->x += var_len + 1;
+	ind->x += ind->var_len + 1;
 }
 
 int	handle_loop_ndx(char *str, int *hold)
@@ -72,14 +72,14 @@ int	handle_loop_ndx(char *str, int *hold)
 	return (count);
 }
 
-int	white_spaces(char *expans)
+int	w_s(char *expans)
 {
 	int	x;
 
 	x = 0;
 	while (expans[x])
 	{
-		if (ft_isalnum(expans[x] || ft_isspecial(expans[x])))
+		if (expans[x] != ' ' && !(expans[x] >= 9 && expans[x] <= 13))
 			return (0);
 		x++;
 	}
