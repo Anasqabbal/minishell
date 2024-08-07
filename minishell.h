@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/05 13:35:17 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/07 17:52:34 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,7 @@ char			**prepare_cmd(char *cmd, char **opts, char **args);
 int				check_access(char *cmd, t_exec *p, t_list **env, char *path);
 	/*start_exec_00.c "4"*/
 int				ft_execve1(t_exec *e, int in, int out, t_all *a);
-int				ft_is_pipe(int fd, int ret);
+int				ft_is_pipe(int fd);
 int				start_exec(t_prs **lst, t_list **envp, int rett, char **path);
 	/* start_exec_mult_cmds.c */
 int				the_input(t_prs *lst, t_exec *e);
@@ -283,7 +283,12 @@ void			ft_handler_fork(int sig);
 int				it_is_signals(int *ret, t_all *a, int i, int s);
 int				it_is_signals11(int *ret);
 int				small_check(int *pid, t_all *a, int *in, t_exec *e);
+void			cd_print_error(char *s1, char *s2);
 
 void			ft_clear_exec(t_exec **e);
 void			clear_prs(t_prs **c);
+
+void	ft_print_prs(t_prs *c);
+void	print_prs(t_prs *p);
+int		ft_2dprint(char **str);
 #endif

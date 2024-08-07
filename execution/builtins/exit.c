@@ -6,17 +6,17 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:47:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/05 13:08:26 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/07 18:03:30 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static void	exit_with(int ret, t_prs *p, t_exec *e, t_list *envp)
+static void	exit_with(int ret, t_prs **p, t_exec **e, t_list **envp)
 {
-	ft_clear_exec(&e);
-	ft_lstclear(&envp, free);
-	clear_prs(&p);
+	ft_clear_exec(e);
+	ft_lstclear(envp, free);
+	clear_prs(p);
 	exit(ret);
 }
 
@@ -69,7 +69,7 @@ int	a_while(t_exec *e, int i, int ind, char **res)
 	return (0);
 }
 
-int	prepare_exit_cod(t_exec *e, t_prs *p, t_list *envp)
+int	prepare_exit_cod(t_exec **e, t_prs **p, t_list **envp)
 {
 	char	**res;
 	int		i;
@@ -78,7 +78,7 @@ int	prepare_exit_cod(t_exec *e, t_prs *p, t_list *envp)
 
 	i = 0;
 	ind = 0;
-	res = ft_split(e->cmd[1], ' ');
+	res = ft_split((*e)->cmd[1], ' ');
 	if (!res)
 		return (1);
 	if (res[0] == NULL)
@@ -86,15 +86,15 @@ int	prepare_exit_cod(t_exec *e, t_prs *p, t_list *envp)
 			to_free(res), exit_with(255, p, e, envp), 1);
 	while (res[i])
 	{
-		ret = a_while(e, i, ind, res);
+		ret = a_while(*e, i, ind, res);
 		if (ret)
 			exit_with(ret, p, e, envp);
 		else if (!ret && res[i + 1])
 			continue ;
 		i++;
 	}
-	if (calcul_args(e->cmd + 1) > 1)
-		return (to_free(res), ft_ex_error("exit: ", e->cmd[1], 1), 1);
+	if (calcul_args((*e)->cmd + 1) > 1)
+		return (to_free(res), ft_ex_error("exit: ", (*e)->cmd[1], 1), 1);
 	return (exit_with(atoi_ex(res[0], res), p, e, envp), 0);
 }
 
@@ -109,14 +109,14 @@ unsigned char	ft_exit(t_exec *e, t_list **envp, t_prs **l)
 		if (e->cmd[0][0] == '\0')
 		{
 			ret = ft_ex_error("exit: ", e->cmd[1], 255);
-			exit_with(ret, *l, e, *envp);
+			exit_with(ret, l, &e, envp);
 		}
-		ret = prepare_exit_cod(e, *l, *envp);
+		ret = prepare_exit_cod(&e, l, envp);
 	}
 	else
 	{
 		ret = e->ex;
-		exit_with(ret, *l, e, *envp);
+		exit_with(ret, l, &e, envp);
 	}
 	return (ret);
 }

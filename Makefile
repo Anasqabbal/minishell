@@ -6,13 +6,14 @@
 #    By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/16 16:28:17 by zgtaib            #+#    #+#              #
-#    Updated: 2024/08/05 13:16:37 by anqabbal         ###   ########.fr        #
+#    Updated: 2024/08/07 14:33:03 by anqabbal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+F = -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror $F
 INCLUDES = minishell.h ./libft/libft.h
 LIBFT = libft/libft.a
 READLINEFLAG = -lreadline
@@ -58,7 +59,7 @@ PARSING = parsing/ft_syntax.c\
 	parsing/ft_utils_7.c
 
 
-SRC = minishell.c $(EXECUTION) $(PARSING)
+SRC = minishell.c $(EXECUTION) $(PARSING) to_remove_functions.c
 
 OBJ = $(SRC:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:18:37 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 16:41:16 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/07 17:07:30 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int	compare_and_check(char **f, t_exec *e,	int i)
 {
-	if (!ft_strncmp(f[i], "<", ft_strlen(f[i]))
-		|| (!ft_strncmp(f[i], "<(", ft_strlen(f[i]))))
+	if (((!ft_strncmp(f[i], "<", 1) && ft_strlen(f[i]) == 1))
+		|| (!ft_strncmp(f[i], "<(", 2) && ft_strlen(f[i]) == 2))
 	{
 		if (check_file_access(f[i], f[i + 1], 1, 0))
 			return (1);
@@ -24,10 +24,10 @@ static int	compare_and_check(char **f, t_exec *e,	int i)
 		if (open_in_files(e, 1, f[i + 1], f[i]))
 			return (1);
 	}
-	else if (!ft_strncmp(f[i], ">", ft_strlen(f[i]))
-		|| !ft_strncmp(f[i], ">>", ft_strlen(f[i]))
-		|| (!ft_strncmp(f[i], ">(", ft_strlen(f[i])))
-		|| (!ft_strncmp(f[i], ">>(", ft_strlen(f[i]))))
+	else if ((!ft_strncmp(f[i], ">", ft_strlen(f[i])) && ft_strlen(f[i]) == 1)
+		|| (!ft_strncmp(f[i], ">>", ft_strlen(f[i])) && ft_strlen(f[i]) == 2)
+		|| (!ft_strncmp(f[i], ">(", ft_strlen(f[i])) && ft_strlen(f[i]) == 2)
+		|| (!ft_strncmp(f[i], ">>(", ft_strlen(f[i])) && ft_strlen(f[i]) == 3))
 	{
 		if (check_file_access(f[i], f[i + 1], 1, 1))
 			return (1);

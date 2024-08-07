@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:35:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/05 08:47:30 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/07 12:31:56 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int	open_files_and_pipe(t_all *a)
 			return (-1);
 		(a)->p = (a)->p->next;
 		(a)->e = (a)->e->n;
-		if (!ft_is_pipe(0, 0))
+		if (!ft_is_pipe(0))
 		{
 			if (pipe(fd2) < 0)
 				return (perror("pipe"), -1);

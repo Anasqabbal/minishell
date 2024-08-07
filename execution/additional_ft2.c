@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:40:14 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 11:22:52 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/07 12:31:19 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,11 @@ int	initialize_t_all(t_prs *p, t_list **envp, t_exec *e, t_all *a)
 	return (0);
 }
 
-int	ft_is_pipe(int fd, int ret)
+int	ft_is_pipe(int fd)
 {
 	struct stat	st;
 
-	if (fd == -1 || ret == -1)
+	if (fd == -1)
 		return (0);
 	if (fstat(fd, &st) == -1)
 		return (perror("fstat"), -1);

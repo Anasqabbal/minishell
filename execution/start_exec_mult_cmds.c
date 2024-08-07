@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:12 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 14:53:20 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/07 12:31:47 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	execute_this(t_all *a)
 			a->ret = ft_execve1(a->e, a->fd[0], a->out, a);
 		else
 			a->ret = ft_execve2(a, a->fd[0], a->out, a->envp);
-		r = ft_is_pipe(a->out, a->ret);
+		r = ft_is_pipe(a->out);
 		if (r == 1)
 			close(a->out);
 	}

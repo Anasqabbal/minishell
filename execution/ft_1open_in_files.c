@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:35 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 16:55:49 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/07 14:34:30 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	check_ambiguous(char *token, char *str, int ind)
 	int	i;
 
 	i = -1;
+	if (!str)
+		return (0);
 	if ((!ft_strncmp(token, ">(", 2) && ft_strlen(token) == 2)
 		|| (!ft_strncmp(token, "<(", 2) && ft_strlen(token) == 2)
 		|| (!ft_strncmp(token, ">>(", 3) && ft_strlen(token) == 3))
@@ -124,7 +126,7 @@ int	set_stdin(t_prs *lst, t_exec *e, int indice, int *fd)
 	}
 	else if (!e->in && indice && ft_prssize(lst) != 1 && e->i)
 	{
-		if (!ft_is_pipe(0, 0))
+		if (!ft_is_pipe(0))
 		{
 			if (pipe(fd2) < 0)
 				return (perror("pipe"), -1);

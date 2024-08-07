@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/31 17:07:19 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/02 11:29:39 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/07 14:45:31 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	first_check(char **res, char *here_doc, char *lim, char **tmp)
 {
 	*res = readline(">");
 	if (!(*res) || (!ft_strncmp(*res, lim, ft_strlen(*res))
-			&& (ft_strlen(*res) == ft_strlen(lim))) || lim[0] == '\0')
+			&& (ft_strlen(*res) == ft_strlen(lim))))
 	{
 		if (!ttyname(0))
 		{

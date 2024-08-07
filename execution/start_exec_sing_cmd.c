@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 11:43:27 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/05 09:20:31 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/07 16:55:25 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ int	first_work(t_prs **lst, t_list **envp, t_sing *s, char **path)
 	s->ret = set_and_open(s->e, (*lst)->red, -1);
 	if (s->ret == -1)
 		return (-1);
+	if (!(*lst)->cmd)
+		return (0);
 	else if (s->ret == 1)
 		return (1);
 	s->ret = check_access((*lst)->cmd, s->e, envp, *path);
@@ -106,10 +108,10 @@ int	one_cmd(t_prs **lst, t_list **envp, t_exec *e, char **path)
 	s.ret = first_work(lst, envp, &s, path);
 	if (s.ret == -1)
 		return (close(s.save), -1);
-	if (s.ret)
-		return (close(s.save), s.ret);
 	if (ft_export_(envp, e->cmd, e) < 0)
 		return (close(s.save), -1);
+	if (s.ret || !(*lst)->cmd)
+		return (close(s.save), s.ret);
 	if (s.ret)
 		return (close(s.save), s.ret);
 	if (it_is_builtin((*lst)->cmd))
@@ -119,9 +121,11 @@ int	one_cmd(t_prs **lst, t_list **envp, t_exec *e, char **path)
 	}
 	else
 	{
-		ft_execve3(s.in, s.out);
+		if (ft_execve3(s.in, s.out) == -1)
+			return (-1);
 		s.ret = execvecmd(e, envp, path, lst);
 	}
-	ft_restore_output(s.out, s.save);
+	if (ft_restore_output(s.out, s.save) == -1)
+		return (-1);
 	return (close(s.save), s.ret);
 }

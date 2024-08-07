@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 16:49:28 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 14:35:03 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/07 14:27:44 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ int	ft_restore_output(int out, int save)
 	if (out != -1)
 	{
 		close(1);
-		if (dup2(save, 1) < 1)
-			return (perror("dup2"), 1);
+		if (dup2(save, STDOUT_FILENO) < 1)
+			return (perror("dup2"), -1);
 	}
 	return (0);
 }

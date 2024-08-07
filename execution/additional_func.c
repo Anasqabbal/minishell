@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 10:22:51 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/04 15:19:16 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/07 12:50:54 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 int	ft_execve3(int in, int out)
 {
 	if (out != -1 && dup2(out, STDOUT_FILENO) < 0)
-		return (perror("dup2"), 1);
+		return (perror("dup2"), -1);
 	if (out != -1)
 		close(out);
 	if (in != -1 && dup2(in, STDIN_FILENO) < 0)
-		return (perror("dup2"), 1);
+		return (perror("dup2"), -1);
 	if (in != -1)
 		close (in);
 	return (0);

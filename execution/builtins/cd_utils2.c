@@ -6,11 +6,19 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 09:41:45 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/05 13:11:25 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/05 14:33:15 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+void	cd_print_error(char *s1, char *s2)
+{
+	ft_putstr_fd("cd : ", 2);
+	ft_putstr_fd(s1, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(s2, 2);
+}
 
 int	ft_do_cd(char **str, t_list **env)
 {

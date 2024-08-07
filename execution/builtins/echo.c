@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 16:13:46 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/05 13:10:55 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/07 18:11:21 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	ft_echo(t_exec *e, t_list *envp)
 	(void) envp;
 	ind = 0;
 	if (it_is_with_options(e->cmd + 1, 0, "echo"))
-		return (1);
+		return (2);
 	x = skip_n(e->cmd, &ind);
 	while (e->cmd[x] != NULL)
 	{
