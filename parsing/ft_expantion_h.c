@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:28:31 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/05 10:42:17 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/08/07 20:32:42 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ static int	calaculate_expan_len_h(char *str, t_list *env, int *x)
 	else if (!expans && ndx == 0)
 	{
 		ft_lstclear(&env, free);
+		free(str);
 		exit (1);
 	}
 	else

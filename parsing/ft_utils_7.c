@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 17:07:08 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/05 13:00:40 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/08/07 20:42:43 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@ int	eqaulsign(char *str, t_ndx *ind)
 {
 	int	hold;
 
-	hold = ind->x;
-	while (hold >= 0)
+	hold = ind->x - 1;
+	if (ind->x - 1 >= 0 && str[ind->x - 1] == '=')
+		return (1);
+	else if (ind->x - 1 >= 0 && str[ind->x - 1] == '"')
 	{
+		while (hold >= 0 && str[hold] == '"')
+			hold--;
 		if (str[hold] == '=')
 			return (1);
-		hold--;
 	}
 	return (0);
 }
@@ -38,23 +41,6 @@ void	turn_expans(char *expans)
 			expans[x] *= -1;
 		x++;
 	}
-}
-
-int	count_exp_qts(char *str, t_ndx *ind)
-{
-	int	hold;
-	int	count;
-
-	hold = ind->x - 1;
-	count = 0;
-	while (hold >= 0 && str[hold] == '"')
-	{
-		count++;
-		hold--;
-	}
-	if (count % 2 == 0 || count == 0)
-		return (1);
-	return (0);
 }
 
 void	retunr_ndx_cop(char *str, char *cmd, int *y, int *x)

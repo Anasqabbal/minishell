@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_expa.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 21:31:51 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/05 13:20:23 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/05 18:06:16 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	handle_expa_suc(char *expans, char *cmd, t_ndx *ind, char *str)
 	blink = 0;
 	turn_expans(expans);
 	if ((eqaulsign(str, ind) || w_s(expans))
-		&& count_exp_qts(str, ind))
+		&& !turn_dollar(str, ind->x))
 	{
 		ft_strcpy(&cmd[ind->y], "\"");
 		ind->y += 1;

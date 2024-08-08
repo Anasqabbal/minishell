@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/04 10:22:51 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/07 12:50:54 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/08 15:37:34 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,14 +91,11 @@ int	it_is_signals11(int *ret)
 			if (WTERMSIG(s) == SIGINT)
 			{
 				write(STDOUT_FILENO, "\n", 1);
-				r = 130;
 				g_sig = 0;
 			}
 			else if (WTERMSIG(s) == SIGQUIT)
-			{
-				r = 131;
 				write(STDOUT_FILENO, "Quit: 3\n", 8);
-			}
+			r = WTERMSIG(s) + 128;
 		}
 		else
 			r = WEXITSTATUS(s);

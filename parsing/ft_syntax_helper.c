@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 15:18:39 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/07/30 20:19:41 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/08/05 14:14:52 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,11 @@ void	replacewihte_s(char *str)
 		x++;
 	}
 	str[len] = '\0';
+}
+
+void	free_if_var_fail(char *str, t_list *env)
+{
+	ft_lstclear(&env, free);
+	free(str);
+	exit(1);
 }

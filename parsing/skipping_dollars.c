@@ -6,7 +6,7 @@
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 16:31:43 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/03 15:10:47 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/08/05 17:41:27 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ char	*dollar_sign(char *str, int ndx)
 	t_ndx_c	indi;
 
 	indi = (t_ndx_c){0, 0};
-	cmd = (char *)malloc((strlen(str) + 1) * sizeof(char));
+	cmd = (char *)malloc((ft_strlen(str) + 1) * sizeof(char));
 	if (!cmd)
 		return (free(cmd), NULL);
 	dollar_while(str, cmd, &indi, ndx);

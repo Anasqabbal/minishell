@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:47:33 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/07 18:03:30 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/08 16:42:09 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	atoi_ex(char *str, char **s)
 		i = 1;
 	if (str[0] == '-')
 		sign = -1;
-	if ((ft_strlen(str) >= 20))
+	if ((ft_strlen(str) >= 20) && sign == 1)
 		return (ft_ex_error("exit: ", str, 255));
 	while (str[i] >= 48 && str[i] <= 57)
 	{

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:31:44 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/07 17:52:34 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/08 14:33:33 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,8 @@ int				ft_error_p(char *from, int indice);
 int				ft_error_files(int indice, int ret, char *n);
 int				ft_error(char *from, int indice);
 int				ft_ex_error(char *from, char *nam, int rt);
+int				initialize_sing(t_prs **lst, t_list **env,
+					t_exec *e, t_sing *s);
 /*PARSING*/
 t_list			*ft_envduppp(char **env);
 void			ft_getenv_oursss(char *str, t_list *env, char *path);
@@ -275,8 +277,8 @@ int				handle_loop_ndx(char *str, int *hold);
 int				spac(char *expans, char *str, char *cmd, t_list *env);
 int				eqaulsign(char *str, t_ndx *ind);
 void			turn_expans(char *expans);
-int				count_exp_qts(char *str, t_ndx *ind);
 void			retunr_ndx_cop(char *str, char *cmd, int *y, int *x);
+void			free_if_var_fail(char *str, t_list *env);
 int				turn_dollar_here(char *str, int y);
 int				count_expantion_here(char *str);
 void			ft_handler_fork(int sig);
@@ -287,8 +289,4 @@ void			cd_print_error(char *s1, char *s2);
 
 void			ft_clear_exec(t_exec **e);
 void			clear_prs(t_prs **c);
-
-void	ft_print_prs(t_prs *c);
-void	print_prs(t_prs *p);
-int		ft_2dprint(char **str);
 #endif

@@ -6,7 +6,7 @@
 /*   By: anqabbal <anqabbal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 11:50:09 by anqabbal          #+#    #+#             */
-/*   Updated: 2024/08/07 18:05:53 by anqabbal         ###   ########.fr       */
+/*   Updated: 2024/08/08 16:48:56 by anqabbal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int	execvecmd(t_exec *e, t_list **envp, char **path, t_prs **l)
 	else if (!ft_strncmp("echo", e->cmd[0], ft_strlen(e->cmd[0])))
 		ret = ft_echo(e, *envp);
 	else if (!ft_strncmp("exit", e->cmd[0],
-			ft_strlen(e->cmd[0])) && printf("exit\n"))
+			ft_strlen(e->cmd[0]))
+		&& (ft_prssize(*l) == 1 && printf("exit\n")))
 		ret = ft_exit(e, envp, l);
 	else if (!ft_strncmp("unset", e->cmd[0], ft_strlen(e->cmd[0])))
 		ret = ft_unset(var + 1, envp, path);

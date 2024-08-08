@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_utils2.c                                        :+:      :+:    :+:   */
+/*   ft_utils_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zgtaib <zgtaib@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 20:38:13 by zgtaib            #+#    #+#             */
-/*   Updated: 2024/08/05 12:48:26 by zgtaib           ###   ########.fr       */
+/*   Updated: 2024/08/07 20:31:30 by zgtaib           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*expand_variable(char *str, t_list *env, int *ndx)
 
 	hold = ft_strjoin(str, "=");
 	if (!hold)
-		return (free(str), NULL);
+		return (NULL);
 	len = ft_strlen(hold);
 	expa = ft_getenv(hold, env);
 	if (!expa)
@@ -32,7 +32,7 @@ char	*expand_variable(char *str, t_list *env, int *ndx)
 	free(hold);
 	hold_h = ft_strdup(expa->content + len);
 	if (!hold_h)
-		return (free(str), NULL);
+		return (NULL);
 	return (hold_h);
 }
 
@@ -41,18 +41,16 @@ char	*extract_virable(char *str, int *var_len, t_list *env)
 	int		x;
 	char	*var;
 	int		y;
+	char	*hold;
 
 	x = 0;
+	hold = str;
 	str++;
 	while (ft_isalnum(str[x]) || str[x] == '_')
 		x++;
 	var = (char *)malloc((x + 1) * sizeof(char));
 	if (!var)
-	{
-		ft_lstclear(&env, free);
-		free(str);
-		exit(1);
-	}
+		free_if_var_fail(hold, env);
 	y = 0;
 	while (y < x)
 	{
